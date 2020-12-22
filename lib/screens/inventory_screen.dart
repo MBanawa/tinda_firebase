@@ -1,9 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class InventoryScreen extends StatelessWidget {
-  final _controller = new TextEditingController();
+import 'package:tinda/widgets/categoryBuilder/new_category.dart';
 
+class InventoryScreen extends StatelessWidget {
   var _categoryNameController = TextEditingController();
   var _categoryDescriptionController = TextEditingController();
 
@@ -23,13 +22,7 @@ class InventoryScreen extends StatelessWidget {
               ),
               FlatButton(
                 color: Colors.green,
-                onPressed: () {
-                  FirebaseFirestore.instance.collection('categories').add({
-                    'categoryname': _categoryNameController.text.trim(),
-                    'categorydescription':
-                        _categoryDescriptionController.text.trim(),
-                  });
-                },
+                onPressed: () {},
                 child: Text('Save'),
               ),
             ],
@@ -66,7 +59,8 @@ class InventoryScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
-          _showFormDialog(context);
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => NewCategory()));
         },
       ),
     );
