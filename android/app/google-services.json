@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "731902383672",
+    "project_id": "tinda-c19af",
+    "storage_bucket": "tinda-c19af.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:731902383672:android:5c537b7c4972769bdc38cd",
+        "android_client_info": {
+          "package_name": "com.banawa.tinda"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "731902383672-s2jrom296602tv4qiaqi4h0uln6l2b3r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.banawa.tinda",
+            "certificate_hash": "858fc344dc8671852314568f2397c3cbf510f3ef"
+          }
+        },
+        {
+          "client_id": "731902383672-rdjhubulvprr0056to4dmvbq4fga4uc4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB23ugItMT-kxKbAk1L94iWOBxwWB9h4ao"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "731902383672-rdjhubulvprr0056to4dmvbq4fga4uc4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
