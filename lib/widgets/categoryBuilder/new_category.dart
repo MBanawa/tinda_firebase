@@ -86,22 +86,19 @@ class _NewCategoryState extends State<NewCategory> {
         });
   }
 
-  void _phoneSize() {
-    Provider.of<PhoneSize>(context);
-  }
-
   @override
   Widget build(BuildContext context) {
-    Scaffold(
+    return Scaffold(
       appBar: AppBar(
         title: Text(
           'New Category',
         ),
         actions: [
-          IconButton(iconSize: 35, icon: Icon(Icons.save), onPressed: () {}),
+          IconButton(iconSize: 30, icon: Icon(Icons.save), onPressed: () {}),
         ],
       ),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Expanded(
             flex: 1,
@@ -185,7 +182,8 @@ class _NewCategoryState extends State<NewCategory> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 30),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 30, horizontal: 10),
                       child: Container(
                         decoration: BoxDecoration(
                           boxShadow: [
@@ -197,7 +195,7 @@ class _NewCategoryState extends State<NewCategory> {
                           borderRadius: BorderRadius.all(Radius.circular(20)),
                           color: Colors.white,
                         ),
-                        height: MediaQuery.of(context).size.height / 1.4,
+                        height: MediaQuery.of(context).size.height / 2,
                         padding: const EdgeInsets.fromLTRB(15.0, 50, 15.0, 0),
                         child: Consumer<PhoneSize>(
                           builder: (ctx, size, child) => Column(
