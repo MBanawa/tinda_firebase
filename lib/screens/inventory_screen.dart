@@ -1,10 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:tinda/widgets/categoryBuilder/edit_category.dart';
 
 import 'package:tinda/widgets/categoryBuilder/new_category.dart';
 import 'package:tinda/widgets/menuItem.dart';
 
-class InventoryScreen extends StatelessWidget {
+class InventoryScreen extends StatefulWidget {
+  @override
+  _InventoryScreenState createState() => _InventoryScreenState();
+}
+
+class _InventoryScreenState extends State<InventoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,10 +90,25 @@ class InventoryScreen extends StatelessWidget {
                                 ),
                               ),
                               PopupMenuButton(onSelected: (MenuItem menuItem) {
+                                print(menuItem.menuVal);
                                 if (menuItem.menuVal == "Edit") {
-                                  //edit category
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          EditCategory(
+                                            categDocs[index].id,
+                                            categDocs[index]
+                                                .data()['categoryname'],
+                                            categDocs[index]
+                                                .data()['categorydescription'],
+                                            categDocs[index]
+                                                .data()['categorycolor'],
+                                          )));
                                 } else if (menuItem.menuVal == "Delete") {
                                   //delete category
+                                  CollectionReference categs = FirebaseFirestore
+                                      .instance
+                                      .collection('categories');
+                                  categs.doc(categDocs[index].id).delete();
                                 }
                               }, itemBuilder: (BuildContext context) {
                                 return menuitems.map((MenuItem menuItem) {
