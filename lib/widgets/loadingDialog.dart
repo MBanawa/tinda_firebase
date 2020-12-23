@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:tinda/widgets/loadingWidget.dart';
 
-class LoadinAlertDialog extends StatelessWidget {
+class LoadingAlertDialog extends StatelessWidget {
   final String message;
-  const LoadinAlertDialog({Key key, this.message}) : super(key: key);
+  const LoadingAlertDialog({Key key, this.message}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

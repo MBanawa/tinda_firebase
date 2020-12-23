@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:tinda/authentication/authentication.dart';
 import 'package:tinda/widgets/categoryBuilder/edit_category.dart';
 
 import 'package:tinda/widgets/categoryBuilder/new_category.dart';
@@ -16,6 +18,16 @@ class _InventoryScreenState extends State<InventoryScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Inventory Screen'),
+        actions: [
+          FlatButton(
+              onPressed: () {
+                FirebaseAuth.instance.signOut();
+                Route route =
+                    MaterialPageRoute(builder: (_) => AuthenticScreen());
+                Navigator.pushReplacement(context, route);
+              },
+              child: Text('Sign Out'))
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),

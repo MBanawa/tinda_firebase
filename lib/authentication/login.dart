@@ -126,7 +126,7 @@ class _LoginState extends State<Login> {
     showDialog(
         context: context,
         builder: (c) {
-          return LoadinAlertDialog(
+          return LoadingAlertDialog(
             message: 'Authenticating, Please wait...',
           );
         });

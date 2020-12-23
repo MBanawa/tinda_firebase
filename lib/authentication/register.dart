@@ -79,7 +79,7 @@ class _RegisterState extends State<Register> {
     showDialog(
         context: context,
         builder: (c) {
-          return LoadinAlertDialog(
+          return LoadingAlertDialog(
             message: 'Processing registration, please wait....',
           );
         });
@@ -87,12 +87,13 @@ class _RegisterState extends State<Register> {
     String imageFileName = DateTime.now().millisecondsSinceEpoch.toString();
 
     Reference storageReference =
-        FirebaseStorage.instance.ref().child(imageFileName);
+        FirebaseStorage.instance.ref().child('user_image').child(imageFileName);
     UploadTask storageUploadTask = storageReference.putFile(_imageFile);
     TaskSnapshot taskSnapshot = await storageUploadTask;
 
     await taskSnapshot.ref.getDownloadURL().then((urlImage) {
       userImageUrl = urlImage;
+
       _registerUser();
     });
   }

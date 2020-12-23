@@ -30,7 +30,7 @@ class Tinda extends StatelessWidget {
             backgroundColor: Colors.yellow.shade900,
           ),
         ),
-        home: HomePage(),
+        home: SplashScreen(),
       ),
     );
   }
