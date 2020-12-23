@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -94,7 +95,25 @@ class _NewCategoryState extends State<NewCategory> {
           'New Category',
         ),
         actions: [
-          IconButton(iconSize: 30, icon: Icon(Icons.save), onPressed: () {}),
+          FlatButton(
+              onPressed: () {
+                FirebaseFirestore.instance.collection('categories').add({
+                  'categoryname': _categoryNameController.text.trim(),
+                  'categorydescription':
+                      _categoryDescriptionController.text.trim(),
+                  'categorycolor': categcolor != null ? categcolor : 4278228616,
+                  'createdAt': Timestamp.now(),
+                });
+                _categoryNameController.clear();
+                _categoryDescriptionController.clear();
+              },
+              child: Text(
+                'SAVE',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 17.0,
+                ),
+              )),
         ],
       ),
       body: Column(
@@ -164,6 +183,7 @@ class _NewCategoryState extends State<NewCategory> {
                                           ),
                                           Text(
                                             _descValue,
+                                            overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
                                               fontSize: 12.0,
                                               color: Colors.orange.shade400,
@@ -201,6 +221,8 @@ class _NewCategoryState extends State<NewCategory> {
                           builder: (ctx, size, child) => Column(
                             children: [
                               Container(
+                                padding:
+                                    const EdgeInsets.fromLTRB(8.0, 0, 8.0, 0),
                                 child: TextField(
                                   style: TextStyle(fontSize: size.fontSize),
                                   controller: _categoryNameController,
@@ -210,7 +232,7 @@ class _NewCategoryState extends State<NewCategory> {
                                     });
                                   },
                                   decoration: InputDecoration(
-                                    hintText: 'Enter category name',
+                                    hintText: 'Enter a category name here..',
                                     hintStyle: TextStyle(
                                       color: Colors.grey,
                                       // fontSize: widget.fontSize,
@@ -222,6 +244,8 @@ class _NewCategoryState extends State<NewCategory> {
                                 height: size.sizedBoxSize,
                               ),
                               Container(
+                                padding:
+                                    const EdgeInsets.fromLTRB(8.0, 0, 8.0, 0),
                                 child: TextField(
                                   style: TextStyle(fontSize: size.fontSize),
                                   controller: _categoryDescriptionController,
@@ -231,7 +255,8 @@ class _NewCategoryState extends State<NewCategory> {
                                     });
                                   },
                                   decoration: InputDecoration(
-                                    hintText: 'Enter a short description..',
+                                    hintText:
+                                        'Enter a short description here..',
                                     hintStyle: TextStyle(
                                       color: Colors.grey,
                                       // fontSize: widget.fontSize,
