@@ -25,18 +25,25 @@ class _LoginState extends State<Login> {
         _screenHeight = MediaQuery.of(context).size.height;
     return SingleChildScrollView(
       child: Container(
-        height: _screenHeight * .7,
+        height: _screenHeight,
         child: Column(
           mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                'Login to your Account',
-                style: TextStyle(color: Colors.white),
+              padding: const EdgeInsets.only(top: 30.0),
+              child: CircleAvatar(
+                backgroundColor: Colors.white,
+                radius: 100,
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Image.asset(
+                    'assets/images/logo.png',
+                  ),
+                ),
               ),
             ),
+            SizedBox(height: 20),
             Form(
               key: _formKey,
               child: Column(
@@ -54,65 +61,69 @@ class _LoginState extends State<Login> {
                     isObscure: true,
                   ),
                   SizedBox(
-                    height: 20.0,
+                    height: 5.0,
                   ),
-                  RaisedButton(
-                    onPressed: () {
-                      _emailtextEditingController.text.isNotEmpty &&
-                              _passwordtextEditingController.text.isNotEmpty
-                          ? loginUser()
-                          : showDialog(
-                              context: context,
-                              builder: (c) {
-                                return ErrorAlertDialog(
-                                  message:
-                                      'Please enter your email and password',
-                                );
-                              },
-                            );
-                    },
-                    color: Colors.teal,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        'Log In',
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width - 20,
+                    height: 60,
+                    child: FlatButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6.0)),
+                      color: Colors.yellow.shade900,
+                      onPressed: () {
+                        _emailtextEditingController.text.isNotEmpty &&
+                                _passwordtextEditingController.text.isNotEmpty
+                            ? loginUser()
+                            : showDialog(
+                                context: context,
+                                builder: (c) {
+                                  return ErrorAlertDialog(
+                                    message:
+                                        'Please enter your email and password',
+                                  );
+                                },
+                              );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Center(
+                          child: Text(
+                            'Sign In',
+                            style: TextStyle(color: Colors.white, fontSize: 18),
+                          ),
+                        ),
                       ),
                     ),
                   ),
                   SizedBox(
-                    height: 50.0,
+                    height: 65.0,
                   ),
                   Container(
                     height: 4.0,
                     width: _screenWidth * 0.9,
-                    color: Colors.teal,
-                  ),
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                  FlatButton.icon(
-                    onPressed: () {},
-                    // => Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //       builder: (context) => AdminSignInPage()),
-                    // ),
-                    icon: Icon(
-                      Icons.lock,
-                      color: Colors.tealAccent,
-                    ),
-                    label: Text(
-                      'Forgot Password?',
-                      style: TextStyle(
-                          color: Colors.tealAccent,
-                          fontWeight: FontWeight.bold),
-                    ),
+                    color: Colors.teal.shade200,
                   ),
                   SizedBox(
                     height: 10.0,
                   ),
                 ],
+              ),
+            ),
+            FlatButton.icon(
+              onPressed: () {},
+              // => Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //       builder: (context) => AdminSignInPage()),
+              // ),
+              icon: Icon(
+                Icons.lock,
+                color: Colors.white,
+              ),
+              label: Text(
+                'Forgot Password?',
+                style:
+                    TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
               ),
             ),
           ],

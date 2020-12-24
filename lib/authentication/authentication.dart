@@ -16,23 +16,12 @@ class _AuthenticScreenState extends State<AuthenticScreen> {
       child: Scaffold(
         appBar: AppBar(
           flexibleSpace: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Colors.teal,
-                  Colors.lightBlue,
-                ],
-                begin: const FractionalOffset(0.0, 0.0),
-                end: const FractionalOffset(1.0, 0.0),
-                stops: [0.0, 1.0],
-                tileMode: TileMode.clamp,
-              ),
-            ),
+            color: Colors.teal,
           ),
           title: Text(
             'Tinda',
             style: TextStyle(
-              fontSize: 25.0,
+              fontSize: 30.0,
               color: Colors.white,
             ),
           ),
@@ -41,28 +30,23 @@ class _AuthenticScreenState extends State<AuthenticScreen> {
             tabs: [
               Tab(
                 icon: Icon(
-                  Icons.lock,
-                  color: Colors.white,
+                  Icons.login,
                 ),
+                text: 'Sign In',
               ),
               Tab(
                 icon: Icon(
-                  Icons.person,
-                  color: Colors.white,
+                  Icons.account_box,
                 ),
+                text: 'Sign up',
               ),
             ],
-            indicatorColor: Colors.white38,
+            indicatorColor: Colors.yellow.shade900,
             indicatorWeight: 5.0,
           ),
         ),
         body: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [
-              Colors.teal,
-              Colors.lightBlue,
-            ], begin: Alignment.topRight, end: Alignment.bottomLeft),
-          ),
+          color: Colors.teal,
           child: TabBarView(children: [
             Login(),
             Register(),

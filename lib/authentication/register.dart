@@ -40,26 +40,15 @@ class _RegisterState extends State<Register> {
   }
 
 //-----------------
-  Future<void> uploadAndSaveImage() async {
-    if (_imageFile == null) {
-      showDialog(
-          context: context,
-          builder: (c) {
-            return ErrorAlertDialog(
-              message: 'Please select an image..',
-            );
-          });
-    } else {
-      _passwordtextEditingController.text ==
-              _cPasswordtextEditingController.text
-          ? _emailtextEditingController.text.isNotEmpty &&
-                  _passwordtextEditingController.text.isNotEmpty &&
-                  _cPasswordtextEditingController.text.isNotEmpty &&
-                  _nametextEditingController.text.isNotEmpty
-              ? uploadToStorage()
-              : displayDialog('Please complete the registration form..')
-          : displayDialog('Passwords do not match!');
-    }
+  Future<void> register() async {
+    _passwordtextEditingController.text == _cPasswordtextEditingController.text
+        ? _emailtextEditingController.text.isNotEmpty &&
+                _passwordtextEditingController.text.isNotEmpty &&
+                _cPasswordtextEditingController.text.isNotEmpty &&
+                _nametextEditingController.text.isNotEmpty
+            ? _registerUser()
+            : displayDialog('Please complete the registration form..')
+        : displayDialog('Passwords do not match!');
   }
 //-----------------
 
@@ -72,33 +61,6 @@ class _RegisterState extends State<Register> {
           );
         });
   }
-
-//-----------------
-
-  uploadToStorage() async {
-    showDialog(
-        context: context,
-        builder: (c) {
-          return LoadingAlertDialog(
-            message: 'Processing registration, please wait....',
-          );
-        });
-
-    String imageFileName = DateTime.now().millisecondsSinceEpoch.toString();
-
-    Reference storageReference =
-        FirebaseStorage.instance.ref().child('user_image').child(imageFileName);
-    UploadTask storageUploadTask = storageReference.putFile(_imageFile);
-    TaskSnapshot taskSnapshot = await storageUploadTask;
-
-    await taskSnapshot.ref.getDownloadURL().then((urlImage) {
-      userImageUrl = urlImage;
-
-      _registerUser();
-    });
-  }
-
-//-----------------
 
   void _registerUser() async {
     User firebaseUser;
@@ -143,34 +105,30 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
-    double _screenWidth = MediaQuery.of(context).size.width;
+    double _screenWidth = MediaQuery.of(context).size.width,
+        _screenHeight = MediaQuery.of(context).size.height;
 
     return SingleChildScrollView(
       child: Container(
+        height: _screenHeight,
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            SizedBox(
-              height: 10.0,
-            ),
-            InkWell(
-              onTap: _selectAndPickImage,
+            Padding(
+              padding: const EdgeInsets.only(top: 30.0),
               child: CircleAvatar(
-                radius: _screenWidth * 0.15,
                 backgroundColor: Colors.white,
-                backgroundImage:
-                    _imageFile == null ? null : FileImage(_imageFile),
-                child: _imageFile == null
-                    ? Icon(
-                        Icons.add_photo_alternate,
-                        size: _screenWidth * 0.15,
-                        color: Colors.grey,
-                      )
-                    : null,
+                radius: 100,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 20.0),
+                  child: Image.asset(
+                    'assets/images/register.png',
+                  ),
+                ),
               ),
             ),
             SizedBox(
-              height: 8.0,
+              height: 20.0,
             ),
             Form(
               key: _formKey,
@@ -204,18 +162,24 @@ class _RegisterState extends State<Register> {
               ),
             ),
             SizedBox(
-              height: 20.0,
+              height: 5.0,
             ),
-            RaisedButton(
-              onPressed: () {
-                uploadAndSaveImage();
-              },
-              color: Colors.teal,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Sign Up',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
+            SizedBox(
+              width: MediaQuery.of(context).size.width - 20,
+              height: 60,
+              child: FlatButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6.0)),
+                color: Colors.yellow.shade900,
+                onPressed: () {
+                  register();
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Sign Up',
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
                 ),
               ),
             ),

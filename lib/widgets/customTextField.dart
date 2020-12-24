@@ -15,19 +15,20 @@ class CustomTextField extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+        borderRadius: BorderRadius.all(Radius.circular(6.0)),
       ),
       padding: EdgeInsets.all(8.0),
-      margin: EdgeInsets.all(10.0),
+      margin: EdgeInsets.all(8.0),
       child: TextField(
         controller: controller,
         obscureText: isObscure,
-        cursorColor: Theme.of(context).primaryColor,
+        cursorColor: Colors.teal,
         decoration: InputDecoration(
+          hintStyle: TextStyle(color: Colors.teal),
           border: InputBorder.none,
           prefixIcon: Icon(
             data,
-            color: Theme.of(context).primaryColor,
+            color: Colors.teal,
           ),
           focusColor: Theme.of(context).primaryColor,
           hintText: hintText,

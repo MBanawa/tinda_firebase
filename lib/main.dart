@@ -24,6 +24,7 @@ class Tinda extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
+          fontFamily: 'Poppins',
           primaryColor: Colors.teal,
           scaffoldBackgroundColor: Colors.grey.shade200,
           floatingActionButtonTheme: FloatingActionButtonThemeData(
@@ -69,13 +70,10 @@ class _SplashScreenState extends State<SplashScreen> {
       child: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              Colors.teal,
-              Colors.lightBlue,
-            ],
-            begin: const FractionalOffset(0.0, 0.0),
-            end: const FractionalOffset(1.0, 0.0),
-            stops: [0.0, 1.0],
+            colors: [Colors.teal.shade800, Colors.green],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            // stops: [0.0, 1.0],
             tileMode: TileMode.clamp,
           ),
         ),
