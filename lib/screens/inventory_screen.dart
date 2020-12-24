@@ -22,9 +22,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
           FlatButton(
               onPressed: () {
                 FirebaseAuth.instance.signOut();
-                Route route =
-                    MaterialPageRoute(builder: (_) => AuthenticScreen());
-                Navigator.pushReplacement(context, route);
               },
               child: Text('Sign Out'))
         ],

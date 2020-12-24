@@ -7,6 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:tinda/home_page.dart';
 import 'package:tinda/authentication/authentication.dart';
 import 'package:tinda/providers/phonesize_provider.dart';
+import 'widgets/loadingWidget.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,66 +18,51 @@ Future<void> main() async {
 class Tinda extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (ctx) => PhoneSize()),
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          fontFamily: 'Poppins',
-          primaryColor: Colors.teal,
-          scaffoldBackgroundColor: Colors.grey.shade200,
-          floatingActionButtonTheme: FloatingActionButtonThemeData(
-            backgroundColor: Colors.yellow.shade900,
+    return FutureBuilder(
+      future: Firebase.initializeApp(),
+      builder: (context, snapshot) {
+        return MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (ctx) => PhoneSize()),
+          ],
+          child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+              fontFamily: 'Poppins',
+              primaryColor: Colors.teal,
+              scaffoldBackgroundColor: Colors.grey.shade200,
+              floatingActionButtonTheme: FloatingActionButtonThemeData(
+                backgroundColor: Colors.yellow.shade900,
+              ),
+            ),
+            home: snapshot.connectionState != ConnectionState.done
+                ? SplashScreen()
+                : StreamBuilder(
+                    stream: FirebaseAuth.instance.authStateChanges(),
+                    builder: (context, userSnapshot) {
+                      if (userSnapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return SplashScreen();
+                      }
+                      if (userSnapshot.hasData) {
+                        return HomePage();
+                      }
+                      return AuthenticScreen();
+                    },
+                  ),
           ),
-        ),
-        home: SplashScreen(),
-      ),
+        );
+      },
     );
   }
 }
 
-class SplashScreen extends StatefulWidget {
-  @override
-  _SplashScreenState createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    super.initState();
-
-    displaySplash();
-  }
-
-  displaySplash() {
-    Timer(Duration(seconds: 3), () async {
-      FirebaseAuth.instance.authStateChanges().listen((User user) {
-        if (user != null) {
-          Route route = MaterialPageRoute(builder: (_) => HomePage());
-          Navigator.pushReplacement(context, route);
-        } else {
-          Route route = MaterialPageRoute(builder: (_) => AuthenticScreen());
-          Navigator.pushReplacement(context, route);
-        }
-      });
-    });
-  }
-
+class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
       child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.teal.shade800, Colors.green],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            // stops: [0.0, 1.0],
-            tileMode: TileMode.clamp,
-          ),
-        ),
+        color: Colors.teal,
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -85,11 +71,23 @@ class _SplashScreenState extends State<SplashScreen> {
               SizedBox(
                 height: 20.0,
               ),
-              Text(
-                'Your personal Tindahan manager',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
+              Column(
+                children: [
+                  Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  ),
+                  SizedBox(height: 20.0),
+                  Container(
+                    child: Text(
+                      'Please Wait...',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

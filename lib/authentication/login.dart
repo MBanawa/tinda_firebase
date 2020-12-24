@@ -1,11 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:tinda/home_page.dart';
 
 import 'package:tinda/widgets/customTextField.dart';
 import 'package:tinda/widgets/errorDialog.dart';
-import 'package:tinda/widgets/loadingDialog.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -18,6 +15,14 @@ class _LoginState extends State<Login> {
   final TextEditingController _passwordtextEditingController =
       TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  void loginUser() async {
+    await _auth.signInWithEmailAndPassword(
+      email: _emailtextEditingController.text.trim(),
+      password: _passwordtextEditingController.text.trim(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -130,46 +135,5 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
-  }
-
-  FirebaseAuth _auth = FirebaseAuth.instance;
-  void loginUser() async {
-    showDialog(
-        context: context,
-        builder: (c) {
-          return LoadingAlertDialog(
-            message: 'Authenticating, Please wait...',
-          );
-        });
-    User firebaseUser;
-    await _auth
-        .signInWithEmailAndPassword(
-      email: _emailtextEditingController.text.trim(),
-      password: _passwordtextEditingController.text.trim(),
-    )
-        .then((auth) {
-      firebaseUser = auth.user;
-    }).catchError((error) {
-      Navigator.pop(context);
-      showDialog(
-          context: context,
-          builder: (c) {
-            return ErrorAlertDialog(
-              message: error.message.toString(),
-            );
-          });
-    });
-
-    if (firebaseUser != null) {
-      readData(firebaseUser).then((s) {
-        Navigator.pop(context);
-        Route route = MaterialPageRoute(builder: (c) => HomePage());
-        Navigator.pushReplacement(context, route);
-      });
-    }
-  }
-
-  Future readData(User fUSer) async {
-    FirebaseFirestore.instance.collection("users").doc(fUSer.uid).get();
   }
 }
