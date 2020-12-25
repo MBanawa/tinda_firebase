@@ -177,7 +177,7 @@ class _NewCategoryState extends State<NewCategory> {
                             borderRadius: BorderRadius.circular(6.0)),
                         color: Colors.yellow.shade900,
                         onPressed: () {
-                          Navigator.pop(context);
+                          Navigator.pop(context, 'Save');
                           _newCategory();
                         },
                         child: Padding(

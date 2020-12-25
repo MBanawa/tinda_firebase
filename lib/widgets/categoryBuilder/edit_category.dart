@@ -119,7 +119,7 @@ class _EditCategoryState extends State<EditCategory> {
     });
     _editCategoryNameController.clear();
     _editCategoryDescriptionController.clear();
-    Navigator.of(context).pop();
+    Navigator.pop(context, 'Edit');
   }
 
   @override
