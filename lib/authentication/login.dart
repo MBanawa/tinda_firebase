@@ -17,7 +17,7 @@ class _LoginState extends State<Login> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   FirebaseAuth _auth = FirebaseAuth.instance;
-  void loginUser() async {
+  void _loginUser() async {
     await _auth.signInWithEmailAndPassword(
       email: _emailtextEditingController.text.trim(),
       password: _passwordtextEditingController.text.trim(),
@@ -71,14 +71,14 @@ class _LoginState extends State<Login> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width - 20,
                     height: 60,
-                    child: FlatButton(
+                    child: RaisedButton(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(6.0)),
                       color: Colors.yellow.shade900,
                       onPressed: () {
                         _emailtextEditingController.text.isNotEmpty &&
                                 _passwordtextEditingController.text.isNotEmpty
-                            ? loginUser()
+                            ? _loginUser()
                             : showDialog(
                                 context: context,
                                 builder: (c) {

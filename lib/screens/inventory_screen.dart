@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:tinda/authentication/authentication.dart';
 import 'package:tinda/widgets/categoryBuilder/edit_category.dart';
 
 import 'package:tinda/widgets/categoryBuilder/new_category.dart';
+import 'package:tinda/widgets/drawer/drawer_navigation.dart';
 import 'package:tinda/widgets/menuItem.dart';
 
 class InventoryScreen extends StatefulWidget {
@@ -13,32 +13,116 @@ class InventoryScreen extends StatefulWidget {
 }
 
 class _InventoryScreenState extends State<InventoryScreen> {
+  Stream userstream;
+  String fuser;
+
+  @override
+  void initState() {
+    super.initState();
+    getStream();
+  }
+
+  CollectionReference categcollection =
+      FirebaseFirestore.instance.collection('categories');
+
+  getStream() async {
+    var firebaseUser = FirebaseAuth.instance.currentUser;
+    setState(() {
+      userstream = categcollection
+          .where('userId', isEqualTo: firebaseUser.uid)
+          .orderBy('createdAt')
+          .snapshots();
+    });
+  }
+
+  _scanDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (param) {
+          return AlertDialog(
+            backgroundColor: Theme.of(context).primaryColor,
+            title: Text(
+              'Create New Item',
+              style: TextStyle(color: Colors.white),
+            ),
+            content: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width - 20,
+                    height: 60,
+                    child: RaisedButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6.0)),
+                        color: Colors.yellow.shade900,
+                        child: Text(
+                          'Scan Barcode Now',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: () {
+                          // Navigator.pop(context);
+                          // scanBarcodeNormal()
+                          //     .then((value) => _selectionDialog(context));
+                        }),
+                  ),
+                  SizedBox(height: 10.0),
+                  Text(
+                    'OR',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(height: 10.0),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width - 20,
+                    height: 60,
+                    child: RaisedButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6.0)),
+                        color: Colors.yellow.shade900,
+                        child: Text(
+                          'Create item without Barcode',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          // _selectionDialog(context);
+                          // _scanBarcode = null;
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => NewCategory()));
+                        }),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: DrawerNavigation(),
       appBar: AppBar(
-        title: Text('Inventory Screen'),
-        actions: [
-          FlatButton(
-              onPressed: () {
-                FirebaseAuth.instance.signOut();
-              },
-              child: Text('Sign Out'))
-        ],
+        centerTitle: true,
+        title: Text('Inventory Manager'),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => NewCategory()));
+          _scanDialog(context);
         },
       ),
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection('categories')
-            .orderBy('createdAt')
-            .snapshots(),
-        builder: (ctx, AsyncSnapshot<QuerySnapshot> categSnapshot) {
+      body: StreamBuilder<QuerySnapshot>(
+        stream: userstream
+        // FirebaseFirestore.instance
+        //     .collection('categories')
+        //     .orderBy('createdAt')
+        //     .snapshots()
+        ,
+        builder: (ctx, categSnapshot) {
           if (categSnapshot.connectionState == ConnectionState.waiting) {
             return Center(
               child: CircularProgressIndicator(),
@@ -99,7 +183,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
                                 ),
                               ),
                               PopupMenuButton(onSelected: (MenuItem menuItem) {
-                                print(menuItem.menuVal);
                                 if (menuItem.menuVal == "Edit") {
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (BuildContext context) =>

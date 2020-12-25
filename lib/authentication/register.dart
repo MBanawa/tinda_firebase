@@ -147,7 +147,7 @@ class _RegisterState extends State<Register> {
             SizedBox(
               width: MediaQuery.of(context).size.width - 20,
               height: 60,
-              child: FlatButton(
+              child: RaisedButton(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(6.0)),
                 color: Colors.yellow.shade900,

@@ -7,7 +7,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:tinda/home_page.dart';
 import 'package:tinda/authentication/authentication.dart';
 import 'package:tinda/providers/phonesize_provider.dart';
-import 'widgets/loadingWidget.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
