@@ -27,13 +27,13 @@ class CustomTextField extends StatelessWidget {
       margin: EdgeInsets.all(8.0),
       child: TextField(
         autocorrect: false,
-        style: TextStyle(color: Theme.of(context).primaryColor),
+        style: TextStyle(color: Colors.teal.shade900),
         onChanged: onChanged,
         controller: controller,
         obscureText: isObscure,
         cursorColor: Colors.teal,
         decoration: InputDecoration(
-          hintStyle: TextStyle(color: Colors.teal),
+          hintStyle: TextStyle(color: Colors.teal.shade900),
           border: InputBorder.none,
           prefixIcon: data == null
               ? null

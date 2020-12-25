@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
-import 'package:tinda/providers/phonesize_provider.dart';
 import 'package:tinda/widgets/customTextField.dart';
 import 'package:tinda/widgets/roundIconButton.dart';
 
@@ -21,8 +19,6 @@ class EditCategory extends StatefulWidget {
 class _EditCategoryState extends State<EditCategory> {
   var _editCategoryNameController = TextEditingController();
   var _editCategoryDescriptionController = TextEditingController();
-  var _nameValue;
-  var _descValue;
 
   @override
   void initState() {
@@ -31,8 +27,6 @@ class _EditCategoryState extends State<EditCategory> {
       _editCategoryNameController.text = widget.name;
       _editCategoryDescriptionController.text = widget.desc;
       categcolor = widget.color;
-      _nameValue = widget.name;
-      _descValue = widget.desc;
       pickerColor = Color(widget.color);
     });
   }
