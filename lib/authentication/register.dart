@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:tinda/home_page.dart';
-import 'dart:io';
 
 import 'package:tinda/widgets/customTextField.dart';
 import 'package:tinda/widgets/errorDialog.dart';
-import 'package:tinda/widgets/loadingDialog.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -25,19 +21,7 @@ class _RegisterState extends State<Register> {
   final TextEditingController _cPasswordtextEditingController =
       TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  String userImageUrl = '';
-  File _imageFile;
   FirebaseAuth _auth = FirebaseAuth.instance;
-
-  final _picker = ImagePicker();
-  void _selectAndPickImage() async {
-    final pickedFile = await _picker.getImage(source: ImageSource.gallery);
-    setState(() {
-      if (pickedFile != null) {
-        _imageFile = File(pickedFile.path);
-      }
-    });
-  }
 
 //-----------------
   Future<void> register() async {
@@ -73,7 +57,6 @@ class _RegisterState extends State<Register> {
         .then((auth) {
       firebaseUser = auth.user;
     }).catchError((error) {
-      Navigator.pop(context);
       showDialog(
           context: context,
           builder: (c) {
@@ -84,11 +67,7 @@ class _RegisterState extends State<Register> {
     });
 
     if (firebaseUser != null) {
-      saveUserInfoToFireStore(firebaseUser).then((value) {
-        Navigator.pop(context);
-        Route route = MaterialPageRoute(builder: (c) => HomePage());
-        Navigator.pushReplacement(context, route);
-      });
+      saveUserInfoToFireStore(firebaseUser);
     }
   }
 
@@ -98,8 +77,9 @@ class _RegisterState extends State<Register> {
       'uid': fUser.uid,
       'email': fUser.email,
       'name': _nametextEditingController.text.trim(),
-      'url': userImageUrl,
     });
+    Navigator.of(context)
+        .pushReplacement(MaterialPageRoute(builder: (context) => HomePage()));
   }
 //-----------------
 
