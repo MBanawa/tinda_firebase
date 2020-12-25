@@ -66,8 +66,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                         onPressed: () {
                           Navigator.pop(context);
                           scanBarcodeNormal()
-                              // .then((value) => _selectionDialog(context))
-                              ;
+                              .then((value) => _selectionDialog(context));
                         }),
                   ),
                   SizedBox(height: 10.0),
@@ -92,10 +91,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
                         ),
                         onPressed: () {
                           Navigator.pop(context);
-                          // _selectionDialog(context);
-                          // _scanBarcode = null;
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => NewCategory()));
+                          _selectionDialog(context);
+                          _scanBarcode = null;
                         }),
                   ),
                 ],
@@ -129,6 +126,85 @@ class _InventoryScreenState extends State<InventoryScreen> {
       }
     });
     print('Barcode $_scanBarcode');
+  }
+
+  _selectionDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (param) {
+          return AlertDialog(
+            actions: [
+              FlatButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+              _scanBarcode == 'No Data'
+                  ? FlatButton(
+                      color: Colors.grey,
+                      onPressed: () {},
+                      child: Text(
+                        'Continue',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    )
+                  : FlatButton(
+                      color: Colors.blue,
+                      onPressed: () {
+                        Navigator.pop(context);
+                        // Navigator.of(context).push(MaterialPageRoute(
+                        //     builder: (context) => ItemScreen(
+                        //           category: _selectedValue,
+                        //           barcode: _scanBarcode,
+                        //         )));
+                      },
+                      child: Text('Continue'),
+                    ),
+            ],
+            title: Text(_scanBarcode == 'No Data'
+                ? 'No Barcode Data Captured'
+                : 'Please Select a Category ${_scanBarcode != null ? _scanBarcode : 'for this new item'}'),
+            content: _scanBarcode == 'No Data'
+                ? RaisedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      scanBarcodeNormal()
+                          .then((value) => _selectionDialog(context));
+                    },
+                    child: Text('Scan Again'),
+                  )
+                : SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        SizedBox(height: 10.0),
+                        Text(
+                          'OR',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 10.0),
+                        RaisedButton(
+                            child: Text('Create a new Category'),
+                            onPressed: () {
+                              Navigator.pop(context, 'NewCategory');
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => NewCategory()));
+                            }),
+                      ],
+                    ),
+                  ),
+          );
+        });
   }
 
   @override
