@@ -25,20 +25,46 @@ class _FirebaseDropDownState extends State<FirebaseDropDown> {
                 child: CircularProgressIndicator(),
               );
 
-            return DropdownButton(
-              items: snapshot.data.docs.map((DocumentSnapshot document) {
-                return DropdownMenuItem(
-                  value: document.data()['categoryname'],
-                  child: Text(document.data()['categoryname']),
-                );
-              }).toList(),
-              value: _selectedValue,
-              onChanged: (categValue) {
-                setState(() {
-                  _selectedValue = categValue;
-                });
-              },
-              hint: Text('Select a Category'),
+            return Container(
+              width: 400,
+              height: 60,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(6),
+                color: Colors.white,
+              ),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton(
+                  items: snapshot.data.docs.map((DocumentSnapshot document) {
+                    return DropdownMenuItem(
+                      value: document.data()['categoryname'],
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          document.data()['categoryname'],
+                          style: TextStyle(color: Colors.teal.shade900),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                  value: _selectedValue,
+                  onChanged: (categValue) {
+                    setState(() {
+                      _selectedValue = categValue;
+                    });
+                  },
+                  hint: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Select a Category',
+                      style: TextStyle(
+                        color: Colors.teal.shade900,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ),
             );
           }),
     );

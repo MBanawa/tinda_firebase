@@ -8,7 +8,6 @@ import 'package:tinda/widgets/categoryBuilder/edit_category.dart';
 import 'package:tinda/widgets/categoryBuilder/new_category.dart';
 import 'package:tinda/widgets/drawer/drawer_navigation.dart';
 import 'package:tinda/widgets/dropDown.dart';
-import 'package:tinda/widgets/loadingWidget.dart';
 import 'package:tinda/widgets/menuItem.dart';
 
 class InventoryScreen extends StatefulWidget {
@@ -20,6 +19,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
   String _scanBarcode = '';
   Stream userstream;
   String fuser;
+  var _selectedValue;
 
   @override
   void initState() {
@@ -130,7 +130,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
     print('Barcode $_scanBarcode');
   }
 
-  var _selectedValue;
   FirebaseDropDown _dropDownList() => FirebaseDropDown(
         onChanged: (value) {
           _selectedValue = value;
@@ -143,6 +142,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
         barrierDismissible: true,
         builder: (param) {
           return AlertDialog(
+            backgroundColor: Theme.of(context).primaryColor,
             actions: [
               FlatButton(
                 onPressed: () {
@@ -151,21 +151,25 @@ class _InventoryScreenState extends State<InventoryScreen> {
                 child: Text(
                   'Cancel',
                   style: TextStyle(
-                    color: Colors.grey,
+                    color: Colors.teal[50],
                   ),
                 ),
               ),
               _scanBarcode == 'No Data'
-                  ? FlatButton(
-                      color: Colors.grey,
+                  ? RaisedButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6.0)),
+                      color: Colors.yellow.shade900,
                       onPressed: () {},
                       child: Text(
                         'Continue',
                         style: TextStyle(color: Colors.white),
                       ),
                     )
-                  : FlatButton(
-                      color: Colors.blue,
+                  : RaisedButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6.0)),
+                      color: Colors.yellow.shade900,
                       onPressed: () {
                         Navigator.pop(context);
                         // Navigator.of(context).push(MaterialPageRoute(
@@ -174,20 +178,37 @@ class _InventoryScreenState extends State<InventoryScreen> {
                         //           barcode: _scanBarcode,
                         //         )));
                       },
-                      child: Text('Continue'),
+                      child: Text(
+                        'Continue',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
             ],
-            title: Text(_scanBarcode == 'No Data'
-                ? 'No Barcode Data Captured'
-                : 'Please Select a Category ${_scanBarcode != null ? _scanBarcode : 'for this new item'}'),
+            title: Text(
+              _scanBarcode == 'No Data'
+                  ? 'No Barcode Data Captured'
+                  : 'Please Select a Category ${_scanBarcode != null ? _scanBarcode : 'for this new item'}',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
             content: _scanBarcode == 'No Data'
-                ? RaisedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      scanBarcodeNormal()
-                          .then((value) => _selectionDialog(context));
-                    },
-                    child: Text('Scan Again'),
+                ? SizedBox(
+                    height: 60,
+                    child: RaisedButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6.0)),
+                      color: Colors.yellow.shade900,
+                      onPressed: () {
+                        Navigator.pop(context);
+                        scanBarcodeNormal()
+                            .then((value) => _selectionDialog(context));
+                      },
+                      child: Text(
+                        'Scan Again',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
                   )
                 : SingleChildScrollView(
                     child: Column(
@@ -198,18 +219,29 @@ class _InventoryScreenState extends State<InventoryScreen> {
                           'OR',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
                         ),
                         SizedBox(height: 10.0),
-                        RaisedButton(
-                            child: Text('Create a new Category'),
-                            onPressed: () {
-                              Navigator.pop(context, 'NewCategory');
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => NewCategory()));
-                            }),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width - 20,
+                          height: 60,
+                          child: RaisedButton(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(6.0)),
+                              color: Colors.yellow.shade900,
+                              child: Text(
+                                'Create a new Category',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context, 'NewCategory');
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => NewCategory()));
+                              }),
+                        ),
                       ],
                     ),
                   ),
