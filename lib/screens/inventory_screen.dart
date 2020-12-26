@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:provider/provider.dart';
+
+import 'package:tinda/providers/barcode_provider.dart';
 import 'package:tinda/providers/category_provider.dart';
 import 'package:tinda/widgets/categoryBuilder/edit_category.dart';
-
 import 'package:tinda/widgets/categoryBuilder/new_category.dart';
 import 'package:tinda/widgets/drawer/drawer_navigation.dart';
 import 'package:tinda/widgets/dropDown.dart';
@@ -128,6 +129,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
         _scanBarcode = 'No Data';
       } else {
         _scanBarcode = barcodeScanRes;
+        Provider.of<BarcodeProvider>(context, listen: false)
+            .acceptBarcode(_scanBarcode);
       }
     });
   }

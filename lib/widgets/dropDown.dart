@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tinda/providers/barcode_provider.dart';
 import 'package:tinda/providers/category_provider.dart';
 
 typedef OnChangeCallback = void Function(dynamic value);

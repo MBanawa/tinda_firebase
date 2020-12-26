@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tinda/main.dart';
 import 'package:tinda/widgets/itemBuilder/new_item.dart';
 
 class CashierScreen extends StatelessWidget {
