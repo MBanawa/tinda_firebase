@@ -90,6 +90,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                         child: Text(
                           'Create item without Barcode',
                           style: TextStyle(color: Colors.white),
+                          textAlign: TextAlign.center,
                         ),
                         onPressed: () {
                           Navigator.pop(context);
