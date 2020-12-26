@@ -7,6 +7,8 @@ import 'package:tinda/widgets/categoryBuilder/edit_category.dart';
 
 import 'package:tinda/widgets/categoryBuilder/new_category.dart';
 import 'package:tinda/widgets/drawer/drawer_navigation.dart';
+import 'package:tinda/widgets/dropDown.dart';
+import 'package:tinda/widgets/loadingWidget.dart';
 import 'package:tinda/widgets/menuItem.dart';
 
 class InventoryScreen extends StatefulWidget {
@@ -128,6 +130,13 @@ class _InventoryScreenState extends State<InventoryScreen> {
     print('Barcode $_scanBarcode');
   }
 
+  var _selectedValue;
+  FirebaseDropDown _dropDownList() => FirebaseDropDown(
+        onChanged: (value) {
+          _selectedValue = value;
+        },
+      );
+
   _selectionDialog(BuildContext context) {
     return showDialog(
         context: context,
@@ -183,6 +192,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                 : SingleChildScrollView(
                     child: Column(
                       children: [
+                        _dropDownList(),
                         SizedBox(height: 10.0),
                         Text(
                           'OR',
