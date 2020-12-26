@@ -3,11 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:provider/provider.dart';
+import 'package:tinda/providers/category_provider.dart';
 import 'package:tinda/widgets/categoryBuilder/edit_category.dart';
 
 import 'package:tinda/widgets/categoryBuilder/new_category.dart';
 import 'package:tinda/widgets/drawer/drawer_navigation.dart';
 import 'package:tinda/widgets/dropDown.dart';
+import 'package:tinda/widgets/itemBuilder/new_item.dart';
 import 'package:tinda/widgets/menuItem.dart';
 
 class InventoryScreen extends StatefulWidget {
@@ -111,7 +114,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           "#ff6666", "Cancel", true, ScanMode.BARCODE);
-      print(barcodeScanRes);
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
     }
@@ -128,12 +130,13 @@ class _InventoryScreenState extends State<InventoryScreen> {
         _scanBarcode = barcodeScanRes;
       }
     });
-    print('Barcode $_scanBarcode');
   }
 
   FirebaseDropDown _dropDownList() => FirebaseDropDown(
         onChanged: (value) {
-          _selectedValue = value;
+          setState(() {
+            _selectedValue = value;
+          });
         },
       );
 
@@ -157,27 +160,22 @@ class _InventoryScreenState extends State<InventoryScreen> {
                 ),
               ),
               _scanBarcode == 'No Data'
-                  ? RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(6.0)),
-                      color: Colors.yellow.shade900,
-                      onPressed: () {},
-                      child: Text(
-                        'Continue',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    )
+                  ? null
                   : RaisedButton(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(6.0)),
                       color: Colors.yellow.shade900,
-                      onPressed: () {
+                      onPressed: () async {
                         Navigator.pop(context);
-                        // Navigator.of(context).push(MaterialPageRoute(
-                        //     builder: (context) => ItemScreen(
-                        //           category: _selectedValue,
-                        //           barcode: _scanBarcode,
-                        //         )));
+                        final providedCategory = Provider.of<CategoryProvider>(
+                            context,
+                            listen: false);
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => NewItem(
+                                  category:
+                                      providedCategory.getCategory.category,
+                                  barcode: _scanBarcode,
+                                )));
                       },
                       child: Text(
                         'Continue',

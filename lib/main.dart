@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'package:tinda/home_page.dart';
 import 'package:tinda/authentication/authentication.dart';
+import 'package:tinda/providers/category_provider.dart';
 import 'package:tinda/providers/phonesize_provider.dart';
 
 Future<void> main() async {
@@ -23,6 +24,7 @@ class Tinda extends StatelessWidget {
         return MultiProvider(
           providers: [
             ChangeNotifierProvider(create: (ctx) => PhoneSize()),
+            ChangeNotifierProvider(create: (ctx) => CategoryProvider()),
           ],
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
