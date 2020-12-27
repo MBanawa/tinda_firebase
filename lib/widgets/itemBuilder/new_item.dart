@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -108,11 +109,21 @@ class _NewItemState extends State<NewItem> {
 
   void _saveNewItem() async {
     FocusScope.of(context).unfocus();
+
     final user = FirebaseAuth.instance.currentUser;
     final userData = await FirebaseFirestore.instance
         .collection('users')
         .doc(user.uid)
         .get();
+
+    final ref = FirebaseStorage.instance
+        .ref()
+        .child('itemImage')
+        .child(user.uid + '.jpg');
+
+    await ref.putFile(imageFile);
+    final url = await ref.getDownloadURL();
+
     final itemDoc = await FirebaseFirestore.instance.collection('items').add({
       'userId': user.uid,
       'userName': userData.data()['name'],
@@ -121,10 +132,12 @@ class _NewItemState extends State<NewItem> {
       'barcode': widget.barcode,
       'category': widget.category,
       'quantity': _itemQuantityController.text.trim(),
+      'itemImage': url,
     });
 
     _addSupplier(itemDoc.id);
     _itemSellPrice(itemDoc.id);
+
     Navigator.pop(context);
   }
 

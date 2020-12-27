@@ -12,6 +12,7 @@ import 'package:tinda/widgets/drawer/drawer_navigation.dart';
 import 'package:tinda/widgets/dropDown.dart';
 import 'package:tinda/widgets/itemBuilder/new_item.dart';
 import 'package:tinda/widgets/menuItem.dart';
+import 'package:tinda/screens/itemsPerCategory_screen.dart';
 
 class InventoryScreen extends StatefulWidget {
   @override
@@ -295,7 +296,11 @@ class _InventoryScreenState extends State<InventoryScreen> {
                 elevation: 3,
                 child: InkWell(
                   splashColor: Colors.teal.withAlpha(80),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ItemsPerCategory(
+                            categDocs[index].data()['categoryname'])));
+                  },
                   child: Container(
                     child: Stack(
                       children: <Widget>[
