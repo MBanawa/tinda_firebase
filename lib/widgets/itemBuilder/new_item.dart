@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -104,7 +106,54 @@ class _NewItemState extends State<NewItem> {
     );
   }
 
-  void _saveNewItem(BuildContext context) {}
+  void _saveNewItem() async {
+    FocusScope.of(context).unfocus();
+    final user = FirebaseAuth.instance.currentUser;
+    final userData = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .get();
+    final itemDoc = await FirebaseFirestore.instance.collection('items').add({
+      'userId': user.uid,
+      'userName': userData.data()['name'],
+      'createdAt': Timestamp.now(),
+      'itemName': _itemNameController.text.trim(),
+      'barcode': widget.barcode,
+      'category': widget.category,
+      'quantity': _itemQuantityController.text.trim(),
+    });
+
+    _addSupplier(itemDoc.id);
+    _itemSellPrice(itemDoc.id);
+    Navigator.pop(context);
+  }
+
+  void _addSupplier(String documentId) async {
+    final itemCollection = FirebaseFirestore.instance
+        .collection('items')
+        .doc(documentId)
+        .collection('Suppliers');
+    itemCollection.add({
+      'entryDate': Timestamp.now(),
+      'supplier': _itemSupplierController.text.trim(),
+      'buyDate': _itemBuyDateController.text.trim(),
+      'buyPrice': _itemBuyPriceController.text.trim(),
+      'quantity': _itemQuantityController.text.trim(),
+    });
+  }
+
+  void _itemSellPrice(String documentId) async {
+    final itemCollection = FirebaseFirestore.instance
+        .collection('items')
+        .doc(documentId)
+        .collection('SellPrice');
+    itemCollection.add({
+      'entryDate': Timestamp.now(),
+      'buyDate': _itemBuyDateController.text.trim(),
+      'buyPrice': _itemBuyPriceController.text.trim(),
+      'sellPrice': _itemSellPriceController.text.trim(),
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -344,7 +393,7 @@ class _NewItemState extends State<NewItem> {
                         hintText: 'How much will you sell the item for?',
                         isObscure: false,
                         onSubmitted: (_) {
-                          _saveNewItem(context);
+                          _saveNewItem();
                         },
                       ),
                       SizedBox(
@@ -359,7 +408,7 @@ class _NewItemState extends State<NewItem> {
                                 borderRadius: BorderRadius.circular(6.0)),
                             color: Colors.yellow.shade900,
                             onPressed: () {
-                              Navigator.pop(context, 'Save');
+                              _saveNewItem();
                             },
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
