@@ -53,8 +53,9 @@ class _NewItemState extends State<NewItem> {
 
   pickImage(ImageSource imageSource) async {
     Navigator.pop(context);
-    final pickedFile =
-        await ImagePicker().getImage(source: imageSource, imageQuality: 30);
+    final pickedFile = await ImagePicker().getImage(
+        source: imageSource,
+        imageQuality: imageSource == ImageSource.camera ? 30 : 50);
     setState(() {
       imageFile = File(pickedFile.path);
     });
@@ -69,7 +70,7 @@ class _NewItemState extends State<NewItem> {
           title: Text(
             'Upload an Image',
             style: TextStyle(
-              color: Colors.teal,
+              color: Colors.white,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -78,7 +79,7 @@ class _NewItemState extends State<NewItem> {
               child: Text(
                 'Take a Picture',
                 style: TextStyle(
-                  color: Colors.teal,
+                  color: Colors.white,
                 ),
               ),
               onPressed: () => pickImage(ImageSource.camera),
@@ -87,7 +88,7 @@ class _NewItemState extends State<NewItem> {
               child: Text(
                 'Select from Gallery',
                 style: TextStyle(
-                  color: Colors.teal,
+                  color: Colors.white,
                 ),
               ),
               onPressed: () => pickImage(ImageSource.gallery),
@@ -96,7 +97,7 @@ class _NewItemState extends State<NewItem> {
               child: Text(
                 'Cancel',
                 style: TextStyle(
-                  color: Colors.teal,
+                  color: Colors.white,
                 ),
               ),
               onPressed: () {

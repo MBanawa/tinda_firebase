@@ -40,6 +40,7 @@ dependencies:
   flutter_barcode_scanner: ^1.0.1  
   font_awesome_flutter: ^8.11.0
   provider: ^4.3.2+2
+  simple_animations: ^2.4.2
   shared_preferences: ^0.5.12+4 
 
 dev_dependencies:

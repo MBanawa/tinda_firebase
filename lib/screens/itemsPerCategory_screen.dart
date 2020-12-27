@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:tinda/animation/FadeAnimation.dart';
+
+import 'package:tinda/screens/itemDetail_screen.dart';
 
 class ItemsPerCategory extends StatefulWidget {
   final String category;
@@ -49,21 +52,24 @@ class _ItemsPerCategoryState extends State<ItemsPerCategory> {
             );
           }
           final itemDocs = snapshot.data.docs;
-          return GridView.builder(
-            gridDelegate:
-                SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+
+          return ListView.builder(
             physics: BouncingScrollPhysics(),
             itemCount: itemDocs.length,
             itemBuilder: (context, index) {
-              return Card(
-                margin: const EdgeInsets.all(8),
-                elevation: 3,
+              return Padding(
+                padding: const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 4.0),
                 child: InkWell(
                   splashColor: Colors.teal.withAlpha(80),
                   onTap: () {},
                   child: Container(
-                    child:
-                        Center(child: Text(itemDocs[index].data()['itemName'])),
+                    // itemDocs[index].data()['itemName']
+                    child: makeItem(
+                      itemDocs[index].data()['itemImage'],
+                      itemDocs[index].data()['itemName'],
+                      itemDocs[index].data()['quantity'],
+                      context,
+                    ),
                   ),
                 ),
               );
@@ -73,4 +79,128 @@ class _ItemsPerCategoryState extends State<ItemsPerCategory> {
       ),
     );
   }
+}
+
+Widget makeItem(
+  image,
+  tag,
+  quantity,
+  context,
+) {
+  return Hero(
+    tag: tag,
+    child: GestureDetector(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ItemDetail(image, tag, quantity)));
+      },
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        height: 250,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(6),
+          image: DecorationImage(image: NetworkImage(image), fit: BoxFit.cover),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey[500],
+              blurRadius: 10,
+              offset: Offset(0, 10),
+            )
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 8,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      FadeAnimation(
+                        .5,
+                        Container(
+                          color: Colors.teal[900].withOpacity(0.5),
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.only(left: 4.0, right: 4.0),
+                            child: Text(
+                              tag,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      FadeAnimation(
+                        0.6,
+                        Padding(
+                          padding: const EdgeInsets.only(left: 4.0, right: 4.0),
+                          child: Container(
+                            color: Colors.teal[900].withOpacity(0.5),
+                            child: Text(
+                              'In Stock: $quantity',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle, color: Colors.yellow.shade900),
+                    child: Center(
+                      child: Icon(
+                        Icons.edit,
+                        size: 20,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+            FadeAnimation(
+              0.7,
+              Container(
+                color: Colors.teal[900].withOpacity(0.5),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 4.0, right: 4.0),
+                  child: Text(
+                    'Buy Price: PHP',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
 }
