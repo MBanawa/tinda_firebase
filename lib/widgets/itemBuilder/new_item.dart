@@ -53,7 +53,8 @@ class _NewItemState extends State<NewItem> {
 
   pickImage(ImageSource imageSource) async {
     Navigator.pop(context);
-    final pickedFile = await ImagePicker().getImage(source: imageSource);
+    final pickedFile =
+        await ImagePicker().getImage(source: imageSource, imageQuality: 30);
     setState(() {
       imageFile = File(pickedFile.path);
     });
@@ -119,7 +120,7 @@ class _NewItemState extends State<NewItem> {
     final ref = FirebaseStorage.instance
         .ref()
         .child('itemImage')
-        .child(user.uid + '.jpg');
+        .child(Timestamp.now().millisecondsSinceEpoch.toString() + '.jpg');
 
     await ref.putFile(imageFile);
     final url = await ref.getDownloadURL();
@@ -188,7 +189,7 @@ class _NewItemState extends State<NewItem> {
                 height: MediaQuery.of(context).size.height * 1.4,
                 width: MediaQuery.of(context).size.width,
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
+                  padding: const EdgeInsets.only(top: 4.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -197,29 +198,42 @@ class _NewItemState extends State<NewItem> {
                           takeImage(context);
                         },
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding:
+                              const EdgeInsets.fromLTRB(15.0, 8.0, 15.0, 15.0),
                           child: Container(
                             width: MediaQuery.of(context).size.width - 20,
                             child: Center(
-                              child: AspectRatio(
-                                aspectRatio: 16 / 9,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(6.0),
-                                    color: Colors.teal.shade300,
-                                    image: imageFile == null
-                                        ? DecorationImage(
-                                            image: ExactAssetImage(
-                                                'assets/images/camera.png',
-                                                scale: 8.0),
-                                            fit: BoxFit.scaleDown,
-                                          )
-                                        : DecorationImage(
-                                            image: FileImage(imageFile),
-                                            fit: BoxFit.cover,
-                                          ),
-                                  ),
-                                ),
+                              child: CircleAvatar(
+                                radius: 100,
+                                backgroundColor: Colors.teal.shade300,
+                                backgroundImage: imageFile == null
+                                    ? null
+                                    : FileImage(imageFile),
+                                child: imageFile == null
+                                    ? Image.asset(
+                                        'assets/images/camera.png',
+                                        width: 50,
+                                        height: 50,
+                                      )
+                                    : null,
+
+                                // Container(
+                                //   decoration: BoxDecoration(
+                                //     // borderRadius: BorderRadius.circular(6.0),
+                                //     color: Colors.teal.shade300,
+                                //     image: imageFile == null
+                                //         ? DecorationImage(
+                                //             image: ExactAssetImage(
+                                //                 'assets/images/camera.png',
+                                //                 scale: 8.0),
+                                //             fit: BoxFit.scaleDown,
+                                //           )
+                                //         : DecorationImage(
+                                //             image: FileImage(imageFile),
+                                //             fit: BoxFit.contain,
+                                //           ),
+                                //   ),
+                                // ),
                               ),
                             ),
                           ),
