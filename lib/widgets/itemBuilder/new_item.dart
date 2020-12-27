@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 import 'package:tinda/widgets/customTextField.dart';
 
@@ -21,8 +22,31 @@ class _NewItemState extends State<NewItem> {
   var _itemSupplierController = TextEditingController();
   var _itemBuyPriceController = TextEditingController();
   var _itemSellPriceController = TextEditingController();
-
+  FocusNode _quantFocusNode = FocusNode();
+  FocusNode _buyDateFocusNode = FocusNode();
+  FocusNode _supplierFocusNode = FocusNode();
+  FocusNode _buyPriceFocusNode = FocusNode();
+  FocusNode _sellPriceFocusNode = FocusNode();
   File imageFile;
+
+  DateTime _dateTime = DateTime.now();
+
+  _selectedItemDate(BuildContext context) async {
+    var _pickedDate = await showDatePicker(
+      context: context,
+      initialDate: _dateTime,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2030),
+    );
+
+    if (_pickedDate != null) {
+      setState(() {
+        _dateTime = _pickedDate;
+        _itemBuyDateController.text =
+            DateFormat('dd-MMM-yyyy').format(_pickedDate);
+      });
+    }
+  }
 
   pickImage(ImageSource imageSource) async {
     Navigator.pop(context);
@@ -38,7 +62,7 @@ class _NewItemState extends State<NewItem> {
       builder: (con) {
         return SimpleDialog(
           title: Text(
-            'Item Image',
+            'Upload an Image',
             style: TextStyle(
               color: Colors.teal,
               fontWeight: FontWeight.bold,
@@ -80,12 +104,14 @@ class _NewItemState extends State<NewItem> {
     );
   }
 
+  void _saveNewItem(BuildContext context) {}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'New Item',
+          'Create a New Item',
         ),
         centerTitle: true,
       ),
@@ -102,6 +128,7 @@ class _NewItemState extends State<NewItem> {
                 child: Padding(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       GestureDetector(
                         onTap: () {
@@ -127,7 +154,7 @@ class _NewItemState extends State<NewItem> {
                                           )
                                         : DecorationImage(
                                             image: FileImage(imageFile),
-                                            fit: BoxFit.fill,
+                                            fit: BoxFit.cover,
                                           ),
                                   ),
                                 ),
@@ -212,56 +239,136 @@ class _NewItemState extends State<NewItem> {
                           ),
                         ],
                       ),
-                      CustomTextField(
-                        controller: _itemNameController,
-                        hintText: 'Enter the item\'s name here..',
-                        isObscure: false,
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+                        child: Text(
+                          'Item Name:',
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                       CustomTextField(
+                        controller: _itemNameController,
+                        keyboardType: TextInputType.text,
+                        hintText: 'Enter the item\'s name here..',
+                        isObscure: false,
+                        onSubmitted: (_) {
+                          FocusScope.of(context).requestFocus(_quantFocusNode);
+                        },
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+                        child: Text(
+                          'Quantity:',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      CustomTextField(
+                        focusNode: _quantFocusNode,
+                        keyboardType: TextInputType.number,
                         controller: _itemQuantityController,
                         hintText: 'How many pieces are you adding?',
                         isObscure: false,
+                        onSubmitted: (_) {
+                          FocusScope.of(context)
+                              .requestFocus(_buyDateFocusNode);
+                        },
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+                        child: Text(
+                          'Purchase Date:',
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                       CustomTextField(
+                        focusNode: _buyDateFocusNode,
+                        keyboardType: TextInputType.datetime,
                         controller: _itemBuyDateController,
                         hintText: 'When did you buy the item?',
                         isObscure: false,
+                        onTap: () {
+                          _selectedItemDate(context);
+                        },
+                        onSubmitted: (_) {
+                          FocusScope.of(context)
+                              .requestFocus(_supplierFocusNode);
+                        },
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+                        child: Text(
+                          'Supplier Name:',
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                       CustomTextField(
+                        focusNode: _supplierFocusNode,
+                        keyboardType: TextInputType.text,
                         controller: _itemSupplierController,
                         hintText: 'Where did you buy the item?',
                         isObscure: false,
+                        onSubmitted: (_) {
+                          FocusScope.of(context)
+                              .requestFocus(_buyPriceFocusNode);
+                        },
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+                        child: Text(
+                          'Purchase Price:',
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                       CustomTextField(
+                        focusNode: _buyPriceFocusNode,
+                        keyboardType: TextInputType.number,
                         controller: _itemBuyPriceController,
                         hintText: 'How much did you buy the item for?',
                         isObscure: false,
+                        onSubmitted: (_) {
+                          FocusScope.of(context)
+                              .requestFocus(_sellPriceFocusNode);
+                        },
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+                        child: Text(
+                          'Sell Price:',
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                       CustomTextField(
+                        focusNode: _sellPriceFocusNode,
+                        keyboardType: TextInputType.number,
                         controller: _itemSellPriceController,
                         hintText: 'How much will you sell the item for?',
                         isObscure: false,
+                        onSubmitted: (_) {
+                          _saveNewItem(context);
+                        },
                       ),
                       SizedBox(
-                        height: 6,
+                        height: 15,
                       ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width - 16,
-                        height: 60,
-                        child: RaisedButton(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(6.0)),
-                          color: Colors.yellow.shade900,
-                          onPressed: () {
-                            Navigator.pop(context, 'Save');
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Center(
-                              child: Text(
-                                'Save',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
+                      Center(
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width - 16,
+                          height: 60,
+                          child: RaisedButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6.0)),
+                            color: Colors.yellow.shade900,
+                            onPressed: () {
+                              Navigator.pop(context, 'Save');
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Center(
+                                child: Text(
+                                  'Save',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 18),
+                                ),
                               ),
                             ),
                           ),

@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:provider/provider.dart';
+import 'package:tinda/providers/category_provider.dart';
 
 import 'package:tinda/widgets/customTextField.dart';
 import 'package:tinda/widgets/roundIconButton.dart';
@@ -100,6 +102,7 @@ class _NewCategoryState extends State<NewCategory> {
       'categorycolor': categcolor != null ? categcolor : 4278228616,
       'createdAt': Timestamp.now(),
     });
+
     _categoryNameController.clear();
     _categoryDescriptionController.clear();
   }
@@ -124,40 +127,57 @@ class _NewCategoryState extends State<NewCategory> {
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 15, bottom: 4),
-                          child: RoundIconButton(
-                            onPressed: () {
-                              _colorDialog(context);
-                            },
-                            icon: Icon(
-                              Icons.edit,
-                              color: Colors.white,
-                              size: 30,
-                            ),
-                            colour: pickerColor,
-                            elevation: 6.0,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 15.0),
-                          child: Text(
-                            'Category Color',
-                            style: TextStyle(
+                    Center(
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 15, bottom: 4),
+                            child: RoundIconButton(
+                              onPressed: () {
+                                _colorDialog(context);
+                              },
+                              icon: Icon(
+                                Icons.edit,
                                 color: Colors.white,
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.bold),
+                                size: 30,
+                              ),
+                              colour: pickerColor,
+                              elevation: 6.0,
+                            ),
                           ),
-                        ),
-                      ],
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 15.0),
+                            child: Text(
+                              'Category Color',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+                      child: Text(
+                        'Category Name:',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                     CustomTextField(
                       controller: _categoryNameController,
                       hintText: 'Enter a category name here..',
                       isObscure: false,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+                      child: Text(
+                        'Category Description:',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                     CustomTextField(
                       controller: _categoryDescriptionController,
@@ -165,26 +185,32 @@ class _NewCategoryState extends State<NewCategory> {
                       isObscure: false,
                     ),
                     SizedBox(
-                      height: 6,
+                      height: 16,
                     ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width - 16,
-                      height: 60,
-                      child: RaisedButton(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6.0)),
-                        color: Colors.yellow.shade900,
-                        onPressed: () {
-                          Navigator.pop(context, 'Save');
-                          _newCategory();
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Center(
-                            child: Text(
-                              'Save',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 18),
+                    Center(
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width - 16,
+                        height: 60,
+                        child: RaisedButton(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6.0)),
+                          color: Colors.yellow.shade900,
+                          onPressed: () {
+                            _newCategory();
+                            Provider.of<CategoryProvider>(context,
+                                    listen: false)
+                                .acceptCategory(
+                                    _categoryNameController.text.trim());
+                            Navigator.pop(context, 'Save');
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(
+                              child: Text(
+                                'Save',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18),
+                              ),
                             ),
                           ),
                         ),

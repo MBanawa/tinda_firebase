@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:provider/provider.dart';
 
-import 'package:tinda/providers/barcode_provider.dart';
 import 'package:tinda/providers/category_provider.dart';
 import 'package:tinda/widgets/categoryBuilder/edit_category.dart';
 import 'package:tinda/widgets/categoryBuilder/new_category.dart';
@@ -129,8 +128,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
         _scanBarcode = 'No Data';
       } else {
         _scanBarcode = barcodeScanRes;
-        Provider.of<BarcodeProvider>(context, listen: false)
-            .acceptBarcode(_scanBarcode);
       }
     });
   }
@@ -189,7 +186,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
             title: Text(
               _scanBarcode == 'No Data'
                   ? 'No Barcode Data Captured'
-                  : 'Please Select a Category ${_scanBarcode != null ? _scanBarcode : 'for this new item'}',
+                  : 'Please Select a Category for ${_scanBarcode != null ? _scanBarcode : 'this new item'}',
               style: TextStyle(
                 color: Colors.white,
               ),
@@ -204,7 +201,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       onPressed: () {
                         Navigator.pop(context);
                         scanBarcodeNormal()
-                            .then((value) => _selectionDialog(context));
+                            .then((value) => _selectionDialog(context))
+                            .then((value) => null);
                       },
                       child: Text(
                         'Scan Again',
@@ -237,11 +235,25 @@ class _InventoryScreenState extends State<InventoryScreen> {
                                 style: TextStyle(color: Colors.white),
                               ),
                               onPressed: () {
-                                Navigator.pop(context, 'NewCategory');
+                                Navigator.pop(context);
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => NewCategory()));
+                                        builder: (context) =>
+                                            NewCategory())).then((value) =>
+                                    value == 'Save'
+                                        ? Navigator.of(context)
+                                            .push(MaterialPageRoute(
+                                                builder: (context) => NewItem(
+                                                      category: Provider.of<
+                                                                  CategoryProvider>(
+                                                              context,
+                                                              listen: false)
+                                                          .getCategory
+                                                          .category,
+                                                      barcode: _scanBarcode,
+                                                    )))
+                                        : null);
                               }),
                         ),
                       ],
@@ -332,6 +344,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (BuildContext context) =>
                                           EditCategory(
+                                            context,
                                             categDocs[index].id,
                                             categDocs[index]
                                                 .data()['categoryname'],
