@@ -39,7 +39,7 @@ class _NewItemState extends State<NewItem> {
       context: context,
       initialDate: _dateTime,
       firstDate: DateTime(2000),
-      lastDate: DateTime(2030),
+      lastDate: DateTime(2090),
     );
 
     if (_pickedDate != null) {
@@ -65,6 +65,7 @@ class _NewItemState extends State<NewItem> {
       context: context,
       builder: (con) {
         return SimpleDialog(
+          backgroundColor: Colors.teal,
           title: Text(
             'Upload an Image',
             style: TextStyle(

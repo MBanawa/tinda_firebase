@@ -49,7 +49,9 @@ class _ItemsPerCategoryState extends State<ItemsPerCategory> {
             );
           }
           final itemDocs = snapshot.data.docs;
-          return ListView.builder(
+          return GridView.builder(
+            gridDelegate:
+                SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
             physics: BouncingScrollPhysics(),
             itemCount: itemDocs.length,
             itemBuilder: (context, index) {
@@ -60,7 +62,6 @@ class _ItemsPerCategoryState extends State<ItemsPerCategory> {
                   splashColor: Colors.teal.withAlpha(80),
                   onTap: () {},
                   child: Container(
-                    height: 60,
                     child:
                         Center(child: Text(itemDocs[index].data()['itemName'])),
                   ),
