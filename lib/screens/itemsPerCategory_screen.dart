@@ -5,6 +5,8 @@ import 'package:tinda/animation/FadeAnimation.dart';
 
 import 'package:tinda/screens/itemDetail_screen.dart';
 
+Color fontColor = Colors.white;
+
 class ItemsPerCategory extends StatefulWidget {
   final String category;
 
@@ -26,7 +28,7 @@ class _ItemsPerCategoryState extends State<ItemsPerCategory> {
     getStream();
   }
 
-  getStream() async {
+  void getStream() async {
     var firebaseUser = FirebaseAuth.instance.currentUser;
     setState(() {
       userstream = itemcollection
@@ -68,6 +70,8 @@ class _ItemsPerCategoryState extends State<ItemsPerCategory> {
                       itemDocs[index].data()['itemImage'],
                       itemDocs[index].data()['itemName'],
                       itemDocs[index].data()['quantity'],
+                      itemDocs[index].id,
+                      itemDocs[index].data()['buyPrice'],
                       context,
                     ),
                   ),
@@ -85,6 +89,8 @@ Widget makeItem(
   image,
   tag,
   quantity,
+  id,
+  buyPrice,
   context,
 ) {
   return Hero(
@@ -102,7 +108,14 @@ Widget makeItem(
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(6),
-          image: DecorationImage(image: NetworkImage(image), fit: BoxFit.cover),
+          image: DecorationImage(
+            image: NetworkImage(image),
+            fit: BoxFit.cover,
+            colorFilter: ColorFilter.mode(
+              Colors.teal,
+              BlendMode.modulate,
+            ),
+          ),
           boxShadow: [
             BoxShadow(
               color: Colors.grey[500],
@@ -124,39 +137,23 @@ Widget makeItem(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       FadeAnimation(
-                        .5,
-                        Container(
-                          color: Colors.teal[900].withOpacity(0.5),
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.only(left: 4.0, right: 4.0),
-                            child: Text(
-                              tag,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
+                        0.5,
+                        Text(
+                          'In Stock: $quantity',
+                          style: TextStyle(
+                              color: fontColor,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
-                      SizedBox(height: 10),
                       FadeAnimation(
-                        0.6,
-                        Padding(
-                          padding: const EdgeInsets.only(left: 4.0, right: 4.0),
-                          child: Container(
-                            color: Colors.teal[900].withOpacity(0.5),
-                            child: Text(
-                              'In Stock: $quantity',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
+                        .6,
+                        Text(
+                          'Buy Price: PHP ${double.parse(buyPrice).toStringAsFixed(2)}',
+                          style: TextStyle(
+                              color: fontColor,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],
@@ -172,7 +169,7 @@ Widget makeItem(
                     child: Center(
                       child: Icon(
                         Icons.edit,
-                        size: 20,
+                        size: 25,
                         color: Colors.white,
                       ),
                     ),
@@ -182,20 +179,15 @@ Widget makeItem(
             ),
             FadeAnimation(
               0.7,
-              Container(
-                color: Colors.teal[900].withOpacity(0.5),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 4.0, right: 4.0),
-                  child: Text(
-                    'Buy Price: PHP',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+              Text(
+                tag,
+                style: TextStyle(
+                  color: fontColor,
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
                 ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],

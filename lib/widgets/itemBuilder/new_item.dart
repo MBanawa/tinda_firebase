@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 import 'package:tinda/widgets/customTextField.dart';
+import 'package:tinda/widgets/loadingDialog.dart';
 
 class NewItem extends StatefulWidget {
   final String category;
@@ -55,7 +56,7 @@ class _NewItemState extends State<NewItem> {
     Navigator.pop(context);
     final pickedFile = await ImagePicker().getImage(
         source: imageSource,
-        imageQuality: imageSource == ImageSource.camera ? 30 : 50);
+        imageQuality: imageSource == ImageSource.camera ? 20 : 50);
     setState(() {
       imageFile = File(pickedFile.path);
     });
@@ -136,38 +137,41 @@ class _NewItemState extends State<NewItem> {
       'category': widget.category,
       'quantity': _itemQuantityController.text.trim(),
       'itemImage': url,
+      'supplier': _itemSupplierController.text.trim(),
+      'buyDate': _itemBuyDateController.text.trim(),
+      'buyPrice': _itemBuyPriceController.text.trim(),
+      'sellPrice': _itemSellPriceController.text.trim(),
     });
 
-    _addSupplier(itemDoc.id);
-    _itemSellPrice(itemDoc.id);
+    _supplierDB(itemDoc.id, _itemNameController.text.trim());
+    _sellPriceDB(itemDoc.id, _itemNameController.text.trim());
 
     Navigator.pop(context);
   }
 
-  void _addSupplier(String documentId) async {
-    final itemCollection = FirebaseFirestore.instance
-        .collection('items')
-        .doc(documentId)
-        .collection('Suppliers');
+  void _supplierDB(String itemId, String itemName) {
+    final itemCollection = FirebaseFirestore.instance.collection('suppliers');
+
     itemCollection.add({
       'entryDate': Timestamp.now(),
       'supplier': _itemSupplierController.text.trim(),
       'buyDate': _itemBuyDateController.text.trim(),
       'buyPrice': _itemBuyPriceController.text.trim(),
       'quantity': _itemQuantityController.text.trim(),
+      'itemId': itemId,
+      'itemName': itemName,
     });
   }
 
-  void _itemSellPrice(String documentId) async {
-    final itemCollection = FirebaseFirestore.instance
-        .collection('items')
-        .doc(documentId)
-        .collection('SellPrice');
+  void _sellPriceDB(String itemId, String itemName) {
+    final itemCollection = FirebaseFirestore.instance.collection('sellprice');
     itemCollection.add({
       'entryDate': Timestamp.now(),
       'buyDate': _itemBuyDateController.text.trim(),
       'buyPrice': _itemBuyPriceController.text.trim(),
       'sellPrice': _itemSellPriceController.text.trim(),
+      'itemId': itemId,
+      'itemName': itemName,
     });
   }
 

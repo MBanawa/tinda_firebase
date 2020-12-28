@@ -24,7 +24,9 @@ class _ItemDetailState extends State<ItemDetail> {
             width: double.infinity,
             decoration: BoxDecoration(
               image: DecorationImage(
-                  image: NetworkImage(widget.image), fit: BoxFit.cover),
+                image: NetworkImage(widget.image),
+                fit: BoxFit.cover,
+              ),
               boxShadow: [
                 BoxShadow(
                   color: Colors.grey[400],
@@ -97,7 +99,7 @@ class _ItemDetailState extends State<ItemDetail> {
                               widget.tag,
                               style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 50,
+                                  fontSize: 35,
                                   fontWeight: FontWeight.bold),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
