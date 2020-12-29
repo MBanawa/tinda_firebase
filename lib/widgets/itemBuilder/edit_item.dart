@@ -9,22 +9,37 @@ import 'package:intl/intl.dart';
 
 import 'package:tinda/widgets/customTextField.dart';
 
-class NewItem extends StatefulWidget {
+class EditItem extends StatefulWidget {
   final String category;
   final String barcode;
+  final String itemName;
+  final String itemQuantity;
+  final String buyDate;
+  final String supplier;
+  final String buyPrice;
+  final String sellPrice;
 
-  NewItem({@required this.category, this.barcode});
-  @override
-  _NewItemState createState() => _NewItemState();
+  EditItem({
+    @required this.category,
+    @required this.barcode,
+    @required this.itemName,
+    @required this.itemQuantity,
+    @required this.buyDate,
+    @required this.supplier,
+    @required this.buyPrice,
+    @required this.sellPrice,
+  });
+
+  _EditItemState createState() => _EditItemState();
 }
 
-class _NewItemState extends State<NewItem> {
-  var _itemNameController = TextEditingController();
-  var _itemQuantityController = TextEditingController();
-  var _itemBuyDateController = TextEditingController();
-  var _itemSupplierController = TextEditingController();
-  var _itemBuyPriceController = TextEditingController();
-  var _itemSellPriceController = TextEditingController();
+class _EditItemState extends State<EditItem> {
+  var _editItemNameController = TextEditingController();
+  var _editItemQuantityController = TextEditingController();
+  var _editItemBuyDateController = TextEditingController();
+  var _editItemSupplierController = TextEditingController();
+  var _editItemBuyPriceController = TextEditingController();
+  var _editItemSellPriceController = TextEditingController();
   FocusNode _quantFocusNode = FocusNode();
   FocusNode _buyDateFocusNode = FocusNode();
   FocusNode _supplierFocusNode = FocusNode();
@@ -45,7 +60,7 @@ class _NewItemState extends State<NewItem> {
     if (_pickedDate != null) {
       setState(() {
         _dateTime = _pickedDate;
-        _itemBuyDateController.text =
+        _editItemBuyDateController.text =
             DateFormat('dd-MMM-yyyy').format(_pickedDate);
       });
     }
@@ -140,19 +155,19 @@ class _NewItemState extends State<NewItem> {
       'userId': user.uid,
       'userName': userData.data()['name'],
       'createdAt': Timestamp.now(),
-      'itemName': _itemNameController.text.trim(),
+      'itemName': _editItemNameController.text.trim(),
       'barcode': widget.barcode,
       'category': widget.category,
-      'quantity': _itemQuantityController.text.trim(),
+      'quantity': _editItemQuantityController.text.trim(),
       'itemImage': url,
-      'supplier': _itemSupplierController.text.trim(),
-      'buyDate': _itemBuyDateController.text.trim(),
-      'buyPrice': _itemBuyPriceController.text.trim(),
-      'sellPrice': _itemSellPriceController.text.trim(),
+      'supplier': _editItemSupplierController.text.trim(),
+      'buyDate': _editItemBuyDateController.text.trim(),
+      'buyPrice': _editItemBuyPriceController.text.trim(),
+      'sellPrice': _editItemSellPriceController.text.trim(),
     });
 
-    _supplierDB(itemDoc.id, _itemNameController.text.trim());
-    _sellPriceDB(itemDoc.id, _itemNameController.text.trim());
+    _supplierDB(itemDoc.id, _editItemNameController.text.trim());
+    _sellPriceDB(itemDoc.id, _editItemNameController.text.trim());
 
     Navigator.pop(context);
   }
@@ -162,10 +177,10 @@ class _NewItemState extends State<NewItem> {
 
     itemCollection.add({
       'entryDate': Timestamp.now(),
-      'supplier': _itemSupplierController.text.trim(),
-      'buyDate': _itemBuyDateController.text.trim(),
-      'buyPrice': _itemBuyPriceController.text.trim(),
-      'quantity': _itemQuantityController.text.trim(),
+      'supplier': _editItemSupplierController.text.trim(),
+      'buyDate': _editItemBuyDateController.text.trim(),
+      'buyPrice': _editItemBuyPriceController.text.trim(),
+      'quantity': _editItemQuantityController.text.trim(),
       'itemId': itemId,
       'itemName': itemName,
     });
@@ -178,9 +193,9 @@ class _NewItemState extends State<NewItem> {
     final itemCollection = FirebaseFirestore.instance.collection('sellprice');
     itemCollection.add({
       'entryDate': Timestamp.now(),
-      'buyDate': _itemBuyDateController.text.trim(),
-      'buyPrice': _itemBuyPriceController.text.trim(),
-      'sellPrice': _itemSellPriceController.text.trim(),
+      'buyDate': _editItemBuyDateController.text.trim(),
+      'buyPrice': _editItemBuyPriceController.text.trim(),
+      'sellPrice': _editItemSellPriceController.text.trim(),
       'itemId': itemId,
       'itemName': itemName,
     });
@@ -234,24 +249,6 @@ class _NewItemState extends State<NewItem> {
                                         height: 50,
                                       )
                                     : null,
-
-                                // Container(
-                                //   decoration: BoxDecoration(
-                                //     // borderRadius: BorderRadius.circular(6.0),
-                                //     color: Colors.teal.shade300,
-                                //     image: imageFile == null
-                                //         ? DecorationImage(
-                                //             image: ExactAssetImage(
-                                //                 'assets/images/camera.png',
-                                //                 scale: 8.0),
-                                //             fit: BoxFit.scaleDown,
-                                //           )
-                                //         : DecorationImage(
-                                //             image: FileImage(imageFile),
-                                //             fit: BoxFit.contain,
-                                //           ),
-                                //   ),
-                                // ),
                               ),
                             ),
                           ),
@@ -341,7 +338,7 @@ class _NewItemState extends State<NewItem> {
                         ),
                       ),
                       CustomTextField(
-                        controller: _itemNameController,
+                        controller: _editItemNameController,
                         keyboardType: TextInputType.text,
                         hintText: 'Enter the item\'s name here..',
                         isObscure: false,
@@ -359,7 +356,7 @@ class _NewItemState extends State<NewItem> {
                       CustomTextField(
                         focusNode: _quantFocusNode,
                         keyboardType: TextInputType.number,
-                        controller: _itemQuantityController,
+                        controller: _editItemQuantityController,
                         hintText: 'How many pieces are you adding?',
                         isObscure: false,
                         onSubmitted: (_) {
@@ -377,7 +374,7 @@ class _NewItemState extends State<NewItem> {
                       CustomTextField(
                         focusNode: _buyDateFocusNode,
                         keyboardType: TextInputType.datetime,
-                        controller: _itemBuyDateController,
+                        controller: _editItemBuyDateController,
                         hintText: 'When did you buy the item?',
                         isObscure: false,
                         onTap: () {
@@ -398,7 +395,7 @@ class _NewItemState extends State<NewItem> {
                       CustomTextField(
                         focusNode: _supplierFocusNode,
                         keyboardType: TextInputType.text,
-                        controller: _itemSupplierController,
+                        controller: _editItemSupplierController,
                         hintText: 'Where did you buy the item?',
                         isObscure: false,
                         onSubmitted: (_) {
@@ -416,7 +413,7 @@ class _NewItemState extends State<NewItem> {
                       CustomTextField(
                         focusNode: _buyPriceFocusNode,
                         keyboardType: TextInputType.number,
-                        controller: _itemBuyPriceController,
+                        controller: _editItemBuyPriceController,
                         hintText: 'How much did you buy the item for?',
                         isObscure: false,
                         onSubmitted: (_) {
@@ -434,7 +431,7 @@ class _NewItemState extends State<NewItem> {
                       CustomTextField(
                         focusNode: _sellPriceFocusNode,
                         keyboardType: TextInputType.number,
-                        controller: _itemSellPriceController,
+                        controller: _editItemSellPriceController,
                         hintText: 'How much will you sell the item for?',
                         isObscure: false,
                         onSubmitted: (_) {

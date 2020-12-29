@@ -161,16 +161,20 @@ Widget makeItem(
                 ),
                 Expanded(
                   flex: 1,
-                  child: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle, color: Colors.yellow.shade900),
-                    child: Center(
-                      child: Icon(
-                        Icons.edit,
-                        size: 25,
-                        color: Colors.white,
+                  child: InkWell(
+                    onTap: () {},
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.yellow.shade900),
+                      child: Center(
+                        child: Icon(
+                          Icons.edit,
+                          size: 25,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
