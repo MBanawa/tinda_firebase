@@ -32,8 +32,9 @@ class _NewItemState extends State<NewItem> {
   FocusNode _buyPriceFocusNode = FocusNode();
   FocusNode _sellPriceFocusNode = FocusNode();
   File imageFile;
-
+  var _isLoading = false;
   DateTime _dateTime = DateTime.now();
+  final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
 
   _selectedItemDate(BuildContext context) async {
     var _pickedDate = await showDatePicker(
@@ -111,9 +112,18 @@ class _NewItemState extends State<NewItem> {
     );
   }
 
+  _showSnackBar(BuildContext context, message) {
+    var _snackBar = SnackBar(
+      content: message,
+      backgroundColor: Colors.teal.shade900,
+      duration: const Duration(milliseconds: 1500),
+    );
+    _globalKey.currentState.showSnackBar(_snackBar);
+  }
+
   void _saveNewItem() async {
     FocusScope.of(context).unfocus();
-
+    _showSnackBar(context, Text('Saving....'));
     final user = FirebaseAuth.instance.currentUser;
     final userData = await FirebaseFirestore.instance
         .collection('users')
@@ -163,7 +173,10 @@ class _NewItemState extends State<NewItem> {
     });
   }
 
-  void _sellPriceDB(String itemId, String itemName) {
+  void _sellPriceDB(
+    String itemId,
+    String itemName,
+  ) {
     final itemCollection = FirebaseFirestore.instance.collection('sellprice');
     itemCollection.add({
       'entryDate': Timestamp.now(),
@@ -178,6 +191,7 @@ class _NewItemState extends State<NewItem> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _globalKey,
       appBar: AppBar(
         title: Text(
           'Create a New Item',
