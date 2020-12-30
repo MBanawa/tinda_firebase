@@ -227,31 +227,11 @@ class _NewItemState extends State<NewItem> {
                                 backgroundImage: imageFile == null
                                     ? null
                                     : FileImage(imageFile),
-                                child: imageFile == null
-                                    ? Image.asset(
-                                        'assets/images/camera.png',
-                                        width: 50,
-                                        height: 50,
-                                      )
-                                    : null,
-
-                                // Container(
-                                //   decoration: BoxDecoration(
-                                //     // borderRadius: BorderRadius.circular(6.0),
-                                //     color: Colors.teal.shade300,
-                                //     image: imageFile == null
-                                //         ? DecorationImage(
-                                //             image: ExactAssetImage(
-                                //                 'assets/images/camera.png',
-                                //                 scale: 8.0),
-                                //             fit: BoxFit.scaleDown,
-                                //           )
-                                //         : DecorationImage(
-                                //             image: FileImage(imageFile),
-                                //             fit: BoxFit.contain,
-                                //           ),
-                                //   ),
-                                // ),
+                                child: Image.asset(
+                                  'assets/images/camera.png',
+                                  width: 50,
+                                  height: 50,
+                                ),
                               ),
                             ),
                           ),

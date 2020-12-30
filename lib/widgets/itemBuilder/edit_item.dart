@@ -10,20 +10,24 @@ import 'package:intl/intl.dart';
 import 'package:tinda/widgets/customTextField.dart';
 
 class EditItem extends StatefulWidget {
+  final String itemId;
   final String category;
   final String barcode;
   final String itemName;
   final String itemQuantity;
+  final String itemImage;
   final String buyDate;
   final String supplier;
   final String buyPrice;
   final String sellPrice;
 
   EditItem({
+    @required this.itemId,
     @required this.category,
     @required this.barcode,
     @required this.itemName,
     @required this.itemQuantity,
+    @required this.itemImage,
     @required this.buyDate,
     @required this.supplier,
     @required this.buyPrice,
@@ -48,6 +52,21 @@ class _EditItemState extends State<EditItem> {
   File imageFile;
   DateTime _dateTime = DateTime.now();
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _setValues();
+  }
+
+  _setValues() {
+    _editItemNameController.text = widget.itemName;
+    _editItemQuantityController.text = widget.itemQuantity;
+    _editItemBuyDateController.text = widget.buyDate;
+    _editItemSupplierController.text = widget.supplier;
+    _editItemBuyPriceController.text = widget.buyPrice;
+    _editItemSellPriceController.text = widget.sellPrice;
+  }
 
   _selectedItemDate(BuildContext context) async {
     var _pickedDate = await showDatePicker(
@@ -134,72 +153,73 @@ class _EditItemState extends State<EditItem> {
     _globalKey.currentState.showSnackBar(_snackBar);
   }
 
-  void _saveNewItem() async {
+  void _editItem() async {
     FocusScope.of(context).unfocus();
     _showSnackBar(context, Text('Saving....'));
+    var url;
     final user = FirebaseAuth.instance.currentUser;
     final userData = await FirebaseFirestore.instance
         .collection('users')
         .doc(user.uid)
         .get();
 
-    final ref = FirebaseStorage.instance
-        .ref()
-        .child('itemImage')
-        .child(Timestamp.now().millisecondsSinceEpoch.toString() + '.jpg');
+    if (imageFile != null) {
+      final ref = FirebaseStorage.instance
+          .ref()
+          .child('itemImage')
+          .child(Timestamp.now().millisecondsSinceEpoch.toString() + '.jpg');
 
-    await ref.putFile(imageFile);
-    final url = await ref.getDownloadURL();
+      await ref.putFile(imageFile);
+      url = await ref.getDownloadURL();
+    }
 
-    final itemDoc = await FirebaseFirestore.instance.collection('items').add({
-      'userId': user.uid,
-      'userName': userData.data()['name'],
-      'createdAt': Timestamp.now(),
+    await FirebaseFirestore.instance
+        .collection('items')
+        .doc(widget.itemId)
+        .update({
       'itemName': _editItemNameController.text.trim(),
-      'barcode': widget.barcode,
-      'category': widget.category,
       'quantity': _editItemQuantityController.text.trim(),
-      'itemImage': url,
+      'itemImage': imageFile != null ? url : widget.itemImage,
       'supplier': _editItemSupplierController.text.trim(),
       'buyDate': _editItemBuyDateController.text.trim(),
       'buyPrice': _editItemBuyPriceController.text.trim(),
       'sellPrice': _editItemSellPriceController.text.trim(),
     });
 
-    _supplierDB(itemDoc.id, _editItemNameController.text.trim());
-    _sellPriceDB(itemDoc.id, _editItemNameController.text.trim());
+    // _supplierDB(itemDoc.id, _editItemNameController.text.trim());
+    // _sellPriceDB(itemDoc.id, _editItemNameController.text.trim());
 
     Navigator.pop(context);
   }
 
-  void _supplierDB(String itemId, String itemName) {
-    final itemCollection = FirebaseFirestore.instance.collection('suppliers');
+  // void _supplierDB(String itemId, String itemName) {
+  //   final itemCollection = FirebaseFirestore.instance.collection('suppliers');
 
-    itemCollection.add({
-      'entryDate': Timestamp.now(),
-      'supplier': _editItemSupplierController.text.trim(),
-      'buyDate': _editItemBuyDateController.text.trim(),
-      'buyPrice': _editItemBuyPriceController.text.trim(),
-      'quantity': _editItemQuantityController.text.trim(),
-      'itemId': itemId,
-      'itemName': itemName,
-    });
-  }
+  //   itemCollection.add({
+  //     'entryDate': Timestamp.now(),
+  //     'supplier': _editItemSupplierController.text.trim(),
+  //     'buyDate': _editItemBuyDateController.text.trim(),
+  //     'buyPrice': _editItemBuyPriceController.text.trim(),
+  //     'quantity': _editItemQuantityController.text.trim(),
+  //     'itemId': itemId,
+  //     'itemName': itemName,
+  //   });
+  // }
 
-  void _sellPriceDB(
-    String itemId,
-    String itemName,
-  ) {
-    final itemCollection = FirebaseFirestore.instance.collection('sellprice');
-    itemCollection.add({
-      'entryDate': Timestamp.now(),
-      'buyDate': _editItemBuyDateController.text.trim(),
-      'buyPrice': _editItemBuyPriceController.text.trim(),
-      'sellPrice': _editItemSellPriceController.text.trim(),
-      'itemId': itemId,
-      'itemName': itemName,
-    });
-  }
+  // void _sellPriceDB(
+  //   String itemId,
+  //   String itemName,
+  // ) {
+  //   final itemCollection = FirebaseFirestore.instance.collection('sellprice');
+  //   itemCollection.add({
+  //     'entryDate': Timestamp.now(),
+  //     'buyDate': _editItemBuyDateController.text.trim(),
+  //     'buyPrice': _editItemBuyPriceController.text.trim(),
+  //     'sellPrice': _editItemSellPriceController.text.trim(),
+  //     'itemId': itemId,
+  //     'itemName': itemName,
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -239,16 +259,14 @@ class _EditItemState extends State<EditItem> {
                               child: CircleAvatar(
                                 radius: 100,
                                 backgroundColor: Colors.teal.shade300,
-                                backgroundImage: imageFile == null
-                                    ? null
-                                    : FileImage(imageFile),
-                                child: imageFile == null
-                                    ? Image.asset(
-                                        'assets/images/camera.png',
-                                        width: 50,
-                                        height: 50,
-                                      )
-                                    : null,
+                                backgroundImage: imageFile != null
+                                    ? FileImage(imageFile)
+                                    : NetworkImage(widget.itemImage),
+                                child: Image.asset(
+                                  'assets/images/camera.png',
+                                  width: 50,
+                                  height: 50,
+                                ),
                               ),
                             ),
                           ),
@@ -435,7 +453,7 @@ class _EditItemState extends State<EditItem> {
                         hintText: 'How much will you sell the item for?',
                         isObscure: false,
                         onSubmitted: (_) {
-                          _saveNewItem();
+                          _editItem();
                         },
                       ),
                       SizedBox(
@@ -450,7 +468,7 @@ class _EditItemState extends State<EditItem> {
                                 borderRadius: BorderRadius.circular(6.0)),
                             color: Colors.yellow.shade900,
                             onPressed: () {
-                              _saveNewItem();
+                              _editItem();
                             },
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:tinda/animation/FadeAnimation.dart';
 
 import 'package:tinda/screens/itemDetail_screen.dart';
+import 'package:tinda/widgets/itemBuilder/edit_item.dart';
 
 Color fontColor = Colors.white;
 
@@ -67,11 +68,17 @@ class _ItemsPerCategoryState extends State<ItemsPerCategory> {
                   child: Container(
                     // itemDocs[index].data()['itemName']
                     child: makeItem(
-                      itemDocs[index].data()['itemImage'],
+                      itemDocs[index].id,
+                      itemDocs[index].data()['createdAt'],
+                      itemDocs[index].data()['category'],
+                      itemDocs[index].data()['barcode'],
                       itemDocs[index].data()['itemName'],
                       itemDocs[index].data()['quantity'],
-                      itemDocs[index].id,
+                      itemDocs[index].data()['itemImage'],
+                      itemDocs[index].data()['buyDate'],
+                      itemDocs[index].data()['supplier'],
                       itemDocs[index].data()['buyPrice'],
+                      itemDocs[index].data()['sellPrice'],
                       context,
                     ),
                   ),
@@ -86,11 +93,17 @@ class _ItemsPerCategoryState extends State<ItemsPerCategory> {
 }
 
 Widget makeItem(
-  image,
+  id,
+  createdAt,
+  category,
+  barcode,
   tag,
   quantity,
-  id,
+  image,
+  buyDate,
+  supplier,
   buyPrice,
+  sellPrice,
   context,
 ) {
   return Hero(
@@ -161,8 +174,22 @@ Widget makeItem(
                 ),
                 Expanded(
                   flex: 1,
-                  child: InkWell(
-                    onTap: () {},
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) => EditItem(
+                                itemId: id,
+                                category: category,
+                                barcode: barcode,
+                                itemName: tag,
+                                itemQuantity: quantity,
+                                itemImage: image,
+                                buyDate: buyDate,
+                                supplier: supplier,
+                                buyPrice: buyPrice,
+                                sellPrice: sellPrice,
+                              )));
+                    },
                     child: Container(
                       width: 40,
                       height: 40,
@@ -172,7 +199,7 @@ Widget makeItem(
                       child: Center(
                         child: Icon(
                           Icons.edit,
-                          size: 25,
+                          size: 20,
                           color: Colors.white,
                         ),
                       ),
