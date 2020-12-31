@@ -106,6 +106,164 @@ Widget makeItem(
   sellPrice,
   context,
 ) {
+  _editDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (param) {
+          return AlertDialog(
+            backgroundColor: Theme.of(context).primaryColor,
+            title: Text(
+              'Please select an option for $tag',
+              style: TextStyle(color: Colors.white),
+            ),
+            content: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width - 20,
+                    height: 60,
+                    child: RaisedButton.icon(
+                        icon: Icon(
+                          Icons.add,
+                          color: Colors.white,
+                        ),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6.0)),
+                        color: Colors.yellow.shade900,
+                        label: Text(
+                          'Add Stocks',
+                          style: TextStyle(color: Colors.white),
+                          textAlign: TextAlign.center,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (BuildContext context) => EditItem(
+                                    option: 'update',
+                                    itemId: id,
+                                    category: category,
+                                    barcode: barcode,
+                                    itemName: tag,
+                                    itemQuantity: quantity,
+                                    itemImage: image,
+                                    buyDate: buyDate,
+                                    supplier: supplier,
+                                    buyPrice: buyPrice,
+                                    sellPrice: sellPrice,
+                                  )));
+                        }),
+                  ),
+                  SizedBox(height: 10.0),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width - 20,
+                    height: 60,
+                    child: RaisedButton.icon(
+                        icon: Icon(
+                          Icons.remove,
+                          color: Colors.white,
+                        ),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6.0)),
+                        color: Colors.yellow.shade900,
+                        label: Text(
+                          'Remove Stocks',
+                          style: TextStyle(color: Colors.white),
+                          textAlign: TextAlign.center,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (BuildContext context) => EditItem(
+                                    option: 'update',
+                                    itemId: id,
+                                    category: category,
+                                    barcode: barcode,
+                                    itemName: tag,
+                                    itemQuantity: quantity,
+                                    itemImage: image,
+                                    buyDate: buyDate,
+                                    supplier: supplier,
+                                    buyPrice: buyPrice,
+                                    sellPrice: sellPrice,
+                                  )));
+                        }),
+                  ),
+                  SizedBox(height: 10.0),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width - 20,
+                    height: 60,
+                    child: RaisedButton.icon(
+                        icon: Icon(
+                          Icons.edit,
+                          color: Colors.white,
+                        ),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6.0)),
+                        color: Colors.yellow.shade900,
+                        label: Text(
+                          'Edit this item',
+                          softWrap: true,
+                          maxLines: 3,
+                          style: TextStyle(color: Colors.white),
+                          textAlign: TextAlign.start,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (BuildContext context) => EditItem(
+                                    option: 'edit',
+                                    itemId: id,
+                                    category: category,
+                                    barcode: barcode,
+                                    itemName: tag,
+                                    itemQuantity: quantity,
+                                    itemImage: image,
+                                    buyDate: buyDate,
+                                    supplier: supplier,
+                                    buyPrice: buyPrice,
+                                    sellPrice: sellPrice,
+                                  )));
+                        }),
+                  ),
+                  SizedBox(height: 10.0),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width - 20,
+                    height: 60,
+                    child: RaisedButton.icon(
+                        icon: Icon(
+                          Icons.delete,
+                          color: Colors.white,
+                        ),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6.0)),
+                        color: Colors.red.shade400,
+                        label: Text(
+                          'Delete this item',
+                          style: TextStyle(color: Colors.white),
+                          textAlign: TextAlign.center,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (BuildContext context) => EditItem(
+                                    option: 'update',
+                                    itemId: id,
+                                    category: category,
+                                    barcode: barcode,
+                                    itemName: tag,
+                                    itemQuantity: quantity,
+                                    itemImage: image,
+                                    buyDate: buyDate,
+                                    supplier: supplier,
+                                    buyPrice: buyPrice,
+                                    sellPrice: sellPrice,
+                                  )));
+                        }),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
   return Hero(
     tag: tag,
     child: GestureDetector(
@@ -176,19 +334,7 @@ Widget makeItem(
                   flex: 1,
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (BuildContext context) => EditItem(
-                                itemId: id,
-                                category: category,
-                                barcode: barcode,
-                                itemName: tag,
-                                itemQuantity: quantity,
-                                itemImage: image,
-                                buyDate: buyDate,
-                                supplier: supplier,
-                                buyPrice: buyPrice,
-                                sellPrice: sellPrice,
-                              )));
+                      _editDialog(context);
                     },
                     child: Container(
                       width: 40,
@@ -198,7 +344,7 @@ Widget makeItem(
                           color: Colors.yellow.shade900),
                       child: Center(
                         child: Icon(
-                          Icons.edit,
+                          Icons.settings,
                           size: 20,
                           color: Colors.white,
                         ),

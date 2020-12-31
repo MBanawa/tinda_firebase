@@ -62,7 +62,7 @@ class _ItemDetailState extends State<ItemDetail> {
                             color: Colors.yellow.shade900),
                         child: Center(
                           child: Icon(
-                            Icons.edit,
+                            Icons.settings,
                             size: 20,
                             color: Colors.white,
                           ),

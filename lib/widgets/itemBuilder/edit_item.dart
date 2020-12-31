@@ -10,6 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:tinda/widgets/customTextField.dart';
 
 class EditItem extends StatefulWidget {
+  final String option;
   final String itemId;
   final String category;
   final String barcode;
@@ -22,6 +23,7 @@ class EditItem extends StatefulWidget {
   final String sellPrice;
 
   EditItem({
+    @required this.option,
     @required this.itemId,
     @required this.category,
     @required this.barcode,
