@@ -146,7 +146,10 @@ class _EditItemState extends State<EditItem> {
     );
   }
 
-  _showSnackBar(BuildContext context, message) {
+  _showSnackBar(
+    BuildContext context,
+    message,
+  ) {
     var _snackBar = SnackBar(
       content: message,
       backgroundColor: Colors.teal.shade900,
@@ -229,7 +232,12 @@ class _EditItemState extends State<EditItem> {
       key: _globalKey,
       appBar: AppBar(
         title: Text(
-          'Create a New Item',
+          widget.option == 'add'
+              ? 'Add Stocks for ${widget.itemName}'
+              : widget.option == 'remove'
+                  ? 'Remove Stocks for ${widget.itemName}'
+                  : 'Edit Details for ${widget.itemName}',
+          softWrap: true,
         ),
         centerTitle: true,
       ),

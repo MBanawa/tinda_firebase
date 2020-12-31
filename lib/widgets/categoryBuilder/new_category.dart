@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:tinda/providers/category_provider.dart';
 
 import 'package:tinda/widgets/customTextField.dart';
+import 'package:tinda/widgets/itemBuilder/new_item.dart';
 import 'package:tinda/widgets/roundIconButton.dart';
 
 class NewCategory extends StatefulWidget {
@@ -16,6 +17,7 @@ class NewCategory extends StatefulWidget {
 class _NewCategoryState extends State<NewCategory> {
   var _categoryNameController = TextEditingController();
   var _categoryDescriptionController = TextEditingController();
+  var _categoryId;
 
   //~~~~~~~~~~Colorpicker
   Color pickerColor = Color(0xff008080);
@@ -28,7 +30,6 @@ class _NewCategoryState extends State<NewCategory> {
       pickerColor = color;
       int colorInt = pickerColor.value;
       categcolor = colorInt;
-      print(colorInt);
     });
   }
 
@@ -94,7 +95,8 @@ class _NewCategoryState extends State<NewCategory> {
         .collection('users')
         .doc(user.uid)
         .get();
-    FirebaseFirestore.instance.collection('categories').add({
+    final categDoc =
+        await FirebaseFirestore.instance.collection('categories').add({
       'userId': user.uid,
       'name': userData.data()['name'],
       'categoryname': _categoryNameController.text.trim(),
@@ -103,8 +105,15 @@ class _NewCategoryState extends State<NewCategory> {
       'createdAt': Timestamp.now(),
     });
 
+    _categoryId = categDoc.id;
+    Provider.of<CategoryProvider>(context, listen: false)
+        .acceptCategory(_categoryId);
+
     _categoryNameController.clear();
     _categoryDescriptionController.clear();
+    Navigator.pop(context);
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => NewItem(categoryId: _categoryId)));
   }
 
   @override
@@ -197,11 +206,6 @@ class _NewCategoryState extends State<NewCategory> {
                           color: Colors.yellow.shade900,
                           onPressed: () {
                             _newCategory();
-                            Provider.of<CategoryProvider>(context,
-                                    listen: false)
-                                .acceptCategory(
-                                    _categoryNameController.text.trim());
-                            Navigator.pop(context, 'Save');
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),

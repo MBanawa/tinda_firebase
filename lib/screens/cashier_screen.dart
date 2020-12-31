@@ -10,7 +10,7 @@ class CashierScreen extends StatelessWidget {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => NewItem(
                     barcode: '123456',
-                    category: 'Snacks',
+                    categoryId: 'Snacks',
                   )));
         },
       ),

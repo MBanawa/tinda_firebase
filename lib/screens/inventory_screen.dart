@@ -166,15 +166,16 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(6.0)),
                       color: Colors.yellow.shade900,
-                      onPressed: () async {
+                      onPressed: () {
                         Navigator.pop(context);
                         final providedCategory = Provider.of<CategoryProvider>(
                             context,
                             listen: false);
+//TODO: asdasd
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => NewItem(
-                                  category:
-                                      providedCategory.getCategory.category,
+                                  categoryId:
+                                      providedCategory.getCategory.categoryId,
                                   barcode: _scanBarcode,
                                 )));
                       },
@@ -240,21 +241,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            NewCategory())).then((value) =>
-                                    value == 'Save'
-                                        ? Navigator.of(context)
-                                            .push(MaterialPageRoute(
-                                                builder: (context) => NewItem(
-                                                      category: Provider.of<
-                                                                  CategoryProvider>(
-                                                              context,
-                                                              listen: false)
-                                                          .getCategory
-                                                          .category,
-                                                      barcode: _scanBarcode,
-                                                    )))
-                                        : null);
+                                        builder: (context) => NewCategory()));
                               }),
                         ),
                       ],
@@ -298,8 +285,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
                   splashColor: Colors.teal.withAlpha(80),
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => ItemsPerCategory(
-                            categDocs[index].data()['categoryname'])));
+                        builder: (context) =>
+                            ItemsPerCategory(categDocs[index].id)));
                   },
                   child: Container(
                     child: Stack(

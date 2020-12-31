@@ -10,10 +10,10 @@ import 'package:intl/intl.dart';
 import 'package:tinda/widgets/customTextField.dart';
 
 class NewItem extends StatefulWidget {
-  final String category;
+  final String categoryId;
   final String barcode;
 
-  NewItem({@required this.category, this.barcode});
+  NewItem({@required this.categoryId, this.barcode});
   @override
   _NewItemState createState() => _NewItemState();
 }
@@ -25,6 +25,7 @@ class _NewItemState extends State<NewItem> {
   var _itemSupplierController = TextEditingController();
   var _itemBuyPriceController = TextEditingController();
   var _itemSellPriceController = TextEditingController();
+  var _category;
   FocusNode _quantFocusNode = FocusNode();
   FocusNode _buyDateFocusNode = FocusNode();
   FocusNode _supplierFocusNode = FocusNode();
@@ -33,6 +34,13 @@ class _NewItemState extends State<NewItem> {
   File imageFile;
   DateTime _dateTime = DateTime.now();
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+
+    getCategory();
+  }
 
   _selectedItemDate(BuildContext context) async {
     var _pickedDate = await showDatePicker(
@@ -49,6 +57,18 @@ class _NewItemState extends State<NewItem> {
             DateFormat('dd-MMM-yyyy').format(_pickedDate);
       });
     }
+  }
+
+  getCategory() async {
+    final categDoc = await FirebaseFirestore.instance
+        .collection('categories')
+        .doc(widget.categoryId)
+        .get();
+
+    setState(() {
+      _category = categDoc.data()['categoryname'];
+    });
+    print('NEW ITEM CATEGORY: $_category ${widget.categoryId}');
   }
 
   pickImage(ImageSource imageSource) async {
@@ -142,7 +162,8 @@ class _NewItemState extends State<NewItem> {
       'createdAt': Timestamp.now(),
       'itemName': _itemNameController.text.trim(),
       'barcode': widget.barcode,
-      'category': widget.category,
+      'category': _category.data()['categoryname'],
+      'categoryId': widget.categoryId,
       'quantity': _itemQuantityController.text.trim(),
       'itemImage': url,
       'supplier': _itemSupplierController.text.trim(),
@@ -300,9 +321,9 @@ class _NewItemState extends State<NewItem> {
                                       EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
                                   child: Center(
                                       child: Text(
-                                    widget.category == null
-                                        ? 'null'
-                                        : widget.category,
+                                    _category == null
+                                        ? 'No Category'
+                                        : _category,
                                     style: TextStyle(
                                         color: Colors.teal.shade100,
                                         fontWeight: FontWeight.bold),

@@ -15,6 +15,7 @@ class FirebaseDropDown extends StatefulWidget {
 
 class _FirebaseDropDownState extends State<FirebaseDropDown> {
   var _selectedValue;
+  var _selectedValueId;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -38,7 +39,7 @@ class _FirebaseDropDownState extends State<FirebaseDropDown> {
                 child: DropdownButton(
                   items: snapshot.data.docs.map((DocumentSnapshot document) {
                     return DropdownMenuItem(
-                      value: document.data()['categoryname'],
+                      value: document.id,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
@@ -53,9 +54,9 @@ class _FirebaseDropDownState extends State<FirebaseDropDown> {
                   onChanged: (categValue) {
                     setState(() {
                       _selectedValue = categValue;
+                      Provider.of<CategoryProvider>(context, listen: false)
+                          .acceptCategory(_selectedValue);
                     });
-                    Provider.of<CategoryProvider>(context, listen: false)
-                        .acceptCategory(_selectedValue);
                   },
                   hint: Padding(
                     padding: const EdgeInsets.all(8.0),

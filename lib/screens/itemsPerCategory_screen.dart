@@ -9,9 +9,9 @@ import 'package:tinda/widgets/itemBuilder/edit_item.dart';
 Color fontColor = Colors.white;
 
 class ItemsPerCategory extends StatefulWidget {
-  final String category;
+  final String categoryId;
 
-  ItemsPerCategory(this.category);
+  ItemsPerCategory(this.categoryId);
 
   @override
   _ItemsPerCategoryState createState() => _ItemsPerCategoryState();
@@ -34,7 +34,7 @@ class _ItemsPerCategoryState extends State<ItemsPerCategory> {
     setState(() {
       userstream = itemcollection
           .where('userId', isEqualTo: firebaseUser.uid)
-          .where('category', isEqualTo: widget.category)
+          .where('categoryId', isEqualTo: widget.categoryId)
           .orderBy('createdAt')
           .snapshots();
     });
@@ -44,7 +44,8 @@ class _ItemsPerCategoryState extends State<ItemsPerCategory> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.category),
+        //TODO: update this
+        title: Text(''),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: userstream,
@@ -106,6 +107,58 @@ Widget makeItem(
   sellPrice,
   context,
 ) {
+  _deleteDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (param) {
+          return AlertDialog(
+            backgroundColor: Theme.of(context).primaryColor,
+            title: Text(
+              'Delete Confirmation',
+              style: TextStyle(color: Colors.white),
+            ),
+            content: Text(
+              'Are you sure you want to delete $tag? This action is permanent.',
+              style: TextStyle(color: Colors.yellow),
+            ),
+            actions: [
+              FlatButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+              Container(
+                width: 100.0,
+                child: RaisedButton(
+                  color: Colors.yellow.shade900,
+                  child: Text(
+                    'Delete',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onPressed: () async {
+                    CollectionReference items =
+                        FirebaseFirestore.instance.collection('items');
+                    var result = await items
+                        .doc(id)
+                        .delete()
+                        .then((value) => value = 'deleted')
+                        .catchError((error) => print(error));
+                    if (result == 'deleted') {
+                      Navigator.pop(context, 'deleted');
+                    }
+                  },
+                ),
+              ),
+            ],
+          );
+        });
+  }
+
   _editDialog(BuildContext context) {
     return showDialog(
         context: context,
@@ -139,7 +192,7 @@ Widget makeItem(
                         onPressed: () {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (BuildContext context) => EditItem(
-                                    option: 'update',
+                                    option: 'add',
                                     itemId: id,
                                     category: category,
                                     barcode: barcode,
@@ -173,7 +226,7 @@ Widget makeItem(
                         onPressed: () {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (BuildContext context) => EditItem(
-                                    option: 'update',
+                                    option: 'remove',
                                     itemId: id,
                                     category: category,
                                     barcode: barcode,
@@ -241,20 +294,10 @@ Widget makeItem(
                           textAlign: TextAlign.center,
                         ),
                         onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (BuildContext context) => EditItem(
-                                    option: 'update',
-                                    itemId: id,
-                                    category: category,
-                                    barcode: barcode,
-                                    itemName: tag,
-                                    itemQuantity: quantity,
-                                    itemImage: image,
-                                    buyDate: buyDate,
-                                    supplier: supplier,
-                                    buyPrice: buyPrice,
-                                    sellPrice: sellPrice,
-                                  )));
+                          _deleteDialog(context).then((value) =>
+                              value == 'deleted'
+                                  ? Navigator.pop(context)
+                                  : null);
                         }),
                   ),
                 ],

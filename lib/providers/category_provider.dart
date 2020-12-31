@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 
 class Category {
-  final String category;
+  final String categoryId;
 
-  Category(this.category);
+  Category(this.categoryId);
 }
 
 class CategoryProvider with ChangeNotifier {
@@ -13,9 +13,9 @@ class CategoryProvider with ChangeNotifier {
     return _category;
   }
 
-  void acceptCategory(String acceptedCat) {
-    final bc = Category(acceptedCat);
-    _category = bc;
+  void acceptCategory(String acceptedCatId) {
+    final categ = Category(acceptedCatId);
+    _category = categ;
     notifyListeners();
   }
 }
