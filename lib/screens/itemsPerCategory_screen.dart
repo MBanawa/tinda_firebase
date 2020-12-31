@@ -18,6 +18,7 @@ class ItemsPerCategory extends StatefulWidget {
 }
 
 class _ItemsPerCategoryState extends State<ItemsPerCategory> {
+  String _category;
   Stream userstream;
   CollectionReference itemcollection =
       FirebaseFirestore.instance.collection('items');
@@ -38,6 +39,15 @@ class _ItemsPerCategoryState extends State<ItemsPerCategory> {
           .orderBy('createdAt')
           .snapshots();
     });
+
+    final categDoc = await FirebaseFirestore.instance
+        .collection('categories')
+        .doc(widget.categoryId)
+        .get();
+
+    setState(() {
+      _category = categDoc.data()['categoryname'];
+    });
   }
 
   @override
@@ -45,7 +55,7 @@ class _ItemsPerCategoryState extends State<ItemsPerCategory> {
     return Scaffold(
       appBar: AppBar(
         //TODO: update this
-        title: Text(''),
+        title: Text('$_category'),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: userstream,

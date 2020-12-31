@@ -162,7 +162,7 @@ class _NewItemState extends State<NewItem> {
       'createdAt': Timestamp.now(),
       'itemName': _itemNameController.text.trim(),
       'barcode': widget.barcode,
-      'category': _category.data()['categoryname'],
+      'category': _category,
       'categoryId': widget.categoryId,
       'quantity': _itemQuantityController.text.trim(),
       'itemImage': url,
@@ -174,8 +174,6 @@ class _NewItemState extends State<NewItem> {
 
     _supplierDB(itemDoc.id, _itemNameController.text.trim());
     _sellPriceDB(itemDoc.id, _itemNameController.text.trim());
-
-    Navigator.pop(context);
   }
 
   void _supplierDB(String itemId, String itemName) {
@@ -205,6 +203,7 @@ class _NewItemState extends State<NewItem> {
       'itemId': itemId,
       'itemName': itemName,
     });
+    Navigator.pop(context);
   }
 
   @override
