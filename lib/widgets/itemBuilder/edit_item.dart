@@ -46,11 +46,13 @@ class _EditItemState extends State<EditItem> {
   var _editItemSupplierController = TextEditingController();
   var _editItemBuyPriceController = TextEditingController();
   var _editItemSellPriceController = TextEditingController();
+  var _removeReasonController = TextEditingController();
   FocusNode _quantFocusNode = FocusNode();
   FocusNode _buyDateFocusNode = FocusNode();
   FocusNode _supplierFocusNode = FocusNode();
   FocusNode _buyPriceFocusNode = FocusNode();
   FocusNode _sellPriceFocusNode = FocusNode();
+  FocusNode _reasonFocusNode = FocusNode();
   File imageFile;
   DateTime _dateTime = DateTime.now();
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
@@ -62,12 +64,20 @@ class _EditItemState extends State<EditItem> {
   }
 
   _setValues() {
-    _editItemNameController.text = widget.itemName;
-    _editItemQuantityController.text = widget.itemQuantity;
-    _editItemBuyDateController.text = widget.buyDate;
-    _editItemSupplierController.text = widget.supplier;
-    _editItemBuyPriceController.text = widget.buyPrice;
-    _editItemSellPriceController.text = widget.sellPrice;
+    if (widget.option == 'add' || widget.option == 'remove') {
+      _editItemQuantityController.clear();
+      _editItemBuyDateController.clear();
+      _editItemSupplierController.clear();
+      _editItemBuyPriceController.clear();
+      _editItemSellPriceController.clear();
+    } else {
+      _editItemNameController.text = widget.itemName;
+      _editItemQuantityController.text = widget.itemQuantity;
+      _editItemBuyDateController.text = widget.buyDate;
+      _editItemSupplierController.text = widget.supplier;
+      _editItemBuyPriceController.text = widget.buyPrice;
+      _editItemSellPriceController.text = widget.sellPrice;
+    }
   }
 
   _selectedItemDate(BuildContext context) async {
@@ -191,40 +201,47 @@ class _EditItemState extends State<EditItem> {
       'sellPrice': _editItemSellPriceController.text.trim(),
     });
 
-    // _supplierDB(itemDoc.id, _editItemNameController.text.trim());
-    // _sellPriceDB(itemDoc.id, _editItemNameController.text.trim());
+    _supplierDB(widget.itemId, _editItemNameController.text.trim());
+    _sellPriceDB(widget.itemId, _editItemNameController.text.trim());
 
     Navigator.pop(context);
+    imageFile = null;
+    _editItemNameController.clear();
+    _editItemQuantityController.clear();
+    _editItemBuyDateController.clear();
+    _editItemSupplierController.clear();
+    _editItemBuyPriceController.clear();
+    _editItemSellPriceController.clear();
   }
 
-  // void _supplierDB(String itemId, String itemName) {
-  //   final itemCollection = FirebaseFirestore.instance.collection('suppliers');
+  void _supplierDB(String itemId, String itemName) {
+    final itemCollection = FirebaseFirestore.instance.collection('suppliers');
 
-  //   itemCollection.add({
-  //     'entryDate': Timestamp.now(),
-  //     'supplier': _editItemSupplierController.text.trim(),
-  //     'buyDate': _editItemBuyDateController.text.trim(),
-  //     'buyPrice': _editItemBuyPriceController.text.trim(),
-  //     'quantity': _editItemQuantityController.text.trim(),
-  //     'itemId': itemId,
-  //     'itemName': itemName,
-  //   });
-  // }
+    itemCollection.add({
+      'entryDate': Timestamp.now(),
+      'supplier': _editItemSupplierController.text.trim(),
+      'buyDate': _editItemBuyDateController.text.trim(),
+      'buyPrice': _editItemBuyPriceController.text.trim(),
+      'quantity': _editItemQuantityController.text.trim(),
+      'itemId': itemId,
+      'itemName': itemName,
+    });
+  }
 
-  // void _sellPriceDB(
-  //   String itemId,
-  //   String itemName,
-  // ) {
-  //   final itemCollection = FirebaseFirestore.instance.collection('sellprice');
-  //   itemCollection.add({
-  //     'entryDate': Timestamp.now(),
-  //     'buyDate': _editItemBuyDateController.text.trim(),
-  //     'buyPrice': _editItemBuyPriceController.text.trim(),
-  //     'sellPrice': _editItemSellPriceController.text.trim(),
-  //     'itemId': itemId,
-  //     'itemName': itemName,
-  //   });
-  // }
+  void _sellPriceDB(
+    String itemId,
+    String itemName,
+  ) {
+    final itemCollection = FirebaseFirestore.instance.collection('sellprice');
+    itemCollection.add({
+      'entryDate': Timestamp.now(),
+      'buyDate': _editItemBuyDateController.text.trim(),
+      'buyPrice': _editItemBuyPriceController.text.trim(),
+      'sellPrice': _editItemSellPriceController.text.trim(),
+      'itemId': itemId,
+      'itemName': itemName,
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -272,112 +289,132 @@ class _EditItemState extends State<EditItem> {
                                 backgroundImage: imageFile != null
                                     ? FileImage(imageFile)
                                     : NetworkImage(widget.itemImage),
-                                child: Image.asset(
-                                  'assets/images/camera.png',
-                                  width: 50,
-                                  height: 50,
-                                ),
+                                child: widget.option == 'add' ||
+                                        widget.option == 'remove'
+                                    ? null
+                                    : Image.asset(
+                                        'assets/images/camera.png',
+                                        width: 50,
+                                        height: 50,
+                                      ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                      Row(
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                      widget.option == 'add' || widget.option == 'remove'
+                          ? Container()
+                          : Row(
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                      8.0, 0.0, 8.0, 0.0),
-                                  child: Text(
-                                    'Barcode:',
-                                    style: TextStyle(color: Colors.white),
+                                Expanded(
+                                  flex: 1,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            8.0, 0.0, 8.0, 0.0),
+                                        child: Text(
+                                          'Barcode:',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
+                                      Container(
+                                        height: 60,
+                                        decoration: BoxDecoration(
+                                          color: Colors.teal.shade800,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(6.0)),
+                                        ),
+                                        padding: EdgeInsets.all(8.0),
+                                        margin: EdgeInsets.fromLTRB(
+                                            8.0, 0.0, 8.0, 8.0),
+                                        child: Center(
+                                            child: Text(
+                                          widget.barcode == null
+                                              ? 'No Barcode'
+                                              : widget.barcode,
+                                          style: TextStyle(
+                                              color: Colors.teal.shade100,
+                                              fontWeight: FontWeight.bold),
+                                        )),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                Container(
-                                  height: 60,
-                                  decoration: BoxDecoration(
-                                    color: Colors.teal.shade800,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(6.0)),
+                                Expanded(
+                                  flex: 1,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            8.0, 0.0, 8.0, 0.0),
+                                        child: Text(
+                                          'Category:',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
+                                      Container(
+                                        height: 60,
+                                        decoration: BoxDecoration(
+                                          color: Colors.teal.shade800,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(6.0)),
+                                        ),
+                                        padding: EdgeInsets.all(8.0),
+                                        margin: EdgeInsets.fromLTRB(
+                                            8.0, 0.0, 8.0, 8.0),
+                                        child: Center(
+                                            child: Text(
+                                          widget.category == null
+                                              ? 'null'
+                                              : widget.category,
+                                          style: TextStyle(
+                                              color: Colors.teal.shade100,
+                                              fontWeight: FontWeight.bold),
+                                        )),
+                                      ),
+                                    ],
                                   ),
-                                  padding: EdgeInsets.all(8.0),
-                                  margin:
-                                      EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
-                                  child: Center(
-                                      child: Text(
-                                    widget.barcode == null
-                                        ? 'No Barcode'
-                                        : widget.barcode,
-                                    style: TextStyle(
-                                        color: Colors.teal.shade100,
-                                        fontWeight: FontWeight.bold),
-                                  )),
                                 ),
                               ],
                             ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Column(
+                      widget.option == 'add' || widget.option == 'remove'
+                          ? Container()
+                          : Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                      8.0, 0.0, 8.0, 0.0),
-                                  child: Text(
-                                    'Category:',
-                                    style: TextStyle(color: Colors.white),
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        8.0, 0.0, 8.0, 0.0),
+                                    child: Text(
+                                      'Item Name:',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                   ),
-                                ),
-                                Container(
-                                  height: 60,
-                                  decoration: BoxDecoration(
-                                    color: Colors.teal.shade800,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(6.0)),
-                                  ),
-                                  padding: EdgeInsets.all(8.0),
-                                  margin:
-                                      EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
-                                  child: Center(
-                                      child: Text(
-                                    widget.category == null
-                                        ? 'null'
-                                        : widget.category,
-                                    style: TextStyle(
-                                        color: Colors.teal.shade100,
-                                        fontWeight: FontWeight.bold),
-                                  )),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                                  CustomTextField(
+                                    controller: _editItemNameController,
+                                    keyboardType: TextInputType.text,
+                                    hintText: 'Enter the item\'s name here..',
+                                    isObscure: false,
+                                    onSubmitted: (_) {
+                                      widget.option == 'remove'
+                                          ? FocusScope.of(context)
+                                              .requestFocus(_reasonFocusNode)
+                                          : FocusScope.of(context)
+                                              .requestFocus(_quantFocusNode);
+                                    },
+                                  )
+                                ]),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
                         child: Text(
-                          'Item Name:',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      CustomTextField(
-                        controller: _editItemNameController,
-                        keyboardType: TextInputType.text,
-                        hintText: 'Enter the item\'s name here..',
-                        isObscure: false,
-                        onSubmitted: (_) {
-                          FocusScope.of(context).requestFocus(_quantFocusNode);
-                        },
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
-                        child: Text(
-                          'Quantity:',
+                          widget.option == 'add' || widget.option == 'remove'
+                              ? 'How many ${widget.itemName} will you ${widget.option}? \n(Current stocks: ${widget.itemQuantity})'
+                              : 'Quantity:',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -385,87 +422,132 @@ class _EditItemState extends State<EditItem> {
                         focusNode: _quantFocusNode,
                         keyboardType: TextInputType.number,
                         controller: _editItemQuantityController,
-                        hintText: 'How many pieces are you adding?',
+                        hintText:
+                            widget.option == 'add' || widget.option == 'remove'
+                                ? 'How many pieces will you ${widget.option}?'
+                                : 'How many pieces are you adding?',
                         isObscure: false,
                         onSubmitted: (_) {
                           FocusScope.of(context)
                               .requestFocus(_buyDateFocusNode);
                         },
                       ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
-                        child: Text(
-                          'Purchase Date:',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      CustomTextField(
-                        focusNode: _buyDateFocusNode,
-                        keyboardType: TextInputType.datetime,
-                        controller: _editItemBuyDateController,
-                        hintText: 'When did you buy the item?',
-                        isObscure: false,
-                        onTap: () {
-                          _selectedItemDate(context);
-                        },
-                        onSubmitted: (_) {
-                          FocusScope.of(context)
-                              .requestFocus(_supplierFocusNode);
-                        },
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
-                        child: Text(
-                          'Supplier Name:',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      CustomTextField(
-                        focusNode: _supplierFocusNode,
-                        keyboardType: TextInputType.text,
-                        controller: _editItemSupplierController,
-                        hintText: 'Where did you buy the item?',
-                        isObscure: false,
-                        onSubmitted: (_) {
-                          FocusScope.of(context)
-                              .requestFocus(_buyPriceFocusNode);
-                        },
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
-                        child: Text(
-                          'Purchase Price:',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      CustomTextField(
-                        focusNode: _buyPriceFocusNode,
-                        keyboardType: TextInputType.number,
-                        controller: _editItemBuyPriceController,
-                        hintText: 'How much did you buy the item for?',
-                        isObscure: false,
-                        onSubmitted: (_) {
-                          FocusScope.of(context)
-                              .requestFocus(_sellPriceFocusNode);
-                        },
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
-                        child: Text(
-                          'Sell Price:',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      CustomTextField(
-                        focusNode: _sellPriceFocusNode,
-                        keyboardType: TextInputType.number,
-                        controller: _editItemSellPriceController,
-                        hintText: 'How much will you sell the item for?',
-                        isObscure: false,
-                        onSubmitted: (_) {
-                          _editItem();
-                        },
-                      ),
+                      widget.option == 'remove'
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      8.0, 0.0, 8.0, 0.0),
+                                  child: Text(
+                                    'Please select reason for removing: \n(Expired, rat damage, defective, etc...)',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                                CustomTextField(
+                                  focusNode: _reasonFocusNode,
+                                  keyboardType: TextInputType.text,
+                                  controller: _removeReasonController,
+                                  hintText: 'Why are you removing stocks?',
+                                  isObscure: false,
+                                  onSubmitted: (_) {},
+                                ),
+                              ],
+                            )
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      8.0, 0.0, 8.0, 0.0),
+                                  child: Text(
+                                    'Purchase Date:',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                                CustomTextField(
+                                  focusNode: _buyDateFocusNode,
+                                  keyboardType: TextInputType.datetime,
+                                  controller: _editItemBuyDateController,
+                                  hintText: 'When did you buy the item?',
+                                  isObscure: false,
+                                  onTap: () {
+                                    _selectedItemDate(context);
+                                  },
+                                  onSubmitted: (_) {
+                                    FocusScope.of(context)
+                                        .requestFocus(_supplierFocusNode);
+                                  },
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      8.0, 0.0, 8.0, 0.0),
+                                  child: Text(
+                                    widget.option == 'add' ||
+                                            widget.option == 'remove'
+                                        ? 'Supplier Name: \n(Last Supplier: ${widget.supplier})'
+                                        : 'Supplier Name:',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                                CustomTextField(
+                                  focusNode: _supplierFocusNode,
+                                  keyboardType: TextInputType.text,
+                                  controller: _editItemSupplierController,
+                                  hintText: 'Where did you buy the item?',
+                                  isObscure: false,
+                                  onSubmitted: (_) {
+                                    FocusScope.of(context)
+                                        .requestFocus(_buyPriceFocusNode);
+                                  },
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      8.0, 0.0, 8.0, 0.0),
+                                  child: Text(
+                                    widget.option == 'add' ||
+                                            widget.option == 'remove'
+                                        ? 'Purchase Price: \n(Previous Purchase Price: PHP ${double.parse(widget.buyPrice).toStringAsFixed(2)})'
+                                        : 'Purchase Price:',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                                CustomTextField(
+                                  focusNode: _buyPriceFocusNode,
+                                  keyboardType: TextInputType.number,
+                                  controller: _editItemBuyPriceController,
+                                  hintText:
+                                      'How much did you buy the item for?',
+                                  isObscure: false,
+                                  onSubmitted: (_) {
+                                    FocusScope.of(context)
+                                        .requestFocus(_sellPriceFocusNode);
+                                  },
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      8.0, 0.0, 8.0, 0.0),
+                                  child: Text(
+                                    widget.option == 'add' ||
+                                            widget.option == 'remove'
+                                        ? 'Sell Price: \n(Previous Sell Price: PHP ${double.parse(widget.sellPrice).toStringAsFixed(2)})'
+                                        : 'Sell Price:',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                                CustomTextField(
+                                  focusNode: _sellPriceFocusNode,
+                                  keyboardType: TextInputType.number,
+                                  controller: _editItemSellPriceController,
+                                  hintText:
+                                      'How much will you sell the item for?',
+                                  isObscure: false,
+                                  onSubmitted: (_) {
+                                    _editItem();
+                                  },
+                                ),
+                              ],
+                            ),
                       SizedBox(
                         height: 15,
                       ),

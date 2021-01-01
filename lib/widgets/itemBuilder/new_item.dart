@@ -174,6 +174,14 @@ class _NewItemState extends State<NewItem> {
 
     _supplierDB(itemDoc.id, _itemNameController.text.trim());
     _sellPriceDB(itemDoc.id, _itemNameController.text.trim());
+
+    imageFile = null;
+    _itemNameController.clear();
+    _itemQuantityController.clear();
+    _itemBuyDateController.clear();
+    _itemSupplierController.clear();
+    _itemBuyPriceController.clear();
+    _itemSellPriceController.clear();
   }
 
   void _supplierDB(String itemId, String itemName) {

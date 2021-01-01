@@ -171,7 +171,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                         final providedCategory = Provider.of<CategoryProvider>(
                             context,
                             listen: false);
-//TODO: asdasd
+
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => NewItem(
                                   categoryId:
