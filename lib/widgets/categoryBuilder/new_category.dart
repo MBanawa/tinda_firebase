@@ -10,6 +10,10 @@ import 'package:tinda/widgets/itemBuilder/new_item.dart';
 import 'package:tinda/widgets/roundIconButton.dart';
 
 class NewCategory extends StatefulWidget {
+  final String barcode;
+
+  NewCategory({this.barcode});
+
   @override
   _NewCategoryState createState() => _NewCategoryState();
 }
@@ -112,8 +116,16 @@ class _NewCategoryState extends State<NewCategory> {
     _categoryNameController.clear();
     _categoryDescriptionController.clear();
     Navigator.pop(context);
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => NewItem(categoryId: _categoryId)));
+    widget.barcode == null
+        ? Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => NewItem(
+                  categoryId: _categoryId,
+                )))
+        : Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => NewItem(
+                  categoryId: _categoryId,
+                  barcode: widget.barcode,
+                )));
   }
 
   @override

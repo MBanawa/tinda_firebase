@@ -241,7 +241,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => NewCategory()));
+                                        builder: (context) => NewCategory(
+                                            barcode: _scanBarcode)));
                               }),
                         ),
                       ],

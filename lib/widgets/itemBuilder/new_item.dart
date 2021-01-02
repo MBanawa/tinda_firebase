@@ -133,15 +133,15 @@ class _NewItemState extends State<NewItem> {
   _showSnackBar(BuildContext context, message) {
     var _snackBar = SnackBar(
       content: message,
-      backgroundColor: Colors.teal.shade900,
-      duration: const Duration(milliseconds: 1500),
+      backgroundColor: Colors.green,
+      duration: const Duration(milliseconds: 3000),
     );
     _globalKey.currentState.showSnackBar(_snackBar);
   }
 
   void _saveNewItem() async {
     FocusScope.of(context).unfocus();
-    _showSnackBar(context, Text('Saving....'));
+    _showSnackBar(context, Text('Saving, please wait....'));
     final user = FirebaseAuth.instance.currentUser;
     final userData = await FirebaseFirestore.instance
         .collection('users')
