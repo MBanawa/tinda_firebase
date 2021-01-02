@@ -162,21 +162,16 @@ class _EditItemState extends State<EditItem> {
   ) {
     var _snackBar = SnackBar(
       content: message,
-      backgroundColor: Colors.teal.shade900,
-      duration: const Duration(milliseconds: 1500),
+      backgroundColor: Colors.green,
+      duration: const Duration(milliseconds: 3000),
     );
     _globalKey.currentState.showSnackBar(_snackBar);
   }
 
   void _editItem() async {
     FocusScope.of(context).unfocus();
-    _showSnackBar(context, Text('Saving....'));
+    _showSnackBar(context, Text('Saving, please wait....'));
     var url;
-    final user = FirebaseAuth.instance.currentUser;
-    final userData = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user.uid)
-        .get();
 
     if (imageFile != null) {
       final ref = FirebaseStorage.instance
@@ -188,21 +183,46 @@ class _EditItemState extends State<EditItem> {
       url = await ref.getDownloadURL();
     }
 
-    await FirebaseFirestore.instance
-        .collection('items')
-        .doc(widget.itemId)
-        .update({
-      'itemName': _editItemNameController.text.trim(),
-      'quantity': _editItemQuantityController.text.trim(),
-      'itemImage': imageFile != null ? url : widget.itemImage,
-      'supplier': _editItemSupplierController.text.trim(),
-      'buyDate': _editItemBuyDateController.text.trim(),
-      'buyPrice': _editItemBuyPriceController.text.trim(),
-      'sellPrice': _editItemSellPriceController.text.trim(),
-    });
+    if (widget.option == 'add') {
+      await FirebaseFirestore.instance
+          .collection('items')
+          .doc(widget.itemId)
+          .update({
+        'quantity': (int.parse(widget.itemQuantity) +
+                int.parse(_editItemQuantityController.text.trim()))
+            .toString(),
+        'itemImage': imageFile != null ? url : widget.itemImage,
+        'supplier': _editItemSupplierController.text.trim(),
+        'buyDate': _editItemBuyDateController.text.trim(),
+        'buyPrice': _editItemBuyPriceController.text.trim(),
+        'sellPrice': _editItemSellPriceController.text.trim(),
+      });
+    } else if (widget.option == 'remove') {
+      await FirebaseFirestore.instance
+          .collection('items')
+          .doc(widget.itemId)
+          .update({
+        'quantity': (int.parse(widget.itemQuantity) -
+                int.parse(_editItemQuantityController.text.trim()))
+            .toString(),
+      });
+    } else {
+      await FirebaseFirestore.instance
+          .collection('items')
+          .doc(widget.itemId)
+          .update({
+        'itemName': _editItemNameController.text.trim(),
+        'quantity': _editItemQuantityController.text.trim(),
+        'itemImage': imageFile != null ? url : widget.itemImage,
+        'supplier': _editItemSupplierController.text.trim(),
+        'buyDate': _editItemBuyDateController.text.trim(),
+        'buyPrice': _editItemBuyPriceController.text.trim(),
+        'sellPrice': _editItemSellPriceController.text.trim(),
+      });
+    }
 
-    _supplierDB(widget.itemId, _editItemNameController.text.trim());
-    _sellPriceDB(widget.itemId, _editItemNameController.text.trim());
+    // _supplierDB(widget.itemId, _editItemNameController.text.trim());
+    // _sellPriceDB(widget.itemId, _editItemNameController.text.trim());
 
     Navigator.pop(context);
     imageFile = null;
@@ -214,34 +234,34 @@ class _EditItemState extends State<EditItem> {
     _editItemSellPriceController.clear();
   }
 
-  void _supplierDB(String itemId, String itemName) {
-    final itemCollection = FirebaseFirestore.instance.collection('suppliers');
+  // void _supplierDB(String itemId, String itemName) {
+  //   final itemCollection = FirebaseFirestore.instance.collection('suppliers');
 
-    itemCollection.add({
-      'entryDate': Timestamp.now(),
-      'supplier': _editItemSupplierController.text.trim(),
-      'buyDate': _editItemBuyDateController.text.trim(),
-      'buyPrice': _editItemBuyPriceController.text.trim(),
-      'quantity': _editItemQuantityController.text.trim(),
-      'itemId': itemId,
-      'itemName': itemName,
-    });
-  }
+  //   itemCollection.add({
+  //     'entryDate': Timestamp.now(),
+  //     'supplier': _editItemSupplierController.text.trim(),
+  //     'buyDate': _editItemBuyDateController.text.trim(),
+  //     'buyPrice': _editItemBuyPriceController.text.trim(),
+  //     'quantity': _editItemQuantityController.text.trim(),
+  //     'itemId': itemId,
+  //     'itemName': itemName,
+  //   });
+  // }
 
-  void _sellPriceDB(
-    String itemId,
-    String itemName,
-  ) {
-    final itemCollection = FirebaseFirestore.instance.collection('sellprice');
-    itemCollection.add({
-      'entryDate': Timestamp.now(),
-      'buyDate': _editItemBuyDateController.text.trim(),
-      'buyPrice': _editItemBuyPriceController.text.trim(),
-      'sellPrice': _editItemSellPriceController.text.trim(),
-      'itemId': itemId,
-      'itemName': itemName,
-    });
-  }
+  // void _sellPriceDB(
+  //   String itemId,
+  //   String itemName,
+  // ) {
+  //   final itemCollection = FirebaseFirestore.instance.collection('sellprice');
+  //   itemCollection.add({
+  //     'entryDate': Timestamp.now(),
+  //     'buyDate': _editItemBuyDateController.text.trim(),
+  //     'buyPrice': _editItemBuyPriceController.text.trim(),
+  //     'sellPrice': _editItemSellPriceController.text.trim(),
+  //     'itemId': itemId,
+  //     'itemName': itemName,
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
