@@ -15,7 +15,7 @@ class FirebaseDropDown extends StatefulWidget {
 
 class _FirebaseDropDownState extends State<FirebaseDropDown> {
   var _selectedValue;
-  var _selectedValueId;
+
   @override
   Widget build(BuildContext context) {
     return Container(

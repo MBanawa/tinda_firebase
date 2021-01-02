@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:tinda/animation/FadeAnimation.dart';
 import 'package:tinda/screens/itemDetail_screen.dart';
@@ -39,7 +40,7 @@ class MakeItem extends StatelessWidget {
     return showDialog(
         context: context,
         barrierDismissible: true,
-        builder: (param) {
+        builder: (dialogContext) {
           return AlertDialog(
             backgroundColor: Theme.of(context).primaryColor,
             title: Text(
@@ -77,7 +78,10 @@ class MakeItem extends StatelessWidget {
                         .then((value) => value = 'deleted')
                         .catchError((error) => print(error));
                     if (result == 'deleted') {
-                      Navigator.pop(context, 'deleted');
+                      final storageReference =
+                          FirebaseStorage.instance.refFromURL(image);
+                      storageReference.delete();
+                      Navigator.of(dialogContext).pop();
                     }
                   },
                 ),
@@ -222,10 +226,13 @@ class MakeItem extends StatelessWidget {
                           textAlign: TextAlign.center,
                         ),
                         onPressed: () {
-                          _deleteDialog(context).then((value) =>
-                              value == 'deleted'
-                                  ? Navigator.pop(context)
-                                  : null);
+                          Navigator.pop(context);
+                          _deleteDialog(context)
+                              // .then((value) =>
+                              //     value == 'deleted'
+                              //         ? Navigator.pop(context)
+                              //         : null)
+                              ;
                         }),
                   ),
                 ],
