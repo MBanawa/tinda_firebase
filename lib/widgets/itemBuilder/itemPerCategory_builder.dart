@@ -70,6 +70,7 @@ class MakeItem extends StatelessWidget {
                     style: TextStyle(color: Colors.white),
                   ),
                   onPressed: () async {
+                    //Delete Item Document
                     CollectionReference items =
                         FirebaseFirestore.instance.collection('items');
                     var result = await items
@@ -78,9 +79,39 @@ class MakeItem extends StatelessWidget {
                         .then((value) => value = 'deleted')
                         .catchError((error) => print(error));
                     if (result == 'deleted') {
+                      //Delete Item Image
                       final storageReference =
                           FirebaseStorage.instance.refFromURL(image);
-                      storageReference.delete();
+                      storageReference
+                          .delete()
+                          .catchError((error) => print(error));
+
+                      //Delete Item Supplier Document
+                      final supplier =
+                          FirebaseFirestore.instance.collection('suppliers');
+                      supplier
+                          .where('itemId', isEqualTo: id)
+                          .get()
+                          .then((value) {
+                        supplier
+                            .doc(value.docs.first.id)
+                            .delete()
+                            .catchError((error) => print(error));
+                      });
+
+                      //Delete Item sellprice Document
+                      final sellprice =
+                          FirebaseFirestore.instance.collection('sellprice');
+                      sellprice
+                          .where('itemId', isEqualTo: id)
+                          .get()
+                          .then((value) {
+                        sellprice
+                            .doc(value.docs.first.id)
+                            .delete()
+                            .catchError((error) => print(error));
+                      });
+
                       Navigator.of(dialogContext).pop();
                     }
                   },

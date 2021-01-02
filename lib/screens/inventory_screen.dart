@@ -52,7 +52,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
           return AlertDialog(
             backgroundColor: Theme.of(context).primaryColor,
             title: Text(
-              'Create New Item',
+              'Add Stocks',
               style: TextStyle(color: Colors.white),
             ),
             content: SingleChildScrollView(
