@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tinda/animation/FadeAnimation.dart';
+import 'package:tinda/widgets/itemBuilder/options_dialog.dart';
 
 class ItemDetail extends StatefulWidget {
   final String image;
@@ -13,6 +14,27 @@ class ItemDetail extends StatefulWidget {
 }
 
 class _ItemDetailState extends State<ItemDetail> {
+  //TODO: ItemProvider??
+  _optionsDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (param) {
+          return OptionsDialog(
+            id: null,
+            category: null,
+            barcode: null,
+            itemName: null,
+            quantity: null,
+            image: null,
+            buyDate: null,
+            supplier: null,
+            buyPrice: null,
+            sellPrice: null,
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,17 +76,22 @@ class _ItemDetailState extends State<ItemDetail> {
                           ),
                         ),
                       ),
-                      Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.yellow.shade900),
-                        child: Center(
-                          child: Icon(
-                            Icons.settings,
-                            size: 20,
-                            color: Colors.white,
+                      GestureDetector(
+                        onTap: () {
+                          _optionsDialog(context);
+                        },
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.yellow.shade900),
+                          child: Center(
+                            child: Icon(
+                              Icons.settings,
+                              size: 20,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       )

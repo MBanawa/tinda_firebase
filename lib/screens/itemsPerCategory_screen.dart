@@ -45,6 +45,7 @@ class _ItemsPerCategoryState extends State<ItemsPerCategory> {
     });
   }
 
+  //TODO: pre-load images so that it won't show grey shadow first?
   @override
   Widget build(BuildContext context) {
     return Scaffold(
