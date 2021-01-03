@@ -136,7 +136,9 @@ class _InventoryScreenState extends State<InventoryScreen> {
   FirebaseDropDown _dropDownList() => FirebaseDropDown(
         onChanged: (value) {
           setState(() {
+            //TODO: what happens to _selectedValue??
             _selectedValue = value;
+            print(_selectedValue);
           });
         },
       );
@@ -260,6 +262,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
         centerTitle: true,
         title: Text('Inventory Manager'),
       ),
+      //TODO: add to stock for items with no barcode??
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {

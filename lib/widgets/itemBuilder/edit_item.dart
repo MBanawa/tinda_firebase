@@ -204,17 +204,20 @@ class _EditItemState extends State<EditItem> {
             .toString(),
       });
 
+      //TODO: first in first out or last in first out for prices and supplier?
       final itemCollection =
           FirebaseFirestore.instance.collection('removedData');
       itemCollection.add({
         'entryDate': Timestamp.now(),
         'removeReason': _removeReasonController.text.trim(),
-        'buyPrice': _editItemBuyPriceController.text.trim(),
-        'sellPrice': _editItemSellPriceController.text.trim(),
+        'buyPrice': widget.buyPrice,
+        'sellPrice': widget.sellPrice,
+        'supplier': widget.supplier,
         'itemId': widget.itemId,
         'itemName': widget.itemName,
       });
     } else {
+      //TODO: Edit supplier and price as well
       FirebaseFirestore.instance.collection('items').doc(widget.itemId).update({
         'itemName': _editItemNameController.text.trim(),
         'quantity': _editItemQuantityController.text.trim(),
