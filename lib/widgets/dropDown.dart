@@ -54,9 +54,9 @@ class _FirebaseDropDownState extends State<FirebaseDropDown> {
                   onChanged: (categValue) {
                     setState(() {
                       _selectedValue = categValue;
-                      Provider.of<CategoryProvider>(context, listen: false)
-                          .acceptCategory(_selectedValue);
                     });
+                    Provider.of<CategoryProvider>(context, listen: false)
+                        .acceptCategory(_selectedValue);
                   },
                   hint: Padding(
                     padding: const EdgeInsets.all(8.0),

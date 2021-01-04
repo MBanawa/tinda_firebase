@@ -23,7 +23,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
   String _scanBarcode = '';
   Stream userstream;
   String fuser;
-  var _selectedValue;
 
   @override
   void initState() {
@@ -133,15 +132,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
     });
   }
 
-  FirebaseDropDown _dropDownList() => FirebaseDropDown(
-        onChanged: (value) {
-          setState(() {
-            //TODO: what happens to _selectedValue??
-            _selectedValue = value;
-            print(_selectedValue);
-          });
-        },
-      );
+  FirebaseDropDown _dropDownList() => FirebaseDropDown();
 
   _selectionDialog(BuildContext context) {
     return showDialog(

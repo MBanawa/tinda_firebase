@@ -69,7 +69,6 @@ class _NewItemState extends State<NewItem> {
     setState(() {
       _category = categDoc.data()['categoryname'];
     });
-    print('NEW ITEM CATEGORY: $_category ${widget.categoryId}');
   }
 
   pickImage(ImageSource imageSource) async {

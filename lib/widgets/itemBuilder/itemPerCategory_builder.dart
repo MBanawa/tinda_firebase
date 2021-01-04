@@ -1,9 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:tinda/animation/FadeAnimation.dart';
 import 'package:tinda/screens/itemDetail_screen.dart';
-import 'package:tinda/widgets/itemBuilder/edit_item.dart';
 import 'package:tinda/widgets/itemBuilder/options_dialog.dart';
 
 Color fontColor = Colors.white;
@@ -36,92 +33,6 @@ class MakeItem extends StatelessWidget {
     @required this.buyPrice,
     @required this.sellPrice,
   });
-
-  // _deleteDialog(BuildContext context) {
-  //   return showDialog(
-  //       context: context,
-  //       barrierDismissible: true,
-  //       builder: (dialogContext) {
-  //         return AlertDialog(
-  //           backgroundColor: Theme.of(context).primaryColor,
-  //           title: Text(
-  //             'Delete Confirmation',
-  //             style: TextStyle(color: Colors.white),
-  //           ),
-  //           content: Text(
-  //             'Are you sure you want to delete $itemName? This action is permanent.',
-  //             style: TextStyle(color: Colors.yellow),
-  //           ),
-  //           actions: [
-  //             FlatButton(
-  //               onPressed: () {
-  //                 Navigator.pop(context);
-  //               },
-  //               child: Text(
-  //                 'Cancel',
-  //                 style: TextStyle(color: Colors.white),
-  //               ),
-  //             ),
-  //             Container(
-  //               width: 100.0,
-  //               child: RaisedButton(
-  //                 color: Colors.yellow.shade900,
-  //                 child: Text(
-  //                   'Delete',
-  //                   style: TextStyle(color: Colors.white),
-  //                 ),
-  //                 onPressed: () async {
-  //                   //Delete Item Document
-  //                   CollectionReference items =
-  //                       FirebaseFirestore.instance.collection('items');
-  //                   var result = await items
-  //                       .doc(id)
-  //                       .delete()
-  //                       .then((value) => value = 'deleted')
-  //                       .catchError((error) => print(error));
-  //                   if (result == 'deleted') {
-  //                     //Delete Item Image
-  //                     final storageReference =
-  //                         FirebaseStorage.instance.refFromURL(image);
-  //                     storageReference
-  //                         .delete()
-  //                         .catchError((error) => print(error));
-
-  //                     //Delete Item Supplier Document
-  //                     final supplier =
-  //                         FirebaseFirestore.instance.collection('suppliers');
-  //                     supplier
-  //                         .where('itemId', isEqualTo: id)
-  //                         .get()
-  //                         .then((value) {
-  //                       supplier
-  //                           .doc(value.docs.first.id)
-  //                           .delete()
-  //                           .catchError((error) => print(error));
-  //                     });
-
-  //                     //Delete Item sellprice Document
-  //                     final sellprice =
-  //                         FirebaseFirestore.instance.collection('sellprice');
-  //                     sellprice
-  //                         .where('itemId', isEqualTo: id)
-  //                         .get()
-  //                         .then((value) {
-  //                       sellprice
-  //                           .doc(value.docs.first.id)
-  //                           .delete()
-  //                           .catchError((error) => print(error));
-  //                     });
-
-  //                     Navigator.of(dialogContext).pop();
-  //                   }
-  //                 },
-  //               ),
-  //             ),
-  //           ],
-  //         );
-  //       });
-  // }
 
   _optionsDialog(BuildContext context) {
     return showDialog(

@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-class Item with ChangeNotifier {
+class Item {
   final String id;
   final String category;
   final String barcode;
