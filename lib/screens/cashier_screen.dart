@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tinda/widgets/itemBuilder/new_item.dart';
+import 'package:tinda/screens/generate_qrcode.dart';
 
 class CashierScreen extends StatelessWidget {
   @override
@@ -7,11 +7,8 @@ class CashierScreen extends StatelessWidget {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => NewItem(
-                    barcode: '123456',
-                    categoryId: 'Snacks',
-                  )));
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => GenerateQr()));
         },
       ),
       appBar: AppBar(
