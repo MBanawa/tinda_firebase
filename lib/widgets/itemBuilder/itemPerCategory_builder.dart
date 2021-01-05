@@ -63,7 +63,18 @@ class MakeItem extends StatelessWidget {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => ItemDetail(image, itemName, quantity)));
+                  builder: (context) => ItemDetail(
+                        id: id,
+                        category: category,
+                        barcode: barcode,
+                        itemName: itemName,
+                        quantity: quantity,
+                        image: image,
+                        buyDate: buyDate,
+                        supplier: supplier,
+                        buyPrice: buyPrice,
+                        sellPrice: sellPrice,
+                      )));
         },
         child: Container(
           padding: const EdgeInsets.all(20),

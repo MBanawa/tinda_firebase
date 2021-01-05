@@ -3,11 +3,29 @@ import 'package:tinda/animation/FadeAnimation.dart';
 import 'package:tinda/widgets/itemBuilder/options_dialog.dart';
 
 class ItemDetail extends StatefulWidget {
-  final String image;
-  final String tag;
+  final String id;
+  final String category;
+  final String barcode;
+  final String itemName;
   final String quantity;
+  final String image;
+  final String buyDate;
+  final String supplier;
+  final String buyPrice;
+  final String sellPrice;
 
-  ItemDetail(this.image, this.tag, this.quantity);
+  ItemDetail({
+    @required this.id,
+    @required this.category,
+    @required this.barcode,
+    @required this.itemName,
+    @required this.quantity,
+    @required this.image,
+    @required this.buyDate,
+    @required this.supplier,
+    @required this.buyPrice,
+    @required this.sellPrice,
+  });
 
   @override
   _ItemDetailState createState() => _ItemDetailState();
@@ -21,16 +39,16 @@ class _ItemDetailState extends State<ItemDetail> {
         barrierDismissible: true,
         builder: (param) {
           return OptionsDialog(
-            id: null,
-            category: null,
-            barcode: null,
-            itemName: null,
-            quantity: null,
-            image: null,
-            buyDate: null,
-            supplier: null,
-            buyPrice: null,
-            sellPrice: null,
+            id: widget.id,
+            category: widget.category,
+            barcode: widget.barcode,
+            itemName: widget.itemName,
+            quantity: widget.quantity,
+            image: widget.image,
+            buyDate: widget.buyDate,
+            supplier: widget.supplier,
+            buyPrice: widget.buyPrice,
+            sellPrice: widget.sellPrice,
           );
         });
   }
@@ -40,7 +58,7 @@ class _ItemDetailState extends State<ItemDetail> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Hero(
-          tag: widget.tag,
+          tag: widget.itemName,
           child: Container(
             height: MediaQuery.of(context).size.height,
             width: double.infinity,
@@ -123,7 +141,7 @@ class _ItemDetailState extends State<ItemDetail> {
                           FadeAnimation(
                             0.6,
                             Text(
-                              widget.tag,
+                              widget.itemName,
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 35,
