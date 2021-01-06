@@ -260,119 +260,176 @@ class _InventoryScreenState extends State<InventoryScreen> {
           _scanDialog(context);
         },
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: userstream,
-        builder: (ctx, categSnapshot) {
-          if (categSnapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          final categDocs = categSnapshot.data.docs;
-          return ListView.builder(
-            physics: BouncingScrollPhysics(),
-            itemCount: categDocs.length,
-            itemBuilder: (context, index) {
-              return Card(
-                margin: EdgeInsets.fromLTRB(8, 8, 8, 0),
-                elevation: 3,
-                child: InkWell(
-                  splashColor: Colors.teal.withAlpha(80),
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                            ItemsPerCategory(categDocs[index].id)));
-                  },
-                  child: Container(
-                    child: Stack(
-                      children: <Widget>[
-                        Container(
-                          width: 6,
-                          height: 65,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(4),
-                                bottomLeft: Radius.circular(4)),
-                            color: Color(
-                                categDocs[index].data()['categorycolor'] == null
-                                    ? 0xff008080
-                                    : categDocs[index].data()['categorycolor']),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(16.0, 8, 0, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Expanded(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      categDocs[index].data()['categoryname'],
-                                      style: TextStyle(
-                                        fontSize: 22.0,
-                                        color: Colors.teal.shade800,
-                                      ),
-                                    ),
-                                    Text(
-                                      '${categDocs[index].data()['categorydescription']}',
-                                      style: TextStyle(
-                                        fontSize: 12.0,
-                                        color: Colors.orange.shade400,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              PopupMenuButton(onSelected: (MenuItem menuItem) {
-                                if (menuItem.menuVal == "Edit") {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          EditCategory(
-                                            context,
-                                            categDocs[index].id,
-                                            categDocs[index]
-                                                .data()['categoryname'],
-                                            categDocs[index]
-                                                .data()['categorydescription'],
-                                            categDocs[index]
-                                                .data()['categorycolor'],
-                                          )));
-                                } else if (menuItem.menuVal == "Delete") {
-                                  //delete category
-                                  CollectionReference categs = FirebaseFirestore
-                                      .instance
-                                      .collection('categories');
-                                  categs.doc(categDocs[index].id).delete();
-                                }
-                              }, itemBuilder: (BuildContext context) {
-                                return menuitems.map((MenuItem menuItem) {
-                                  return PopupMenuItem(
-                                    value: menuItem,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Icon(menuItem.iconVal),
-                                        Text(menuItem.menuVal),
-                                      ],
-                                    ),
-                                  );
-                                }).toList();
-                              })
-                            ],
-                          ),
-                        ),
-                      ],
+      body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.grey,
+                        offset: Offset(0, 1),
+                        blurRadius: 3.0,
+                        spreadRadius: 0.5),
+                  ],
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(6.0)),
+                ),
+                padding: EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
+                margin: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintStyle: TextStyle(color: Colors.grey),
+                    hintText: 'Search Category',
+                    prefixIcon: Icon(
+                      Icons.search,
+                      color: Colors.teal.shade800,
                     ),
+                    border: InputBorder.none,
                   ),
                 ),
-              );
-            },
-          );
-        },
+              ),
+            ),
+            Container(
+              child: StreamBuilder<QuerySnapshot>(
+                stream: userstream,
+                builder: (ctx, categSnapshot) {
+                  if (categSnapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  final categDocs = categSnapshot.data.docs;
+                  return ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    physics: BouncingScrollPhysics(),
+                    itemCount: categDocs.length,
+                    itemBuilder: (context, index) {
+                      return Card(
+                        margin: EdgeInsets.fromLTRB(8, 8, 8, 0),
+                        elevation: 3,
+                        child: InkWell(
+                          splashColor: Colors.teal.withAlpha(80),
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    ItemsPerCategory(categDocs[index].id)));
+                          },
+                          child: Container(
+                            child: Stack(
+                              children: <Widget>[
+                                Container(
+                                  width: 6,
+                                  height: 65,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(4),
+                                        bottomLeft: Radius.circular(4)),
+                                    color: Color(categDocs[index]
+                                                .data()['categorycolor'] ==
+                                            null
+                                        ? 0xff008080
+                                        : categDocs[index]
+                                            .data()['categorycolor']),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(16.0, 8, 0, 0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              categDocs[index]
+                                                  .data()['categoryname'],
+                                              style: TextStyle(
+                                                fontSize: 22.0,
+                                                color: Colors.teal.shade800,
+                                              ),
+                                            ),
+                                            Text(
+                                              '${categDocs[index].data()['categorydescription']}',
+                                              style: TextStyle(
+                                                fontSize: 12.0,
+                                                color: Colors.orange.shade400,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      PopupMenuButton(
+                                          onSelected: (MenuItem menuItem) {
+                                        if (menuItem.menuVal == "Edit") {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (BuildContext
+                                                          context) =>
+                                                      EditCategory(
+                                                        context,
+                                                        categDocs[index].id,
+                                                        categDocs[index].data()[
+                                                            'categoryname'],
+                                                        categDocs[index].data()[
+                                                            'categorydescription'],
+                                                        categDocs[index].data()[
+                                                            'categorycolor'],
+                                                      )));
+                                        } else if (menuItem.menuVal ==
+                                            "Delete") {
+                                          //delete category
+                                          CollectionReference categs =
+                                              FirebaseFirestore.instance
+                                                  .collection('categories');
+                                          categs
+                                              .doc(categDocs[index].id)
+                                              .delete();
+                                        }
+                                      }, itemBuilder: (BuildContext context) {
+                                        return menuitems
+                                            .map((MenuItem menuItem) {
+                                          return PopupMenuItem(
+                                            value: menuItem,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Icon(menuItem.iconVal),
+                                                Text(menuItem.menuVal),
+                                              ],
+                                            ),
+                                          );
+                                        }).toList();
+                                      })
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+            SizedBox(height: 80.0)
+          ],
+        ),
       ),
     );
   }
