@@ -13,6 +13,7 @@ import 'package:tinda/widgets/dropDown.dart';
 import 'package:tinda/widgets/itemBuilder/new_item.dart';
 import 'package:tinda/widgets/menuItem.dart';
 import 'package:tinda/screens/itemsPerCategory_screen.dart';
+import 'package:tinda/widgets/search_field.dart';
 
 class InventoryScreen extends StatefulWidget {
   @override
@@ -264,34 +265,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
         physics: BouncingScrollPhysics(),
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Container(
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.grey,
-                        offset: Offset(0, 1),
-                        blurRadius: 3.0,
-                        spreadRadius: 0.5),
-                  ],
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(6.0)),
-                ),
-                padding: EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
-                margin: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintStyle: TextStyle(color: Colors.grey),
-                    hintText: 'Search Category',
-                    prefixIcon: Icon(
-                      Icons.search,
-                      color: Colors.teal.shade800,
-                    ),
-                    border: InputBorder.none,
-                  ),
-                ),
-              ),
+            SearchFieldWidget(
+              hintText: 'Search Category',
             ),
             Container(
               child: StreamBuilder<QuerySnapshot>(

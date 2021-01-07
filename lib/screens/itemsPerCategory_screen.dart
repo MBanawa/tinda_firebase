@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tinda/widgets/itemBuilder/itemPerCategory_builder.dart';
+import 'package:tinda/widgets/search_field.dart';
 
 class ItemsPerCategory extends StatefulWidget {
   final String categoryId;
@@ -52,6 +53,7 @@ class _ItemsPerCategoryState extends State<ItemsPerCategory> {
       appBar: AppBar(
         title: Text('$_category'),
       ),
+      //TODO: how to add SearchFieldWidget here??????
       body: StreamBuilder<QuerySnapshot>(
         stream: userstream,
         builder: (context, snapshot) {
