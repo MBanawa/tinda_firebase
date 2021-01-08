@@ -41,7 +41,7 @@ class GenerateQr extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 15),
             SizedBox(
               width: MediaQuery.of(context).size.width - 20,
               height: 60,
