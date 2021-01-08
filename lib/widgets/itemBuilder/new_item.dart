@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:tinda/screens/generate_qrcode.dart';
 
 import 'package:tinda/widgets/customTextField.dart';
 
@@ -332,8 +333,9 @@ class _NewItemState extends State<NewItem> {
                                         ? 'No Category'
                                         : _category,
                                     style: TextStyle(
-                                        color: Colors.teal.shade100,
-                                        fontWeight: FontWeight.bold),
+                                      color: Colors.teal.shade100,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   )),
                                 ),
                               ],
@@ -341,6 +343,32 @@ class _NewItemState extends State<NewItem> {
                           ),
                         ],
                       ),
+                      widget.barcode == null
+                          ? FlatButton(
+                              onPressed: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => GenerateQr()));
+                              },
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Looks like your item doesn\'t have a barcode.',
+                                    style: TextStyle(
+                                      color: Colors.yellow,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Click here to generate a QR Code for this item',
+                                    style: TextStyle(
+                                      color: Colors.yellow,
+                                      decoration: TextDecoration.underline,
+                                      decorationThickness: 2,
+                                    ),
+                                  ),
+                                ],
+                              ))
+                          : null,
                       Padding(
                         padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
                         child: Text(

@@ -66,7 +66,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                             borderRadius: BorderRadius.circular(6.0)),
                         color: Colors.yellow.shade900,
                         child: Text(
-                          'Scan Barcode Now',
+                          'Scan item now',
                           style: TextStyle(color: Colors.white),
                         ),
                         onPressed: () {
