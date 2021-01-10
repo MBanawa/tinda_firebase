@@ -45,7 +45,7 @@ class _GenerateQrState extends State<GenerateQr> {
         .doc(user.uid)
         .get();
 
-    final ref = FirebaseStorage.instance.ref().child('QrCodes').child(_qrCode +
+    final ref = FirebaseStorage.instance.ref().child('qrCodes').child(_qrCode +
         '_' +
         Timestamp.now().millisecondsSinceEpoch.toString() +
         '.png');
@@ -53,7 +53,7 @@ class _GenerateQrState extends State<GenerateQr> {
     await ref.putData(pngBytes);
     final url = await ref.getDownloadURL();
 
-    await FirebaseFirestore.instance.collection('QrData').add({
+    await FirebaseFirestore.instance.collection('qrData').add({
       'userId': user.uid,
       'userName': userData.data()['name'],
       'createdAt': Timestamp.now(),
@@ -146,12 +146,11 @@ class _GenerateQrState extends State<GenerateQr> {
                           borderRadius: BorderRadius.circular(6.0)),
                       color: Colors.green,
                       child: Text(
-                        'Save QR to Gallery',
+                        'Save Generated QR Code',
                         style: TextStyle(color: Colors.white),
                       ),
                       onPressed: () {
-                        // Navigator.pop(context);
-                        _saveQrImage();
+                        _saveQrImage().then((value) => Navigator.pop(context));
                       }),
                 ),
               (loading)
