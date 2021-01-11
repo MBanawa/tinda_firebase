@@ -20,7 +20,6 @@ class _GenerateQrState extends State<GenerateQr> {
   FocusNode _qrFocus = FocusNode();
   GlobalKey _globalKey = GlobalKey();
   bool loading = false;
-  String _generatedName;
 
   _qrGenerator() {
     FocusScope.of(context).unfocus();

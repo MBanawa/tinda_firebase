@@ -355,7 +355,7 @@ class _NewItemState extends State<NewItem> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      'Notification:',
+                                      'Notice:',
                                       style: TextStyle(
                                         color: Colors.red.shade400,
                                         fontWeight: FontWeight.bold,
