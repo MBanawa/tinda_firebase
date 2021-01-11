@@ -20,6 +20,7 @@ class _GenerateQrState extends State<GenerateQr> {
   FocusNode _qrFocus = FocusNode();
   GlobalKey _globalKey = GlobalKey();
   bool loading = false;
+  String _generatedName;
 
   _qrGenerator() {
     FocusScope.of(context).unfocus();
@@ -62,10 +63,13 @@ class _GenerateQrState extends State<GenerateQr> {
     }).then((value) => {
           this.setState(() {
             loading = false;
-          })
+          }),
+          _qrController.clear(),
+          Navigator.pop(context, '$_qrCode')
         });
   }
 
+  String awe;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -150,7 +154,7 @@ class _GenerateQrState extends State<GenerateQr> {
                         style: TextStyle(color: Colors.white),
                       ),
                       onPressed: () {
-                        _saveQrImage().then((value) => Navigator.pop(context));
+                        _saveQrImage();
                       }),
                 ),
               (loading)

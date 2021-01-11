@@ -33,9 +33,11 @@ class _NewItemState extends State<NewItem> {
   FocusNode _supplierFocusNode = FocusNode();
   FocusNode _buyPriceFocusNode = FocusNode();
   FocusNode _sellPriceFocusNode = FocusNode();
+  String _qrCode;
   File imageFile;
   DateTime _dateTime = DateTime.now();
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
+  bool _dismiss = false;
 
   @override
   void initState() {
@@ -162,7 +164,7 @@ class _NewItemState extends State<NewItem> {
       'userName': userData.data()['name'],
       'createdAt': Timestamp.now(),
       'itemName': _itemNameController.text.trim(),
-      'barcode': widget.barcode,
+      'barcode': _qrCode != null ? _qrCode : widget.barcode,
       'category': _category,
       'categoryId': widget.categoryId,
       'quantity': _itemQuantityController.text.trim(),
@@ -225,292 +227,323 @@ class _NewItemState extends State<NewItem> {
         ),
         centerTitle: true,
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-            flex: 1,
-            child: SingleChildScrollView(
-              child: Container(
-                color: Theme.of(context).primaryColor,
-                height: MediaQuery.of(context).size.height * 1.4,
-                width: MediaQuery.of(context).size.width,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 4.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          takeImage(context);
-                        },
-                        child: Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(15.0, 8.0, 15.0, 15.0),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width - 20,
-                            child: Center(
-                              child: CircleAvatar(
-                                radius: 100,
-                                backgroundColor: Colors.teal.shade300,
-                                backgroundImage: imageFile == null
-                                    ? null
-                                    : FileImage(imageFile),
-                                child: Image.asset(
-                                  'assets/images/camera.png',
-                                  width: 50,
-                                  height: 50,
-                                ),
-                              ),
-                            ),
+      body: SingleChildScrollView(
+        child: Container(
+          color: Theme.of(context).primaryColor,
+          height: MediaQuery.of(context).size.height * 2,
+          width: MediaQuery.of(context).size.width,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 4.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    takeImage(context);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(15.0, 8.0, 15.0, 15.0),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width - 20,
+                      child: Center(
+                        child: CircleAvatar(
+                          radius: 100,
+                          backgroundColor: Colors.teal.shade300,
+                          backgroundImage:
+                              imageFile == null ? null : FileImage(imageFile),
+                          child: Image.asset(
+                            'assets/images/camera.png',
+                            width: 50,
+                            height: 50,
                           ),
                         ),
                       ),
-                      Row(
+                    ),
+                  ),
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(
-                            flex: 1,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                      8.0, 0.0, 8.0, 0.0),
-                                  child: Text(
-                                    'Barcode:',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                                Container(
-                                  height: 60,
-                                  decoration: BoxDecoration(
-                                    color: Colors.teal.shade800,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(6.0)),
-                                  ),
-                                  padding: EdgeInsets.all(8.0),
-                                  margin:
-                                      EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
-                                  child: Center(
-                                      child: Text(
-                                    widget.barcode == null
-                                        ? 'No Barcode'
-                                        : widget.barcode,
-                                    style: TextStyle(
-                                        color: Colors.teal.shade100,
-                                        fontWeight: FontWeight.bold),
-                                  )),
-                                ),
-                              ],
+                          Padding(
+                            padding:
+                                const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+                            child: Text(
+                              _qrCode != null ? 'QR Name:' : 'Barcode:',
+                              style: TextStyle(color: Colors.white),
                             ),
                           ),
-                          Expanded(
-                            flex: 1,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                      8.0, 0.0, 8.0, 0.0),
-                                  child: Text(
-                                    'Category:',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                                Container(
-                                  height: 60,
-                                  decoration: BoxDecoration(
-                                    color: Colors.teal.shade800,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(6.0)),
-                                  ),
-                                  padding: EdgeInsets.all(8.0),
-                                  margin:
-                                      EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
-                                  child: Center(
-                                      child: Text(
-                                    _category == null
-                                        ? 'No Category'
-                                        : _category,
-                                    style: TextStyle(
-                                      color: Colors.teal.shade100,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  )),
-                                ),
-                              ],
+                          Container(
+                            height: 60,
+                            decoration: BoxDecoration(
+                              color: Colors.teal.shade800,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(6.0)),
                             ),
+                            padding: EdgeInsets.all(8.0),
+                            margin: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
+                            child: Center(
+                                child: Text(
+                              widget.barcode == null
+                                  ? _qrCode == null
+                                      ? 'No Barcode'
+                                      : _qrCode
+                                  : widget.barcode,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  color: Colors.teal.shade100,
+                                  fontWeight: FontWeight.bold),
+                            )),
                           ),
                         ],
                       ),
-                      widget.barcode == null
-                          ? FlatButton(
-                              onPressed: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => GenerateQr()));
-                              },
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Looks like your item doesn\'t have a barcode.',
-                                    style: TextStyle(
-                                      color: Colors.yellow,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Click here to generate a QR Code for this item',
-                                    style: TextStyle(
-                                      color: Colors.yellow,
-                                      decoration: TextDecoration.underline,
-                                      decorationThickness: 2,
-                                    ),
-                                  ),
-                                ],
-                              ))
-                          : null,
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
-                        child: Text(
-                          'Item Name:',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      CustomTextField(
-                        controller: _itemNameController,
-                        keyboardType: TextInputType.text,
-                        hintText: 'Enter the item\'s name here..',
-                        isObscure: false,
-                        onSubmitted: (_) {
-                          FocusScope.of(context).requestFocus(_quantFocusNode);
-                        },
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
-                        child: Text(
-                          'Quantity:',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      CustomTextField(
-                        focusNode: _quantFocusNode,
-                        keyboardType: TextInputType.number,
-                        controller: _itemQuantityController,
-                        hintText: 'How many pieces are you adding?',
-                        isObscure: false,
-                        onSubmitted: (_) {
-                          FocusScope.of(context)
-                              .requestFocus(_buyDateFocusNode);
-                        },
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
-                        child: Text(
-                          'Purchase Date:',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      CustomTextField(
-                        focusNode: _buyDateFocusNode,
-                        keyboardType: TextInputType.datetime,
-                        controller: _itemBuyDateController,
-                        hintText: 'When did you buy the item?',
-                        isObscure: false,
-                        onTap: () {
-                          _selectedItemDate(context);
-                        },
-                        onSubmitted: (_) {
-                          FocusScope.of(context)
-                              .requestFocus(_supplierFocusNode);
-                        },
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
-                        child: Text(
-                          'Supplier Name:',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      CustomTextField(
-                        focusNode: _supplierFocusNode,
-                        keyboardType: TextInputType.text,
-                        controller: _itemSupplierController,
-                        hintText: 'Where did you buy the item?',
-                        isObscure: false,
-                        onSubmitted: (_) {
-                          FocusScope.of(context)
-                              .requestFocus(_buyPriceFocusNode);
-                        },
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
-                        child: Text(
-                          'Purchase Price:',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      CustomTextField(
-                        focusNode: _buyPriceFocusNode,
-                        keyboardType: TextInputType.number,
-                        controller: _itemBuyPriceController,
-                        hintText: 'How much did you buy the item for?',
-                        isObscure: false,
-                        onSubmitted: (_) {
-                          FocusScope.of(context)
-                              .requestFocus(_sellPriceFocusNode);
-                        },
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
-                        child: Text(
-                          'Sell Price:',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      CustomTextField(
-                        focusNode: _sellPriceFocusNode,
-                        keyboardType: TextInputType.number,
-                        controller: _itemSellPriceController,
-                        hintText: 'How much will you sell the item for?',
-                        isObscure: false,
-                        onSubmitted: (_) {
-                          _saveNewItem();
-                        },
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Center(
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width - 16,
-                          height: 60,
-                          child: RaisedButton(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(6.0)),
-                            color: Colors.yellow.shade900,
-                            onPressed: () {
-                              _saveNewItem();
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Center(
-                                child: Text(
-                                  'Save',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 18),
-                                ),
-                              ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding:
+                                const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+                            child: Text(
+                              'Category:',
+                              style: TextStyle(color: Colors.white),
                             ),
+                          ),
+                          Container(
+                            height: 60,
+                            decoration: BoxDecoration(
+                              color: Colors.teal.shade800,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(6.0)),
+                            ),
+                            padding: EdgeInsets.all(8.0),
+                            margin: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
+                            child: Center(
+                                child: Text(
+                              _category == null ? 'No Category' : _category,
+                              style: TextStyle(
+                                color: Colors.teal.shade100,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                widget.barcode == null && _qrCode == null
+                    ? _dismiss == false
+                        ? Container(
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade400,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(6.0)),
+                            ),
+                            margin: EdgeInsets.all(14),
+                            padding: EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Notification:',
+                                      style: TextStyle(
+                                        color: Colors.red.shade400,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              _dismiss = true;
+                                            });
+                                          },
+                                          child: Icon(Icons.close)),
+                                    )
+                                  ],
+                                ),
+                                Text(
+                                  'No Barcode detected. \nDo you want to generate a QR Code for this item?',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.yellow.shade900,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(6.0)),
+                                  ),
+                                  width: double.infinity,
+                                  child: FlatButton(
+                                      onPressed: () {
+                                        Navigator.of(context)
+                                            .push(MaterialPageRoute(
+                                                builder: (context) =>
+                                                    GenerateQr()))
+                                            .then((value) {
+                                          setState(() {
+                                            _qrCode = value;
+                                          });
+                                        });
+                                      },
+                                      child: Text(
+                                        'Yes',
+                                        style: TextStyle(color: Colors.white),
+                                      )),
+                                )
+                              ],
+                            ),
+                          )
+                        : SizedBox()
+                    : SizedBox(),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+                  child: Text(
+                    'Item Name:',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                CustomTextField(
+                  controller: _itemNameController,
+                  keyboardType: TextInputType.text,
+                  hintText: 'Enter the item\'s name here..',
+                  isObscure: false,
+                  onSubmitted: (_) {
+                    FocusScope.of(context).requestFocus(_quantFocusNode);
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+                  child: Text(
+                    'Quantity:',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                CustomTextField(
+                  focusNode: _quantFocusNode,
+                  keyboardType: TextInputType.number,
+                  controller: _itemQuantityController,
+                  hintText: 'How many pieces are you adding?',
+                  isObscure: false,
+                  onSubmitted: (_) {
+                    FocusScope.of(context).requestFocus(_buyDateFocusNode);
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+                  child: Text(
+                    'Purchase Date:',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                CustomTextField(
+                  focusNode: _buyDateFocusNode,
+                  keyboardType: TextInputType.datetime,
+                  controller: _itemBuyDateController,
+                  hintText: 'When did you buy the item?',
+                  isObscure: false,
+                  onTap: () {
+                    _selectedItemDate(context);
+                  },
+                  onSubmitted: (_) {
+                    FocusScope.of(context).requestFocus(_supplierFocusNode);
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+                  child: Text(
+                    'Supplier Name:',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                CustomTextField(
+                  focusNode: _supplierFocusNode,
+                  keyboardType: TextInputType.text,
+                  controller: _itemSupplierController,
+                  hintText: 'Where did you buy the item?',
+                  isObscure: false,
+                  onSubmitted: (_) {
+                    FocusScope.of(context).requestFocus(_buyPriceFocusNode);
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+                  child: Text(
+                    'Purchase Price:',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                CustomTextField(
+                  focusNode: _buyPriceFocusNode,
+                  keyboardType: TextInputType.number,
+                  controller: _itemBuyPriceController,
+                  hintText: 'How much did you buy the item for?',
+                  isObscure: false,
+                  onSubmitted: (_) {
+                    FocusScope.of(context).requestFocus(_sellPriceFocusNode);
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+                  child: Text(
+                    'Sell Price:',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                CustomTextField(
+                  focusNode: _sellPriceFocusNode,
+                  keyboardType: TextInputType.number,
+                  controller: _itemSellPriceController,
+                  hintText: 'How much will you sell the item for?',
+                  isObscure: false,
+                  onSubmitted: (_) {
+                    _saveNewItem();
+                  },
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Center(
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width - 16,
+                    height: 60,
+                    child: RaisedButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6.0)),
+                      color: Colors.yellow.shade900,
+                      onPressed: () {
+                        _saveNewItem();
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Center(
+                          child: Text(
+                            'Save',
+                            style: TextStyle(color: Colors.white, fontSize: 18),
                           ),
                         ),
                       ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
