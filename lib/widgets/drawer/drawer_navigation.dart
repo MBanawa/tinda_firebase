@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import 'package:tinda/screens/myQrCode_screen.dart';
+
 class DrawerNavigation extends StatefulWidget {
   @override
   _DrawerNavigationState createState() => _DrawerNavigationState();
@@ -18,16 +20,23 @@ class _DrawerNavigationState extends State<DrawerNavigation> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Center(
-                  child: FlatButton(
-                      onPressed: () {
-                        FirebaseAuth.instance.signOut();
-                      },
-                      child: Text(
-                        'Sign Out',
-                        style: TextStyle(color: Colors.white),
-                      )),
-                )
+                FlatButton(
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => MyQrCodeScreen()));
+                    },
+                    child: Text(
+                      'MY QR Codes',
+                      style: TextStyle(color: Colors.white),
+                    )),
+                FlatButton(
+                    onPressed: () {
+                      FirebaseAuth.instance.signOut();
+                    },
+                    child: Text(
+                      'Sign Out',
+                      style: TextStyle(color: Colors.white),
+                    ))
               ],
             ),
           )
