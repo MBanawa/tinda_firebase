@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tinda/screens/generate_qrcode.dart';
+
+import 'package:tinda/screens/scratch.dart';
 
 class CashierScreen extends StatelessWidget {
   @override
@@ -8,7 +9,7 @@ class CashierScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => GenerateQr()));
+              .push(MaterialPageRoute(builder: (context) => Scratch()));
         },
       ),
       appBar: AppBar(

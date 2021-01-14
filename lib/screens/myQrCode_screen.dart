@@ -55,7 +55,7 @@ class _MyQrCodeScreenState extends State<MyQrCodeScreen> {
                     shrinkWrap: true,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      childAspectRatio: 2 / 3,
+                      childAspectRatio: 2.5 / 3,
                       crossAxisSpacing: 10,
                     ),
                     physics: BouncingScrollPhysics(),
@@ -66,15 +66,18 @@ class _MyQrCodeScreenState extends State<MyQrCodeScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Image.network(qrDocs[index].data()['qrUrl']),
-                            Text(
-                              'Code: ${qrDocs[index].data()['qrName']}',
-                              style: TextStyle(
-                                color: Colors.teal.shade900,
-                                fontSize: 16,
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Text(
+                                'Code: ${qrDocs[index].data()['qrName']}',
+                                style: TextStyle(
+                                  color: Colors.teal.shade900,
+                                  fontSize: 12,
+                                ),
+                                textAlign: TextAlign.center,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 4,
                               ),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 4,
                             ),
                           ],
                         ),
