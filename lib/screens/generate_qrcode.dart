@@ -72,12 +72,13 @@ class _GenerateQrState extends State<GenerateQr> {
             loading = false;
           }),
           _qrController.clear(),
-          Navigator.pop(context, '$_qrCode')
+          // Navigator.pop(context, '$_qrCode')
         });
   }
 
   Future<bool> saveFile(String url, String fileName) async {
     Directory directory;
+    print('URL: $url');
     try {
       if (await _requestPermission(Permission.storage)) {
         directory = await getExternalStorageDirectory();
@@ -89,13 +90,14 @@ class _GenerateQrState extends State<GenerateQr> {
         await directory.create(recursive: true);
       }
       if (await directory.exists()) {
-        File saveFile = File(directory.path + '/$fileName');
+        File saveFile = File(directory.path + '/Pictures/$fileName.png');
         await dio.download(url, saveFile.path);
       }
       return true;
     } catch (e) {
       print(e);
     }
+    return false;
   }
 
   Future<bool> _requestPermission(Permission permission) async {
