@@ -8,8 +8,8 @@ class CashierScreen extends StatelessWidget {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => Scratch()));
+          // Navigator.of(context)
+          //     .push(MaterialPageRoute(builder: (context) => Scratch()));
         },
       ),
       appBar: AppBar(
