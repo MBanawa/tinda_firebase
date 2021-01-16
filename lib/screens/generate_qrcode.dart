@@ -36,6 +36,7 @@ class _GenerateQrState extends State<GenerateQr> {
   }
 
   Future<void> _saveQrImage() async {
+    _requestPermission(Permission.storage);
     RenderRepaintBoundary boundary =
         _globalKey.currentContext.findRenderObject();
     ui.Image image = await boundary.toImage();
