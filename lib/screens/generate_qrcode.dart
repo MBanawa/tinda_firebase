@@ -69,10 +69,12 @@ class _GenerateQrState extends State<GenerateQr> {
     }).then((value) => {
           this.setState(() {
             _url = url;
+
             loading = false;
           }),
+          downloadQR(),
           _qrController.clear(),
-          // Navigator.pop(context, '$_qrCode')
+          Navigator.pop(context, '$_qrCode')
         });
   }
 
@@ -137,7 +139,6 @@ class _GenerateQrState extends State<GenerateQr> {
     }
   }
 
-  String awe;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -225,22 +226,6 @@ class _GenerateQrState extends State<GenerateQr> {
                           ),
                           onPressed: () {
                             _saveQrImage();
-                          }),
-                    ),
-                    SizedBox(height: 15),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width - 20,
-                      height: 60,
-                      child: RaisedButton(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(6.0)),
-                          color: Colors.green,
-                          child: Text(
-                            'Save Generated QR Code to Phone',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          onPressed: () {
-                            downloadQR();
                           }),
                     ),
                   ],
