@@ -82,6 +82,21 @@ class _GenerateQrState extends State<GenerateQr> {
     try {
       if (await _requestPermission(Permission.storage)) {
         directory = await getExternalStorageDirectory();
+
+        String newPath = '';
+        List<String> folders = directory.path.split('/');
+
+        ///storage/emulated/0/Android/data/com.banawa.tinda/files
+        for (int x = 1; x < folders.length; x++) {
+          String folder = folders[x];
+          if (folder != 'Android') {
+            newPath += '/' + folder;
+          } else {
+            break;
+          }
+        }
+        newPath = newPath + '/Tinda';
+        directory = Directory(newPath);
         print(directory.path);
       } else {
         return false;
@@ -90,7 +105,7 @@ class _GenerateQrState extends State<GenerateQr> {
         await directory.create(recursive: true);
       }
       if (await directory.exists()) {
-        File saveFile = File(directory.path + '/Pictures/$fileName.png');
+        File saveFile = File(directory.path + '/QR_Codes/$fileName.png');
         await dio.download(url, saveFile.path);
       }
       return true;
