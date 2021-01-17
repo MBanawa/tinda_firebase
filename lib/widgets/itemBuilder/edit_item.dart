@@ -220,6 +220,7 @@ class _EditItemState extends State<EditItem> {
     } else {
       //TODO: Edit supplier and price as well
       FirebaseFirestore.instance.collection('items').doc(widget.itemId).update({
+        'barcode': _qrCode != null ? _qrCode : widget.barcode,
         'itemName': _editItemNameController.text.trim(),
         'quantity': _editItemQuantityController.text.trim(),
         'itemImage': imageFile != null ? url : widget.itemImage,
@@ -412,86 +413,96 @@ class _EditItemState extends State<EditItem> {
                                 ),
                               ],
                             ),
-                      widget.barcode == null && _qrCode == null
-                          ? _dismiss == false
-                              ? Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey.shade400,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(6.0)),
-                                  ),
-                                  margin: EdgeInsets.all(14),
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            'Notice:',
-                                            style: TextStyle(
-                                              color: Colors.red.shade400,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 18,
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.centerRight,
-                                            child: GestureDetector(
-                                                onTap: () {
-                                                  setState(() {
-                                                    _dismiss = true;
-                                                  });
-                                                },
-                                                child: Icon(Icons.close)),
-                                          )
-                                        ],
-                                      ),
-                                      Text(
-                                        'No Barcode detected. \nDo you want to generate a QR Code for this item?',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                      SizedBox(height: 8),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.yellow.shade900,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(6.0)),
-                                        ),
-                                        width: double.infinity,
-                                        child: FlatButton(
-                                            onPressed: () {
-                                              Navigator.of(context)
-                                                  .push(MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          GenerateQr()))
-                                                  .then((value) {
-                                                setState(() {
-                                                  _qrCode = value;
-                                                });
-                                              });
-                                            },
-                                            child: Text(
-                                              'Yes',
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            )),
-                                      )
-                                    ],
-                                  ),
-                                )
-                              : SizedBox()
-                          : SizedBox(),
                       widget.option == 'add' || widget.option == 'remove'
                           ? Container()
                           : Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                  widget.barcode == null && _qrCode == null
+                                      ? _dismiss == false
+                                          ? Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey.shade400,
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(6.0)),
+                                              ),
+                                              margin: EdgeInsets.all(14),
+                                              padding: EdgeInsets.all(8.0),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                        'Notice:',
+                                                        style: TextStyle(
+                                                          color: Colors
+                                                              .red.shade400,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 18,
+                                                        ),
+                                                      ),
+                                                      Align(
+                                                        alignment: Alignment
+                                                            .centerRight,
+                                                        child: GestureDetector(
+                                                            onTap: () {
+                                                              setState(() {
+                                                                _dismiss = true;
+                                                              });
+                                                            },
+                                                            child: Icon(
+                                                                Icons.close)),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  Text(
+                                                    'No Barcode detected. \nDo you want to generate a QR Code for this item?',
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 8),
+                                                  Container(
+                                                    decoration: BoxDecoration(
+                                                      color: Colors
+                                                          .yellow.shade900,
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  6.0)),
+                                                    ),
+                                                    width: double.infinity,
+                                                    child: FlatButton(
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .push(MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          GenerateQr()))
+                                                              .then((value) {
+                                                            setState(() {
+                                                              _qrCode = value;
+                                                            });
+                                                          });
+                                                        },
+                                                        child: Text(
+                                                          'Yes',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white),
+                                                        )),
+                                                  )
+                                                ],
+                                              ),
+                                            )
+                                          : SizedBox()
+                                      : SizedBox(),
                                   Padding(
                                     padding: const EdgeInsets.fromLTRB(
                                         8.0, 0.0, 8.0, 0.0),
