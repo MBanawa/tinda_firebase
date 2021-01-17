@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:tinda/screens/scratch.dart';
-
 class CashierScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

@@ -99,9 +99,10 @@ class _MyQrCodeScreenState extends State<MyQrCodeScreen> {
                   }
                   if (await directory.exists()) {
                     final result = await ImageGallerySaver.saveImage(
-                        image.readAsBytesSync(),
+                        _imageFile.readAsBytesSync(),
                         quality: 100);
                     print("File Saved");
+                    print(result);
                   }
                 }).catchError((onError) {
                   print(onError);
