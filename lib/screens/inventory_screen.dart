@@ -209,16 +209,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
                 : SingleChildScrollView(
                     child: Column(
                       children: [
-                        _dropDownList(),
-                        SizedBox(height: 10.0),
-                        Text(
-                          'OR',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        SizedBox(height: 10.0),
                         SizedBox(
                           width: MediaQuery.of(context).size.width - 20,
                           height: 60,
@@ -239,6 +229,16 @@ class _InventoryScreenState extends State<InventoryScreen> {
                                             barcode: _scanBarcode)));
                               }),
                         ),
+                        SizedBox(height: 10.0),
+                        Text(
+                          'OR',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: 10.0),
+                        _dropDownList(),
                       ],
                     ),
                   ),

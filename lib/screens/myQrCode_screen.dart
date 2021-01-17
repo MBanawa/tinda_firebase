@@ -142,35 +142,29 @@ class _MyQrCodeScreenState extends State<MyQrCodeScreen> {
                       itemCount: qrDocs.length,
                       itemBuilder: (context, index) {
                         return GridTile(
-                          child: GestureDetector(
-                            onTap: () {
-                              //TODO: navigate to qr screen
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  BarcodeWidget(
-                                    data: qrDocs[index].data()['qrName'],
-                                    barcode: Barcode.qrCode(),
-                                    color: Colors.black,
-                                    height: 150,
-                                    width: 150,
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                BarcodeWidget(
+                                  data: qrDocs[index].data()['qrName'],
+                                  barcode: Barcode.qrCode(),
+                                  color: Colors.black,
+                                  height: 150,
+                                  width: 150,
+                                ),
+                                Text(
+                                  'Code: ${qrDocs[index].data()['qrName']}',
+                                  style: TextStyle(
+                                    color: Colors.teal.shade900,
+                                    fontSize: 12,
                                   ),
-                                  // Image.network(qrDocs[index].data()['qrUrl']),
-                                  Text(
-                                    'Code: ${qrDocs[index].data()['qrName']}',
-                                    style: TextStyle(
-                                      color: Colors.teal.shade900,
-                                      fontSize: 12,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 4,
-                                  ),
-                                ],
-                              ),
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 4,
+                                ),
+                              ],
                             ),
                           ),
                         );

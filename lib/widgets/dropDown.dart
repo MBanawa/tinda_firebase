@@ -60,12 +60,14 @@ class _FirebaseDropDownState extends State<FirebaseDropDown> {
                   },
                   hint: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'Select a Category',
-                      style: TextStyle(
-                        color: Colors.teal.shade900,
+                    child: Center(
+                      child: Text(
+                        'Select a Category',
+                        style: TextStyle(
+                          color: Colors.teal.shade900,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
                     ),
                   ),
                 ),
