@@ -6,6 +6,7 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:provider/provider.dart';
 
 import 'package:tinda/providers/category_provider.dart';
+import 'package:tinda/widgets/InventoryCard.dart';
 import 'package:tinda/widgets/categoryBuilder/edit_category.dart';
 import 'package:tinda/widgets/categoryBuilder/new_category.dart';
 import 'package:tinda/widgets/drawer/drawer_navigation.dart';
@@ -285,117 +286,31 @@ class _InventoryScreenState extends State<InventoryScreen> {
                     physics: BouncingScrollPhysics(),
                     itemCount: categDocs.length,
                     itemBuilder: (context, index) {
-                      return Card(
-                        margin: EdgeInsets.fromLTRB(8, 8, 8, 0),
-                        elevation: 3,
-                        child: InkWell(
-                          splashColor: Colors.teal.withAlpha(80),
-                          onTap: () {
+                      return InventoryCard(
+                        categID: categDocs[index].id,
+                        categName: categDocs[index].data()['categoryname'],
+                        categDescription:
+                            categDocs[index].data()['categorydescription'],
+                        categColor: categDocs[index].data()['categorycolor'],
+                        onMenuItemSelected: (MenuItem menuItem) {
+                          if (menuItem.menuVal == "Edit") {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    ItemsPerCategory(categDocs[index].id)));
-                          },
-                          child: Container(
-                            child: Stack(
-                              children: <Widget>[
-                                Container(
-                                  width: 6,
-                                  height: 65,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(4),
-                                        bottomLeft: Radius.circular(4)),
-                                    color: Color(categDocs[index]
-                                                .data()['categorycolor'] ==
-                                            null
-                                        ? 0xff008080
-                                        : categDocs[index]
-                                            .data()['categorycolor']),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(16.0, 8, 0, 0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Expanded(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              categDocs[index]
-                                                  .data()['categoryname'],
-                                              style: TextStyle(
-                                                fontSize: 22.0,
-                                                color: Colors.teal.shade800,
-                                              ),
-                                            ),
-                                            Text(
-                                              '${categDocs[index].data()['categorydescription']}',
-                                              style: TextStyle(
-                                                fontSize: 12.0,
-                                                color: Colors.orange.shade400,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      PopupMenuButton(
-                                          onSelected: (MenuItem menuItem) {
-                                        if (menuItem.menuVal == "Edit") {
-                                          Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                  builder: (BuildContext
-                                                          context) =>
-                                                      EditCategory(
-                                                        context,
-                                                        categDocs[index].id,
-                                                        categDocs[index].data()[
-                                                            'categoryname'],
-                                                        categDocs[index].data()[
-                                                            'categorydescription'],
-                                                        categDocs[index].data()[
-                                                            'categorycolor'],
-                                                      )));
-                                        } else if (menuItem.menuVal ==
-                                            "Delete") {
-                                          //delete category
-                                          CollectionReference categs =
-                                              FirebaseFirestore.instance
-                                                  .collection('categories');
-                                          categs
-                                              .doc(categDocs[index].id)
-                                              .delete();
-                                        }
-                                      }, itemBuilder: (BuildContext context) {
-                                        return menuitems
-                                            .map((MenuItem menuItem) {
-                                          return PopupMenuItem(
-                                            value: menuItem,
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Icon(menuItem.iconVal),
-                                                Text(menuItem.menuVal),
-                                              ],
-                                            ),
-                                          );
-                                        }).toList();
-                                      })
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                                builder: (BuildContext context) => EditCategory(
+                                      context,
+                                      categDocs[index].id,
+                                      categDocs[index].data()['categoryname'],
+                                      categDocs[index]
+                                          .data()['categorydescription'],
+                                      categDocs[index].data()['categorycolor'],
+                                    )));
+                          } else if (menuItem.menuVal == "Delete") {
+                            //delete category
+                            CollectionReference categs = FirebaseFirestore
+                                .instance
+                                .collection('categories');
+                            categs.doc(categDocs[index].id).delete();
+                          }
+                        },
                       );
                     },
                   );
