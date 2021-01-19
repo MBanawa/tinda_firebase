@@ -13,7 +13,6 @@ import 'package:tinda/widgets/drawer/drawer_navigation.dart';
 import 'package:tinda/widgets/dropDown.dart';
 import 'package:tinda/widgets/itemBuilder/new_item.dart';
 import 'package:tinda/widgets/menuItem.dart';
-import 'package:tinda/screens/itemsPerCategory_screen.dart';
 import 'package:tinda/widgets/search_field.dart';
 
 class InventoryScreen extends StatefulWidget {
