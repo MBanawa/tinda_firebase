@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:tinda/models/http_exception.dart';
 
 import 'package:tinda/widgets/customTextField.dart';
 import 'package:tinda/widgets/errorDialog.dart';
@@ -16,15 +15,40 @@ class _LoginState extends State<Login> {
   final TextEditingController _passwordtextEditingController =
       TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final dataKey = GlobalKey();
   bool _isLoading = false;
 
   FirebaseAuth _auth = FirebaseAuth.instance;
   void _loginUser() async {
+    FocusScope.of(context).unfocus();
+    Scrollable.ensureVisible(dataKey.currentContext);
+    setState(() {
+      _isLoading = true;
+    });
     try {
-      await _auth.signInWithEmailAndPassword(
-        email: _emailtextEditingController.text.trim(),
-        password: _passwordtextEditingController.text.trim(),
-      );
+      await Future.delayed(Duration(milliseconds: 1800), () {
+        _auth.signInWithEmailAndPassword(
+          email: _emailtextEditingController.text.trim(),
+          password: _passwordtextEditingController.text.trim(),
+        );
+        setState(() {
+          _isLoading = false;
+        });
+        showDialog(
+            context: context,
+            builder: (BuildContext builderContext) {
+              Future.delayed(Duration(milliseconds: 800), () {
+                Navigator.of(builderContext).pop();
+              });
+              return AlertDialog(
+                backgroundColor: Colors.teal,
+                content: Text(
+                  'Authentication Successful!',
+                  style: TextStyle(color: Colors.white),
+                ),
+              );
+            });
+      });
     } catch (error) {
       print(error);
       var errorMessage = 'Authentication failed';
@@ -32,36 +56,24 @@ class _LoginState extends State<Login> {
       //   errorMessage = 'This email address is already in use!';
       // } else if (error.toString().contains('INVALID_EMAIL')) {
       //   errorMessage = 'This is not a valid email address';
-      // } else if (error.toString().contains('WEAK_PASSWORD')) {
-      //   errorMessage = 'The password you enter is too weak';
       // } else
-      if (error.toString().contains(
+      if (error.toString().contains('blocked')) {
+        errorMessage = error;
+      } else if (error.toString().contains(
           'There is no user record corresponding to this identifier.')) {
-        errorMessage = 'The email you entered could not be found';
+        errorMessage = 'The email address you entered could not be found';
       } else if (error.toString().contains('password is invalid')) {
         errorMessage = 'The password you entered is invalid.';
       }
       _showErrorDialog(errorMessage);
     }
-
-    setState(() {
-      _isLoading = false;
-    });
   }
 
   void _showErrorDialog(String message) {
     showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text('An Error Occured!'),
-        content: Text(message),
-        actions: <Widget>[
-          FlatButton(
-              onPressed: () {
-                Navigator.of(ctx).pop();
-              },
-              child: Text('Okay'))
-        ],
+      builder: (ctx) => ErrorAlertDialog(
+        message: message,
       ),
     );
   }
@@ -77,7 +89,17 @@ class _LoginState extends State<Login> {
           mainAxisSize: MainAxisSize.max,
           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            _isLoading == true
+                ? Container(
+                    alignment: Alignment.center,
+                    child: LinearProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation(Colors.teal[600]),
+                      backgroundColor: Colors.white,
+                    ),
+                  )
+                : Container(),
             Padding(
+              key: dataKey,
               padding: const EdgeInsets.only(top: 30.0),
               child: CircleAvatar(
                 backgroundColor: Colors.white,
@@ -126,7 +148,7 @@ class _LoginState extends State<Login> {
                                 builder: (c) {
                                   return ErrorAlertDialog(
                                     message:
-                                        'Please enter your email and password',
+                                        'Please enter a valid email and password',
                                   );
                                 },
                               );
