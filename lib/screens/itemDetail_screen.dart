@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tinda/animation/FadeAnimation.dart';
+import 'package:tinda/screens/inventory_screen.dart';
 import 'package:tinda/widgets/itemBuilder/options_dialog.dart';
 
 class ItemDetail extends StatefulWidget {

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:tinda/models/http_exception.dart';
 
 import 'package:tinda/widgets/customTextField.dart';
 import 'package:tinda/widgets/errorDialog.dart';
@@ -15,12 +16,53 @@ class _LoginState extends State<Login> {
   final TextEditingController _passwordtextEditingController =
       TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
 
   FirebaseAuth _auth = FirebaseAuth.instance;
   void _loginUser() async {
-    await _auth.signInWithEmailAndPassword(
-      email: _emailtextEditingController.text.trim(),
-      password: _passwordtextEditingController.text.trim(),
+    try {
+      await _auth.signInWithEmailAndPassword(
+        email: _emailtextEditingController.text.trim(),
+        password: _passwordtextEditingController.text.trim(),
+      );
+    } catch (error) {
+      print(error);
+      var errorMessage = 'Authentication failed';
+      // if (error.toString().contains('EMAIL_EXISTS')) {
+      //   errorMessage = 'This email address is already in use!';
+      // } else if (error.toString().contains('INVALID_EMAIL')) {
+      //   errorMessage = 'This is not a valid email address';
+      // } else if (error.toString().contains('WEAK_PASSWORD')) {
+      //   errorMessage = 'The password you enter is too weak';
+      // } else
+      if (error.toString().contains(
+          'There is no user record corresponding to this identifier.')) {
+        errorMessage = 'The email you entered could not be found';
+      } else if (error.toString().contains('password is invalid')) {
+        errorMessage = 'The password you entered is invalid.';
+      }
+      _showErrorDialog(errorMessage);
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('An Error Occured!'),
+        content: Text(message),
+        actions: <Widget>[
+          FlatButton(
+              onPressed: () {
+                Navigator.of(ctx).pop();
+              },
+              child: Text('Okay'))
+        ],
+      ),
     );
   }
 
