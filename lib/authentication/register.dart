@@ -22,9 +22,15 @@ class _RegisterState extends State<Register> {
       TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   FirebaseAuth _auth = FirebaseAuth.instance;
-
+  final dataKey = GlobalKey();
+  bool _isLoading = false;
 //-----------------
   Future<void> register() async {
+    FocusScope.of(context).unfocus();
+    Scrollable.ensureVisible(dataKey.currentContext);
+    setState(() {
+      _isLoading = true;
+    });
     _passwordtextEditingController.text == _cPasswordtextEditingController.text
         ? _emailtextEditingController.text.isNotEmpty &&
                 _passwordtextEditingController.text.isNotEmpty &&
@@ -86,7 +92,17 @@ class _RegisterState extends State<Register> {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
+            _isLoading == true
+                ? Container(
+                    alignment: Alignment.center,
+                    child: LinearProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation(Colors.teal[600]),
+                      backgroundColor: Colors.white,
+                    ),
+                  )
+                : Container(),
             Padding(
+              key: dataKey,
               padding: const EdgeInsets.only(top: 30.0),
               child: CircleAvatar(
                 backgroundColor: Colors.white,

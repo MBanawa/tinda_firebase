@@ -54,7 +54,7 @@ class _LoginState extends State<Login> {
       var errorMessage = 'Authentication failed';
 
       if (error.toString().contains('blocked')) {
-        errorMessage = error.message.toString;
+        errorMessage = '${error.message}';
       } else if (error.toString().contains(
           'There is no user record corresponding to this identifier.')) {
         errorMessage = 'The email address you entered could not be found';
