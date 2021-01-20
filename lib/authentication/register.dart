@@ -31,24 +31,24 @@ class _RegisterState extends State<Register> {
                 _cPasswordtextEditingController.text.isNotEmpty &&
                 _nametextEditingController.text.isNotEmpty
             ? _registerUser()
-            : displayDialog('Please complete the registration form..')
-        : displayDialog('Passwords do not match!');
+            : showErrorDialog(
+                context, 'Please complete the registration form..')
+        : showErrorDialog(context, 'Passwords do not match!');
   }
 //-----------------
 
-  displayDialog(String msg) {
-    showDialog(
-        context: context,
-        builder: (c) {
-          return ErrorAlertDialog(
-            message: msg,
-          );
-        });
-  }
-
   void _registerUser() async {
     User firebaseUser;
-
+    if (_nametextEditingController.text.isEmpty ||
+        _emailtextEditingController.text.isEmpty ||
+        _passwordtextEditingController.text.isEmpty ||
+        _cPasswordtextEditingController.text.isEmpty) {
+      showErrorDialog(
+          context,
+          'Please fill out the registration form' +
+              '${_nametextEditingController.text.isEmpty ? "Name is empty" : ""}');
+      return;
+    }
     await _auth
         .createUserWithEmailAndPassword(
       email: _emailtextEditingController.text.trim(),

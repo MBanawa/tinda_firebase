@@ -26,8 +26,8 @@ class _LoginState extends State<Login> {
       _isLoading = true;
     });
     try {
-      await Future.delayed(Duration(milliseconds: 1800), () {
-        _auth.signInWithEmailAndPassword(
+      await Future.delayed(Duration(milliseconds: 1700), () async {
+        await _auth.signInWithEmailAndPassword(
           email: _emailtextEditingController.text.trim(),
           password: _passwordtextEditingController.text.trim(),
         );
@@ -50,7 +50,7 @@ class _LoginState extends State<Login> {
             });
       });
     } catch (error) {
-      print(error);
+      print('ERROR MESSAGE: $error');
       var errorMessage = 'Authentication failed';
       // if (error.toString().contains('EMAIL_EXISTS')) {
       //   errorMessage = 'This email address is already in use!';
@@ -58,24 +58,19 @@ class _LoginState extends State<Login> {
       //   errorMessage = 'This is not a valid email address';
       // } else
       if (error.toString().contains('blocked')) {
-        errorMessage = error;
+        errorMessage = '$error';
       } else if (error.toString().contains(
           'There is no user record corresponding to this identifier.')) {
         errorMessage = 'The email address you entered could not be found';
       } else if (error.toString().contains('password is invalid')) {
         errorMessage = 'The password you entered is invalid.';
       }
-      _showErrorDialog(errorMessage);
-    }
-  }
+      showErrorDialog(context, errorMessage);
 
-  void _showErrorDialog(String message) {
-    showDialog(
-      context: context,
-      builder: (ctx) => ErrorAlertDialog(
-        message: message,
-      ),
-    );
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override

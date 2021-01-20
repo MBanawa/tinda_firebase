@@ -17,6 +17,8 @@ class ErrorAlertDialog extends StatelessWidget {
       ),
       content: Text(
         message,
+        maxLines: 99,
+        softWrap: true,
         style: TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.w500,
@@ -41,4 +43,13 @@ class ErrorAlertDialog extends StatelessWidget {
       ],
     );
   }
+}
+
+void showErrorDialog(BuildContext context, String message) {
+  showDialog(
+    context: context,
+    builder: (ctx) => ErrorAlertDialog(
+      message: message,
+    ),
+  );
 }
