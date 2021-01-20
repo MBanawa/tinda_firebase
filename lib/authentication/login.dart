@@ -52,13 +52,9 @@ class _LoginState extends State<Login> {
     } catch (error) {
       print('ERROR MESSAGE: $error');
       var errorMessage = 'Authentication failed';
-      // if (error.toString().contains('EMAIL_EXISTS')) {
-      //   errorMessage = 'This email address is already in use!';
-      // } else if (error.toString().contains('INVALID_EMAIL')) {
-      //   errorMessage = 'This is not a valid email address';
-      // } else
+
       if (error.toString().contains('blocked')) {
-        errorMessage = '$error';
+        errorMessage = error.message.toString;
       } else if (error.toString().contains(
           'There is no user record corresponding to this identifier.')) {
         errorMessage = 'The email address you entered could not be found';
