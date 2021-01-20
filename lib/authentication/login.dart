@@ -31,9 +31,7 @@ class _LoginState extends State<Login> {
           email: _emailtextEditingController.text.trim(),
           password: _passwordtextEditingController.text.trim(),
         );
-        setState(() {
-          _isLoading = false;
-        });
+
         showDialog(
             context: context,
             builder: (BuildContext builderContext) {
@@ -48,6 +46,9 @@ class _LoginState extends State<Login> {
                 ),
               );
             });
+        setState(() {
+          _isLoading = false;
+        });
       });
     } catch (error) {
       print('ERROR MESSAGE: $error');

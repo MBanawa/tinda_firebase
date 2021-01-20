@@ -31,12 +31,15 @@ class _RegisterState extends State<Register> {
     setState(() {
       _isLoading = true;
     });
+
     _passwordtextEditingController.text == _cPasswordtextEditingController.text
         ? _emailtextEditingController.text.isNotEmpty &&
                 _passwordtextEditingController.text.isNotEmpty &&
                 _cPasswordtextEditingController.text.isNotEmpty &&
                 _nametextEditingController.text.isNotEmpty
-            ? _registerUser()
+            ? await Future.delayed(Duration(milliseconds: 1700), () async {
+                _registerUser();
+              })
             : showErrorDialog(
                 context,
                 'Please complete the registration form:' +
@@ -44,25 +47,31 @@ class _RegisterState extends State<Register> {
                     '${_emailtextEditingController.text.isEmpty ? "\n- Email Address is Empty" : ""}' +
                     '${_passwordtextEditingController.text.isEmpty ? "\n- Password is Empty" : ""}')
         : showErrorDialog(context, 'Passwords do not match!');
+
+    setState(() {
+      _isLoading = false;
+    });
   }
 //-----------------
 
   void _registerUser() async {
     User firebaseUser;
 
-    await _auth
-        .createUserWithEmailAndPassword(
-      email: _emailtextEditingController.text.trim(),
-      password: _passwordtextEditingController.text.trim(),
-    )
-        .then((auth) {
-      firebaseUser = auth.user;
-    }).catchError((error) {
+    try {
+      await _auth
+          .createUserWithEmailAndPassword(
+        email: _emailtextEditingController.text.trim(),
+        password: _passwordtextEditingController.text.trim(),
+      )
+          .then((auth) {
+        firebaseUser = auth.user;
+      });
+    } catch (e) {
       showErrorDialog(
         context,
-        error.message.toString(),
+        e.message,
       );
-    });
+    }
 
     if (firebaseUser != null) {
       saveUserInfoToFireStore(firebaseUser);
@@ -78,6 +87,24 @@ class _RegisterState extends State<Register> {
     });
     Navigator.of(context)
         .pushReplacement(MaterialPageRoute(builder: (context) => HomePage()));
+
+    showDialog(
+        context: context,
+        builder: (BuildContext builderContext) {
+          Future.delayed(Duration(milliseconds: 800), () {
+            Navigator.of(builderContext).pop();
+          });
+          return AlertDialog(
+            backgroundColor: Colors.teal,
+            content: Text(
+              'Registration Successful!',
+              style: TextStyle(color: Colors.white),
+            ),
+          );
+        });
+    setState(() {
+      _isLoading = false;
+    });
   }
 //-----------------
 
