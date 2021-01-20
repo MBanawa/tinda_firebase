@@ -48,9 +48,9 @@ class _RegisterState extends State<Register> {
                     '${_passwordtextEditingController.text.isEmpty ? "\n- Password is Empty" : ""}')
         : showErrorDialog(context, 'Passwords do not match!');
 
-    setState(() {
-      _isLoading = false;
-    });
+    // setState(() {
+    //   _isLoading = false;
+    // });
   }
 //-----------------
 
@@ -76,18 +76,6 @@ class _RegisterState extends State<Register> {
     if (firebaseUser != null) {
       saveUserInfoToFireStore(firebaseUser);
     }
-  }
-
-//-----------------
-  Future saveUserInfoToFireStore(User fUser) async {
-    FirebaseFirestore.instance.collection('users').doc(fUser.uid).set({
-      'uid': fUser.uid,
-      'email': fUser.email,
-      'name': _nametextEditingController.text.trim(),
-    });
-    Navigator.of(context)
-        .pushReplacement(MaterialPageRoute(builder: (context) => HomePage()));
-
     showDialog(
         context: context,
         builder: (BuildContext builderContext) {
@@ -105,6 +93,18 @@ class _RegisterState extends State<Register> {
     setState(() {
       _isLoading = false;
     });
+  }
+
+//-----------------
+  Future saveUserInfoToFireStore(User fUser) async {
+    FirebaseFirestore.instance.collection('users').doc(fUser.uid).set({
+      'uid': fUser.uid,
+      'email': fUser.email,
+      'name': _nametextEditingController.text.trim(),
+    });
+
+    Navigator.of(context)
+        .pushReplacement(MaterialPageRoute(builder: (context) => HomePage()));
   }
 //-----------------
 
