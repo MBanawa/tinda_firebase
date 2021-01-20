@@ -95,7 +95,7 @@ class _RegisterState extends State<Register> {
     });
   }
 
-//-----------------
+//-------create user table----------
   Future saveUserInfoToFireStore(User fUser) async {
     FirebaseFirestore.instance.collection('users').doc(fUser.uid).set({
       'uid': fUser.uid,
