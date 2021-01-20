@@ -138,14 +138,9 @@ class _LoginState extends State<Login> {
                         _emailtextEditingController.text.isNotEmpty &&
                                 _passwordtextEditingController.text.isNotEmpty
                             ? _loginUser()
-                            : showDialog(
-                                context: context,
-                                builder: (c) {
-                                  return ErrorAlertDialog(
-                                    message:
-                                        'Please enter a valid email and password',
-                                  );
-                                },
+                            : showErrorDialog(
+                                context,
+                                'Please enter a valid email and password',
                               );
                       },
                       child: Padding(
