@@ -32,25 +32,29 @@ class _RegisterState extends State<Register> {
       _isLoading = true;
     });
 
-    _passwordtextEditingController.text == _cPasswordtextEditingController.text
-        ? _emailtextEditingController.text.isNotEmpty &&
-                _passwordtextEditingController.text.isNotEmpty &&
-                _cPasswordtextEditingController.text.isNotEmpty &&
-                _nametextEditingController.text.isNotEmpty
-            ? await Future.delayed(Duration(milliseconds: 1700), () async {
-                _registerUser();
-              })
-            : showErrorDialog(
-                context,
-                'Please complete the registration form:' +
-                    '${_nametextEditingController.text.isEmpty ? "\n- Name Field is Empty" : ""}' +
-                    '${_emailtextEditingController.text.isEmpty ? "\n- Email Address is Empty" : ""}' +
-                    '${_passwordtextEditingController.text.isEmpty ? "\n- Password is Empty" : ""}')
-        : showErrorDialog(context, 'Passwords do not match!');
-
-    // setState(() {
-    //   _isLoading = false;
-    // });
+    if (_passwordtextEditingController.text ==
+        _cPasswordtextEditingController.text) {
+      if (_emailtextEditingController.text.isNotEmpty &&
+          _passwordtextEditingController.text.isNotEmpty &&
+          _cPasswordtextEditingController.text.isNotEmpty &&
+          _nametextEditingController.text.isNotEmpty) {
+        await Future.delayed(Duration(milliseconds: 1700), () async {
+          _registerUser();
+        });
+      } else {
+        showErrorDialog(
+            context,
+            'Please complete the registration form:' +
+                '${_nametextEditingController.text.isEmpty ? "\n- Name Field is Empty" : ""}' +
+                '${_emailtextEditingController.text.isEmpty ? "\n- Email Address is Empty" : ""}' +
+                '${_passwordtextEditingController.text.isEmpty ? "\n- Password is Empty" : ""}');
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    } else {
+      showErrorDialog(context, 'Passwords do not match!');
+    }
   }
 //-----------------
 
@@ -75,21 +79,22 @@ class _RegisterState extends State<Register> {
 
     if (firebaseUser != null) {
       saveUserInfoToFireStore(firebaseUser);
-    }
-    showDialog(
-        context: context,
-        builder: (BuildContext builderContext) {
-          Future.delayed(Duration(milliseconds: 800), () {
-            Navigator.of(builderContext).pop();
+      showDialog(
+          context: context,
+          builder: (BuildContext builderContext) {
+            Future.delayed(Duration(milliseconds: 800), () {
+              Navigator.of(builderContext).pop();
+            });
+            return AlertDialog(
+              backgroundColor: Colors.teal,
+              content: Text(
+                'Registration Successful!',
+                style: TextStyle(color: Colors.white),
+              ),
+            );
           });
-          return AlertDialog(
-            backgroundColor: Colors.teal,
-            content: Text(
-              'Registration Successful!',
-              style: TextStyle(color: Colors.white),
-            ),
-          );
-        });
+    }
+
     setState(() {
       _isLoading = false;
     });
