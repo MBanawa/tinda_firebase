@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:tinda/widgets/customTextField.dart';
 import 'package:tinda/widgets/errorDialog.dart';
+import 'package:tinda/widgets/successDialog.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -31,21 +32,8 @@ class _LoginState extends State<Login> {
           email: _emailtextEditingController.text.trim(),
           password: _passwordtextEditingController.text.trim(),
         );
+        showSuccessDialog(context, 'Authentication Successful!');
 
-        showDialog(
-            context: context,
-            builder: (BuildContext builderContext) {
-              Future.delayed(Duration(milliseconds: 800), () {
-                Navigator.of(builderContext).pop();
-              });
-              return AlertDialog(
-                backgroundColor: Colors.teal,
-                content: Text(
-                  'Authentication Successful!',
-                  style: TextStyle(color: Colors.white),
-                ),
-              );
-            });
         setState(() {
           _isLoading = false;
         });

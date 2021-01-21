@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import 'package:tinda/main.dart';
+
 import 'package:tinda/screens/myQrCode_screen.dart';
 
 class DrawerNavigation extends StatefulWidget {
@@ -32,6 +34,9 @@ class _DrawerNavigationState extends State<DrawerNavigation> {
                 FlatButton(
                     onPressed: () {
                       FirebaseAuth.instance.signOut();
+                      Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(builder: (context) => Tinda()),
+                          (route) => false);
                     },
                     child: Text(
                       'Sign Out',

@@ -5,6 +5,7 @@ import 'package:tinda/home_page.dart';
 
 import 'package:tinda/widgets/customTextField.dart';
 import 'package:tinda/widgets/errorDialog.dart';
+import 'package:tinda/widgets/successDialog.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -79,24 +80,11 @@ class _RegisterState extends State<Register> {
 
     if (firebaseUser != null) {
       saveUserInfoToFireStore(firebaseUser);
-      showDialog(
-          context: context,
-          builder: (BuildContext builderContext) {
-            Future.delayed(Duration(milliseconds: 800), () {
-              Navigator.of(builderContext).pop();
-            });
-            return AlertDialog(
-              backgroundColor: Colors.teal,
-              content: Text(
-                'Registration Successful!',
-                style: TextStyle(color: Colors.white),
-              ),
-            );
-          });
     }
 
     setState(() {
       _isLoading = false;
+      showSuccessDialog(context, 'Registration Successful!');
     });
   }
 

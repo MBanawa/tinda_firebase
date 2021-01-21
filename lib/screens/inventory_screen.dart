@@ -23,7 +23,8 @@ class InventoryScreen extends StatefulWidget {
 class _InventoryScreenState extends State<InventoryScreen> {
   String _scanBarcode = '';
   Stream userstream;
-  String fuser;
+
+  var _len;
 
   @override
   void initState() {
@@ -41,8 +42,12 @@ class _InventoryScreenState extends State<InventoryScreen> {
           .where('userId', isEqualTo: firebaseUser.uid)
           .orderBy('createdAt')
           .snapshots();
-      fuser = firebaseUser.uid;
     });
+
+    var snap = await categcollection
+        .where('userId', isEqualTo: firebaseUser.uid)
+        .get();
+    _len = snap.docs.length;
   }
 
   _scanDialog(BuildContext context) {
@@ -222,8 +227,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                                 style: TextStyle(color: Colors.white),
                               ),
                               onPressed: () {
-                                Navigator.pop(context);
-                                Navigator.push(
+                                Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => NewCategory(
@@ -262,11 +266,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
           _scanDialog(context);
         },
       ),
-      body:
-          // _documentCount == 0
-          //     ? Text('Start adding Categories by pressing the + button')
-          //     :
-          SingleChildScrollView(
+
+      body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Column(
           children: [
@@ -275,51 +276,59 @@ class _InventoryScreenState extends State<InventoryScreen> {
             ),
             Container(
               child: StreamBuilder<QuerySnapshot>(
-                stream: userstream,
-                builder: (ctx, categSnapshot) {
-                  if (categSnapshot.connectionState ==
-                      ConnectionState.waiting) {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  final categDocs = categSnapshot.data.docs;
-                  return ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    physics: BouncingScrollPhysics(),
-                    itemCount: categDocs.length,
-                    itemBuilder: (context, index) {
-                      return InventoryCard(
-                        categID: categDocs[index].id,
-                        categName: categDocs[index].data()['categoryname'],
-                        categDescription:
-                            categDocs[index].data()['categorydescription'],
-                        categColor: categDocs[index].data()['categorycolor'],
-                        onMenuItemSelected: (MenuItem menuItem) {
-                          if (menuItem.menuVal == "Edit") {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (BuildContext context) => EditCategory(
-                                      context,
-                                      categDocs[index].id,
-                                      categDocs[index].data()['categoryname'],
-                                      categDocs[index]
-                                          .data()['categorydescription'],
-                                      categDocs[index].data()['categorycolor'],
-                                    )));
-                          } else if (menuItem.menuVal == "Delete") {
-                            //delete category
-                            CollectionReference categs = FirebaseFirestore
-                                .instance
-                                .collection('categories');
-                            categs.doc(categDocs[index].id).delete();
-                          }
+                  stream: userstream,
+                  builder: (ctx, categSnapshot) {
+                    if (categSnapshot.connectionState ==
+                        ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    if (_len == 0) {
+                      return Text('awe');
+                    } else {
+                      final categDocs = categSnapshot.data.docs;
+
+                      return ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        physics: BouncingScrollPhysics(),
+                        itemCount: categDocs.length,
+                        itemBuilder: (context, index) {
+                          return InventoryCard(
+                            categID: categDocs[index].id,
+                            categName: categDocs[index].data()['categoryname'],
+                            categDescription:
+                                categDocs[index].data()['categorydescription'],
+                            categColor:
+                                categDocs[index].data()['categorycolor'],
+                            onMenuItemSelected: (MenuItem menuItem) {
+                              if (menuItem.menuVal == "Edit") {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        EditCategory(
+                                          context,
+                                          categDocs[index].id,
+                                          categDocs[index]
+                                              .data()['categoryname'],
+                                          categDocs[index]
+                                              .data()['categorydescription'],
+                                          categDocs[index]
+                                              .data()['categorycolor'],
+                                        )));
+                              } else if (menuItem.menuVal == "Delete") {
+                                //delete category
+                                CollectionReference categs = FirebaseFirestore
+                                    .instance
+                                    .collection('categories');
+                                categs.doc(categDocs[index].id).delete();
+                              }
+                            },
+                          );
                         },
                       );
-                    },
-                  );
-                },
-              ),
+                    }
+                  }),
             ),
             SizedBox(height: 80.0)
           ],
