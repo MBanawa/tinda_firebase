@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:tinda/widgets/customTextField.dart';
 import 'package:tinda/widgets/errorDialog.dart';
+import 'package:tinda/widgets/google_signup_button.dart';
 import 'package:tinda/widgets/successDialog.dart';
 
 class Login extends StatefulWidget {
@@ -140,7 +141,19 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                   SizedBox(
-                    height: 65.0,
+                    height: 8.0,
+                  ),
+                  Text(
+                    'OR',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  SizedBox(
+                    height: 8.0,
+                  ),
+                  GoogleSignupButtonWidget(),
+                  SizedBox(
+                    height: 30.0,
                   ),
                   Container(
                     height: 4.0,

@@ -227,7 +227,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
                                 style: TextStyle(color: Colors.white),
                               ),
                               onPressed: () {
-                                Navigator.pushReplacement(
+                                Navigator.pop(context);
+                                Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => NewCategory(
