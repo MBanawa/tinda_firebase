@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -37,6 +39,15 @@ class _HomePageState extends State<HomePage> {
   void _onItemTapped(int selectedIndex) {
     _pageController.animateToPage(selectedIndex,
         duration: Duration(milliseconds: 200), curve: Curves.easeIn);
+  }
+
+  Future<bool> isNewUser(User user) async {
+    QuerySnapshot result = await FirebaseFirestore.instance
+        .collection("users")
+        .where("email", isEqualTo: user.email)
+        .get();
+    final List<DocumentSnapshot> docs = result.docs;
+    return docs.length == 0 ? true : false;
   }
 
   @override

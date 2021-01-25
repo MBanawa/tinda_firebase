@@ -23,7 +23,7 @@ class InventoryScreen extends StatefulWidget {
 class _InventoryScreenState extends State<InventoryScreen> {
   String _scanBarcode = '';
   Stream userstream;
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   var _len;
 
   @override
@@ -52,7 +52,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
   _scanDialog(BuildContext context) {
     return showDialog(
-        context: _scaffoldKey.currentContext,
+        context: context,
         barrierDismissible: true,
         builder: (param) {
           return AlertDialog(
@@ -143,7 +143,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
   _selectionDialog(BuildContext context) {
     return showDialog(
-        context: _scaffoldKey.currentContext,
+        context: context,
         barrierDismissible: true,
         builder: (param) {
           return AlertDialog(
@@ -255,7 +255,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
       drawer: DrawerNavigation(),
       appBar: AppBar(
         centerTitle: true,
