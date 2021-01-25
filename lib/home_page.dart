@@ -19,7 +19,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   GlobalKey _bottomNavigationKey = GlobalKey();
-
+  bool newUser;
   PageController _pageController = PageController();
 
   List<Widget> _screens = [
@@ -41,13 +41,27 @@ class _HomePageState extends State<HomePage> {
         duration: Duration(milliseconds: 200), curve: Curves.easeIn);
   }
 
-  Future<bool> isNewUser(User user) async {
+  isNewUser() async {
+    final user = FirebaseAuth.instance.currentUser;
     QuerySnapshot result = await FirebaseFirestore.instance
         .collection("users")
         .where("email", isEqualTo: user.email)
         .get();
     final List<DocumentSnapshot> docs = result.docs;
     return docs.length == 0 ? true : false;
+  }
+
+  Future<void> newUserChecker() async {
+    newUser = await isNewUser();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    newUserChecker().then((_) {
+      print(newUser);
+    });
   }
 
   @override
