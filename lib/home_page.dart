@@ -41,6 +41,17 @@ class _HomePageState extends State<HomePage> {
         duration: Duration(milliseconds: 200), curve: Curves.easeIn);
   }
 
+  @override
+  void initState() {
+    super.initState();
+
+    newUserChecker().then((_) {
+      if (newUser == true) {
+        saveUserInfoToFireStore();
+      }
+    });
+  }
+
   isNewUser() async {
     final user = FirebaseAuth.instance.currentUser;
     QuerySnapshot result = await FirebaseFirestore.instance
@@ -53,14 +64,16 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> newUserChecker() async {
     newUser = await isNewUser();
-    print('NEWUSER? $newUser');
   }
 
-  @override
-  void initState() {
-    super.initState();
-
-    newUserChecker();
+  Future saveUserInfoToFireStore() async {
+    final user = FirebaseAuth.instance.currentUser;
+    FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+      'uid': user.uid,
+      'email': user.email,
+      'name': user.displayName,
+      'class': 2,
+    });
   }
 
   @override
