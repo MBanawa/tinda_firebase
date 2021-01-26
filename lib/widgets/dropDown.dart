@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tinda/providers/category_provider.dart';
@@ -16,12 +17,31 @@ class FirebaseDropDown extends StatefulWidget {
 class _FirebaseDropDownState extends State<FirebaseDropDown> {
   var _selectedValue;
 
+  Stream userstream;
+  @override
+  void initState() {
+    super.initState();
+    getStream();
+  }
+
+  CollectionReference categcollection =
+      FirebaseFirestore.instance.collection('categories');
+
+  getStream() async {
+    var firebaseUser = FirebaseAuth.instance.currentUser;
+    setState(() {
+      userstream = categcollection
+          .where('userId', isEqualTo: firebaseUser.uid)
+          .orderBy('createdAt')
+          .snapshots();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       child: StreamBuilder<QuerySnapshot>(
-          stream:
-              FirebaseFirestore.instance.collection('categories').snapshots(),
+          stream: userstream,
           builder: (context, snapshot) {
             if (!snapshot.hasData)
               return Center(

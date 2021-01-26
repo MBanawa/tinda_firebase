@@ -94,6 +94,7 @@ class _RegisterState extends State<Register> {
       'uid': fUser.uid,
       'email': fUser.email,
       'name': _nametextEditingController.text.trim(),
+      'class': 1,
     });
 
     Navigator.of(context)

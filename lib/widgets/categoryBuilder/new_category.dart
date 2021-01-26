@@ -102,7 +102,7 @@ class _NewCategoryState extends State<NewCategory> {
     final categDoc =
         await FirebaseFirestore.instance.collection('categories').add({
       'userId': user.uid,
-      'name': userData.data()['name'] != null
+      'name': userData.data()['class'] == 1
           ? userData.data()['name']
           : user.displayName,
       'categoryname': _categoryNameController.text.trim(),

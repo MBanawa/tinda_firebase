@@ -161,9 +161,9 @@ class _NewItemState extends State<NewItem> {
 
     final itemDoc = await FirebaseFirestore.instance.collection('items').add({
       'userId': user.uid,
-      'userName': user.displayName
-      // userData.data()['name']
-      ,
+      'userName': userData.data()['class'] == 1
+          ? userData.data()['name']
+          : user.displayName,
       'createdAt': Timestamp.now(),
       'itemName': _itemNameController.text.trim(),
       'barcode': _qrCode != null ? _qrCode : widget.barcode,

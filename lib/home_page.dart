@@ -53,15 +53,14 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> newUserChecker() async {
     newUser = await isNewUser();
+    print('NEWUSER? $newUser');
   }
 
   @override
   void initState() {
     super.initState();
 
-    newUserChecker().then((_) {
-      print(newUser);
-    });
+    newUserChecker();
   }
 
   @override
