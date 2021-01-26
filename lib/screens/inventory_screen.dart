@@ -24,8 +24,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
   String _scanBarcode = '';
   Stream userstream;
 
-  var _len;
-
   @override
   void initState() {
     super.initState();
@@ -43,11 +41,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
           .orderBy('createdAt')
           .snapshots();
     });
-
-    var snap = await categcollection
-        .where('userId', isEqualTo: firebaseUser.uid)
-        .get();
-    _len = snap.docs.length;
   }
 
   _scanDialog(BuildContext context) {
@@ -285,50 +278,45 @@ class _InventoryScreenState extends State<InventoryScreen> {
                         child: CircularProgressIndicator(),
                       );
                     }
-                    if (_len == 0) {
-                      return Text('awe');
-                    } else {
-                      final categDocs = categSnapshot.data.docs;
 
-                      return ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        physics: BouncingScrollPhysics(),
-                        itemCount: categDocs.length,
-                        itemBuilder: (context, index) {
-                          return InventoryCard(
-                            categID: categDocs[index].id,
-                            categName: categDocs[index].data()['categoryname'],
-                            categDescription:
-                                categDocs[index].data()['categorydescription'],
-                            categColor:
-                                categDocs[index].data()['categorycolor'],
-                            onMenuItemSelected: (MenuItem menuItem) {
-                              if (menuItem.menuVal == "Edit") {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        EditCategory(
-                                          context,
-                                          categDocs[index].id,
-                                          categDocs[index]
-                                              .data()['categoryname'],
-                                          categDocs[index]
-                                              .data()['categorydescription'],
-                                          categDocs[index]
-                                              .data()['categorycolor'],
-                                        )));
-                              } else if (menuItem.menuVal == "Delete") {
-                                //delete category
-                                CollectionReference categs = FirebaseFirestore
-                                    .instance
-                                    .collection('categories');
-                                categs.doc(categDocs[index].id).delete();
-                              }
-                            },
-                          );
-                        },
-                      );
-                    }
+                    final categDocs = categSnapshot.data.docs;
+
+                    return ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      physics: BouncingScrollPhysics(),
+                      itemCount: categDocs.length,
+                      itemBuilder: (context, index) {
+                        return InventoryCard(
+                          categID: categDocs[index].id,
+                          categName: categDocs[index].data()['categoryname'],
+                          categDescription:
+                              categDocs[index].data()['categorydescription'],
+                          categColor: categDocs[index].data()['categorycolor'],
+                          onMenuItemSelected: (MenuItem menuItem) {
+                            if (menuItem.menuVal == "Edit") {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      EditCategory(
+                                        context,
+                                        categDocs[index].id,
+                                        categDocs[index].data()['categoryname'],
+                                        categDocs[index]
+                                            .data()['categorydescription'],
+                                        categDocs[index]
+                                            .data()['categorycolor'],
+                                      )));
+                            } else if (menuItem.menuVal == "Delete") {
+                              //delete category
+                              CollectionReference categs = FirebaseFirestore
+                                  .instance
+                                  .collection('categories');
+                              categs.doc(categDocs[index].id).delete();
+                            }
+                          },
+                        );
+                      },
+                    );
                   }),
             ),
             SizedBox(height: 80.0)
