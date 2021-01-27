@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:tinda/widgets/customTextField.dart';
 import 'package:tinda/widgets/errorDialog.dart';
 import 'package:tinda/widgets/google_signup_button.dart';
-import 'package:tinda/widgets/successDialog.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -28,12 +27,11 @@ class _LoginState extends State<Login> {
       _isLoading = true;
     });
     try {
-      await Future.delayed(Duration(milliseconds: 1700), () async {
+      await Future.delayed(Duration(milliseconds: 1600), () async {
         await _auth.signInWithEmailAndPassword(
           email: _emailtextEditingController.text.trim(),
           password: _passwordtextEditingController.text.trim(),
         );
-        showSuccessDialog(context, 'Authentication Successful!');
 
         setState(() {
           _isLoading = false;

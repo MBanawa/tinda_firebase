@@ -43,7 +43,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
     });
   }
 
-  _scanDialog(BuildContext context) {
+  _scanDialog(context) {
     return showDialog(
         context: context,
         barrierDismissible: true,
@@ -96,7 +96,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                           textAlign: TextAlign.center,
                         ),
                         onPressed: () {
-                          Navigator.pop(context);
+                          Navigator.of(context).pop();
                           _selectionDialog(context);
                           _scanBarcode = null;
                         }),
@@ -134,7 +134,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
   FirebaseDropDown _dropDownList() => FirebaseDropDown();
 
-  _selectionDialog(BuildContext context) {
+  _selectionDialog(context) {
     return showDialog(
         context: context,
         barrierDismissible: true,

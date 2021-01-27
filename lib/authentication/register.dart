@@ -5,7 +5,6 @@ import 'package:tinda/home_page.dart';
 
 import 'package:tinda/widgets/customTextField.dart';
 import 'package:tinda/widgets/errorDialog.dart';
-import 'package:tinda/widgets/successDialog.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -84,7 +83,6 @@ class _RegisterState extends State<Register> {
 
     setState(() {
       _isLoading = false;
-      showSuccessDialog(context, 'Registration Successful!');
     });
   }
 
