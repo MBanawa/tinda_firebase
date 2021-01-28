@@ -16,7 +16,7 @@ class CashierScreen extends StatelessWidget {
         });
   }
 
-  dialog2(BuildContext context) {
+  dialog2(context) {
     return showDialog(
         context: context,
         barrierDismissible: true,
