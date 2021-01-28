@@ -108,6 +108,39 @@ class _InventoryScreenState extends State<InventoryScreen> {
         });
   }
 
+  _dialogUno(context) {
+    return showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (ctx) {
+          return AlertDialog(
+            content: RaisedButton(
+              onPressed: () {
+                // _selectionDialog(context);
+                dialog2(context);
+              },
+            ),
+          );
+        });
+  }
+
+  dialog2(BuildContext context) {
+    return showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (ctx) {
+          return AlertDialog(
+            actions: [
+              RaisedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        });
+  }
+
   Future<void> scanBarcodeNormal() async {
     String barcodeScanRes;
     // Platform messages may fail, so we use a try/catch PlatformException.
@@ -257,7 +290,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
-          _scanDialog(context);
+          _dialogUno(context);
+          // _scanDialog(context);
         },
       ),
 

@@ -22,7 +22,13 @@ class CashierScreen extends StatelessWidget {
         barrierDismissible: true,
         builder: (ctx) {
           return AlertDialog(
-            actions: [],
+            actions: [
+              RaisedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
           );
         });
   }
