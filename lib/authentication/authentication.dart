@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:tinda/authentication/login.dart';
 import 'package:tinda/authentication/register.dart';
-import 'package:tinda/screens/test_screen.dart';
 
 class AuthenticScreen extends StatefulWidget {
   @override
@@ -49,8 +48,8 @@ class _AuthenticScreenState extends State<AuthenticScreen> {
         body: Container(
           color: Colors.teal,
           child: TabBarView(children: [
-            TestLogin(),
-            // Login(),
+            // TestLogin(),
+            Login(),
             Register(),
           ]),
         ),

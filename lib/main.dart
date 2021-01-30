@@ -9,14 +9,21 @@ import 'package:tinda/authentication/authentication.dart';
 import 'package:tinda/providers/category_provider.dart';
 import 'package:tinda/providers/google_sign_in.dart';
 import 'package:tinda/providers/phonesize_provider.dart';
+import 'package:tinda/screens/test_screen.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(Tinda());
+  runApp(Phoenix(child: Tinda()));
 }
 
-class Tinda extends StatelessWidget {
+class Tinda extends StatefulWidget {
+  @override
+  _TindaState createState() => _TindaState();
+}
+
+class _TindaState extends State<Tinda> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(

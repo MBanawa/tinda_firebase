@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:tinda/authentication/register.dart';
 import 'package:tinda/widgets/customTextField.dart';
 
 class TestLogin extends StatefulWidget {
@@ -8,6 +9,74 @@ class TestLogin extends StatefulWidget {
 }
 
 class _TestLoginState extends State<TestLogin> {
+ 
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Colors.teal,
+                  Colors.lightBlue,
+                ],
+                begin: const FractionalOffset(0.0, 0.0),
+                end: const FractionalOffset(1.0, 0.0),
+                stops: [0.0, 1.0],
+                tileMode: TileMode.clamp,
+              ),
+            ),
+          ),
+          title: Text(
+            'iMercado',
+            style: TextStyle(
+              fontSize: 45.0,
+              color: Colors.white,
+              fontFamily: 'Signatra',
+            ),
+          ),
+          centerTitle: true,
+          bottom: TabBar(
+            tabs: [
+              Tab(
+                icon: Icon(
+                  Icons.lock,
+                  color: Colors.white,
+                ),
+              ),
+              Tab(
+                icon: Icon(
+                  Icons.person,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+            indicatorColor: Colors.white38,
+            indicatorWeight: 5.0,
+          ),
+        ),
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+              Colors.teal,
+              Colors.lightBlue,
+            ], begin: Alignment.topRight, end: Alignment.bottomLeft),
+          ),
+          child: TabBarView(children: [
+            LoginTab(),
+            Register(),
+          ]),
+        ),
+      ),
+    );
+  }
+}
+
+class LoginTab extends StatelessWidget {
   final TextEditingController _emailtextEditingController =
       TextEditingController();
   final TextEditingController _passwordtextEditingController =
