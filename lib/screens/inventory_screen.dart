@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
+
 import 'package:provider/provider.dart';
 
 import 'package:tinda/providers/category_provider.dart';
@@ -246,8 +247,18 @@ class _InventoryScreenState extends State<InventoryScreen> {
         });
   }
 
+  var _reload;
+
+  executeAfterWholeBuildProcess(BuildContext context) {
+    Phoenix.rebirth(context);
+  }
+
   @override
   Widget build(BuildContext context) {
+    _reload == '1'
+        ? print('done')
+        : WidgetsBinding.instance.addPostFrameCallback(
+            (_) => executeAfterWholeBuildProcess(context));
     return Scaffold(
       drawer: DrawerNavigation(),
       appBar: AppBar(

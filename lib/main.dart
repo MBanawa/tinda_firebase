@@ -9,7 +9,7 @@ import 'package:tinda/authentication/authentication.dart';
 import 'package:tinda/providers/category_provider.dart';
 import 'package:tinda/providers/google_sign_in.dart';
 import 'package:tinda/providers/phonesize_provider.dart';
-import 'package:tinda/screens/test_screen.dart';
+
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 Future<void> main() async {
@@ -84,16 +84,12 @@ class SplashScreen extends StatelessWidget {
               Column(
                 children: [
                   Center(
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
-                  ),
-                  SizedBox(height: 20.0),
-                  Container(
-                    child: Text(
-                      'Please Wait...',
-                      style: TextStyle(
-                        color: Colors.white,
+                    child: Container(
+                      child: Text(
+                        'Please Wait...',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
