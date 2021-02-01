@@ -42,6 +42,7 @@ class _LoginState extends State<Login> {
   void _loginUser() async {
     FocusScope.of(context).unfocus();
     Scrollable.ensureVisible(dataKey.currentContext);
+
     setState(() {
       _isLoading = true;
     });

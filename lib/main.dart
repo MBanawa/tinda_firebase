@@ -9,7 +9,7 @@ import 'package:tinda/authentication/authentication.dart';
 import 'package:tinda/providers/category_provider.dart';
 import 'package:tinda/providers/google_sign_in.dart';
 import 'package:tinda/providers/phonesize_provider.dart';
-
+import 'package:tinda/providers/refresh_provider.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 Future<void> main() async {
@@ -34,6 +34,7 @@ class _TindaState extends State<Tinda> {
             ChangeNotifierProvider(create: (ctx) => PhoneSize()),
             ChangeNotifierProvider(create: (ctx) => CategoryProvider()),
             ChangeNotifierProvider(create: (ctx) => GoogleSignInProvider()),
+            ChangeNotifierProvider(create: (ctx) => RefreshProvider()),
           ],
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
