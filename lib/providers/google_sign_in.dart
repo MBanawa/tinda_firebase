@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -17,6 +18,18 @@ class GoogleSignInProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  CollectionReference refreshcollection =
+      FirebaseFirestore.instance.collection('refresh');
+  refreshStarter() async {
+    var firebaseUser = FirebaseAuth.instance.currentUser;
+
+    var doc = refreshcollection.doc(firebaseUser.uid);
+    await doc.set({
+      'uid': firebaseUser.uid,
+      'refresh': 1,
+    });
+  }
+
   Future login() async {
     isSigningIn = true;
 
@@ -32,7 +45,9 @@ class GoogleSignInProvider extends ChangeNotifier {
         idToken: googleauth.idToken,
       );
 
-      await FirebaseAuth.instance.signInWithCredential(credential);
+      await FirebaseAuth.instance.signInWithCredential(credential).then((_) {
+        refreshStarter();
+      });
       isSigningIn = false;
     }
   }

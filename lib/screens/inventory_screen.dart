@@ -247,18 +247,20 @@ class _InventoryScreenState extends State<InventoryScreen> {
         });
   }
 
-  var _reload;
-
-  executeAfterWholeBuildProcess(BuildContext context) {
-    Phoenix.rebirth(context);
+  executeAfterWholeBuildProcess(BuildContext context) async {
+    final user = FirebaseAuth.instance.currentUser;
+    final doc = FirebaseFirestore.instance.collection('refresh').doc(user.uid);
+    final userData = await doc.get();
+    if (userData.data()['refresh'] == 1) {
+      doc.update({'refresh': 0});
+      Phoenix.rebirth(context);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    _reload == '1'
-        ? print('done')
-        : WidgetsBinding.instance.addPostFrameCallback(
-            (_) => executeAfterWholeBuildProcess(context));
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => executeAfterWholeBuildProcess(context));
     return Scaffold(
       drawer: DrawerNavigation(),
       appBar: AppBar(

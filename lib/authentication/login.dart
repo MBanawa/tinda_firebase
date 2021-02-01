@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -20,18 +21,41 @@ class _LoginState extends State<Login> {
   bool _isLoading = false;
 
   FirebaseAuth _auth = FirebaseAuth.instance;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  CollectionReference refreshcollection =
+      FirebaseFirestore.instance.collection('refresh');
+  refreshStarter() async {
+    var firebaseUser = FirebaseAuth.instance.currentUser;
+
+    var doc = refreshcollection.doc(firebaseUser.uid);
+    await doc.set({
+      'uid': firebaseUser.uid,
+      'refresh': 1,
+    });
+  }
+
   void _loginUser() async {
     FocusScope.of(context).unfocus();
     Scrollable.ensureVisible(dataKey.currentContext);
     setState(() {
       _isLoading = true;
     });
+
     try {
       await Future.delayed(Duration(milliseconds: 1600), () async {
-        await _auth.signInWithEmailAndPassword(
+        await _auth
+            .signInWithEmailAndPassword(
           email: _emailtextEditingController.text.trim(),
           password: _passwordtextEditingController.text.trim(),
-        );
+        )
+            .then((_) {
+          refreshStarter();
+        });
 
         setState(() {
           _isLoading = false;
