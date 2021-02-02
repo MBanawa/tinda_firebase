@@ -6,6 +6,7 @@ import 'package:tinda/home_page.dart';
 
 import 'package:tinda/widgets/customTextField.dart';
 import 'package:tinda/widgets/errorDialog.dart';
+import 'package:tinda/widgets/refresh_starter.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -70,6 +71,7 @@ class _RegisterState extends State<Register> {
       )
           .then((auth) {
         firebaseUser = auth.user;
+        refreshStarter();
       });
     } catch (e) {
       showErrorDialog(

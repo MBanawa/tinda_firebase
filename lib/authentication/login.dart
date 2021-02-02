@@ -1,10 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:tinda/widgets/customTextField.dart';
 import 'package:tinda/widgets/errorDialog.dart';
 import 'package:tinda/widgets/google_signup_button.dart';
+import 'package:tinda/widgets/refresh_starter.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -25,18 +25,6 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
-  }
-
-  CollectionReference refreshcollection =
-      FirebaseFirestore.instance.collection('refresh');
-  refreshStarter() async {
-    var firebaseUser = FirebaseAuth.instance.currentUser;
-
-    var doc = refreshcollection.doc(firebaseUser.uid);
-    await doc.set({
-      'uid': firebaseUser.uid,
-      'refresh': 1,
-    });
   }
 
   void _loginUser() async {

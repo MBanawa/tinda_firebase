@@ -1,7 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:tinda/widgets/refresh_starter.dart';
 
 class GoogleSignInProvider extends ChangeNotifier {
   final googleSignIn = GoogleSignIn();
@@ -16,18 +16,6 @@ class GoogleSignInProvider extends ChangeNotifier {
   set isSigningIn(bool isSigningIn) {
     _isSigningIn = isSigningIn;
     notifyListeners();
-  }
-
-  CollectionReference refreshcollection =
-      FirebaseFirestore.instance.collection('refresh');
-  refreshStarter() async {
-    var firebaseUser = FirebaseAuth.instance.currentUser;
-
-    var doc = refreshcollection.doc(firebaseUser.uid);
-    await doc.set({
-      'uid': firebaseUser.uid,
-      'refresh': 1,
-    });
   }
 
   Future login() async {
