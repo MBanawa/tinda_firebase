@@ -19,13 +19,12 @@ class GoogleSignInProvider extends ChangeNotifier {
   }
 
   Future login() async {
-    isSigningIn = true;
-
     final user = await googleSignIn.signIn();
     if (user == null) {
       isSigningIn = false;
       return;
     } else {
+      isSigningIn = true;
       final googleauth = await user.authentication;
 
       final credential = GoogleAuthProvider.credential(

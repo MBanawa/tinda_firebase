@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tinda/providers/google_sign_in.dart';
 
 import 'package:tinda/widgets/customTextField.dart';
 import 'package:tinda/widgets/errorDialog.dart';
@@ -36,7 +38,7 @@ class _LoginState extends State<Login> {
     });
 
     try {
-      await Future.delayed(Duration(milliseconds: 1600), () async {
+      await Future.delayed(Duration(milliseconds: 1300), () async {
         await _auth
             .signInWithEmailAndPassword(
           email: _emailtextEditingController.text.trim(),
@@ -72,6 +74,7 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<GoogleSignInProvider>(context);
     double _screenWidth = MediaQuery.of(context).size.width,
         _screenHeight = MediaQuery.of(context).size.height;
     return SingleChildScrollView(
@@ -81,7 +84,7 @@ class _LoginState extends State<Login> {
           mainAxisSize: MainAxisSize.max,
           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _isLoading == true
+            _isLoading == true || provider.isSigningIn
                 ? Container(
                     alignment: Alignment.center,
                     child: LinearProgressIndicator(
