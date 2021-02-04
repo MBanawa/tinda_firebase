@@ -26,12 +26,19 @@ class _GenerateQrState extends State<GenerateQr> {
   GlobalKey _globalKey = GlobalKey();
   bool loading = false;
   final Dio dio = Dio();
-  double progress = 0;
+  final dataKey = GlobalKey();
 
-  _qrGenerator() {
+  _qrGenerator() async {
+    Scrollable.ensureVisible(dataKey.currentContext);
+    this.setState(() {
+      loading = true;
+    });
     FocusScope.of(context).unfocus();
-    setState(() {
-      _qrCode = _qrController.text.trim();
+    await Future.delayed(Duration(milliseconds: 1500), () {
+      setState(() {
+        _qrCode = _qrController.text.trim();
+        loading = false;
+      });
     });
   }
 
@@ -151,8 +158,21 @@ class _GenerateQrState extends State<GenerateQr> {
           height: MediaQuery.of(context).size.height,
           child: Column(
             mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
+            // mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              (loading)
+                  ? Container(
+                      alignment: Alignment.center,
+                      child: LinearProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation(Colors.teal[600]),
+                        backgroundColor: Colors.teal[100],
+                      ),
+                    )
+                  : Center(),
+              SizedBox(
+                key: dataKey,
+                height: 80,
+              ),
               _qrCode == null
                   ? Container(
                       child: Icon(
@@ -201,8 +221,9 @@ class _GenerateQrState extends State<GenerateQr> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(6.0)),
                     color: Colors.yellow.shade900,
+                    //TODO: ADD RESET FUNCTION
                     child: Text(
-                      'Generate QR Now',
+                      _qrCode == null ? 'Generate QR Now' : 'Reset',
                       style: TextStyle(color: Colors.white),
                     ),
                     onPressed: () {
@@ -222,7 +243,7 @@ class _GenerateQrState extends State<GenerateQr> {
                               borderRadius: BorderRadius.circular(6.0)),
                           color: Colors.green,
                           child: Text(
-                            'Save Generated QR Code',
+                            'Save and go back',
                             style: TextStyle(color: Colors.white),
                           ),
                           onPressed: () {
@@ -231,11 +252,6 @@ class _GenerateQrState extends State<GenerateQr> {
                     ),
                   ],
                 ),
-              (loading)
-                  ? Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : Center()
             ],
           ),
         ),
