@@ -84,6 +84,41 @@ class _NewItemState extends State<NewItem> {
     });
   }
 
+  _imageAlert() {
+    return showDialog(
+        context: context,
+        builder: (ctx) {
+          return SimpleDialog(
+            title: Text(
+              'Alert!',
+              style: TextStyle(
+                color: Colors.yellow[900],
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            children: [
+              Text(
+                'Ooops! You forgot to pick a photo of your item.',
+                style: TextStyle(
+                  color: Colors.teal,
+                ),
+              ),
+              SimpleDialogOption(
+                child: Text(
+                  'Go Back',
+                  style: TextStyle(
+                    color: Colors.teal,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        });
+  }
+
   takeImage(mContext) {
     return showDialog(
       context: context,
@@ -513,7 +548,7 @@ class _NewItemState extends State<NewItem> {
                   hintText: 'How much will you sell the item for?',
                   isObscure: false,
                   onSubmitted: (_) {
-                    _saveNewItem();
+                    imageFile == null ? _imageAlert() : _saveNewItem();
                   },
                 ),
                 SizedBox(
@@ -528,7 +563,7 @@ class _NewItemState extends State<NewItem> {
                           borderRadius: BorderRadius.circular(6.0)),
                       color: Colors.yellow.shade900,
                       onPressed: () {
-                        _saveNewItem();
+                        imageFile == null ? _imageAlert() : _saveNewItem();
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
