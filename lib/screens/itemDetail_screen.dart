@@ -153,7 +153,6 @@ class _ItemDetailState extends State<ItemDetail> {
                           SizedBox(height: 6),
                           FadeAnimation(
                             0.7,
-                            //TODO: need to change display realtime on item save
                             Text(
                               'In Stock:',
                               style: TextStyle(

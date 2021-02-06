@@ -10,7 +10,6 @@ import 'package:tinda/screens/generate_qrcode_screen.dart';
 
 import 'package:tinda/widgets/customTextField.dart';
 
-//TODO: add option to generate QR code for items without barcode
 class NewItem extends StatefulWidget {
   final String categoryId;
   final String barcode;

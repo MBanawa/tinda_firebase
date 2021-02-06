@@ -34,7 +34,7 @@ class _GenerateQrState extends State<GenerateQr> {
       loading = true;
     });
     FocusScope.of(context).unfocus();
-    await Future.delayed(Duration(milliseconds: 1500), () {
+    await Future.delayed(Duration(milliseconds: 1000), () {
       setState(() {
         _qrCode = _qrController.text.trim();
         loading = false;
@@ -147,6 +147,13 @@ class _GenerateQrState extends State<GenerateQr> {
     }
   }
 
+  resetQr() {
+    setState(() {
+      _qrCode = null;
+    });
+    _qrController.clear();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -221,14 +228,13 @@ class _GenerateQrState extends State<GenerateQr> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(6.0)),
                     color: Colors.yellow.shade900,
-                    //TODO: ADD RESET FUNCTION
                     child: Text(
                       _qrCode == null ? 'Generate QR Now' : 'Reset',
                       style: TextStyle(color: Colors.white),
                     ),
                     onPressed: () {
-                      // Navigator.pop(context);
-                      _qrGenerator();
+                      _qrCode == null ? _qrGenerator() : resetQr();
+                      ;
                     }),
               ),
               SizedBox(height: 15),
@@ -243,7 +249,7 @@ class _GenerateQrState extends State<GenerateQr> {
                               borderRadius: BorderRadius.circular(6.0)),
                           color: Colors.green,
                           child: Text(
-                            'Save and go back',
+                            'Save',
                             style: TextStyle(color: Colors.white),
                           ),
                           onPressed: () {
