@@ -287,10 +287,23 @@ class _NewItemState extends State<NewItem> {
                           backgroundColor: Colors.teal.shade300,
                           backgroundImage:
                               imageFile == null ? null : FileImage(imageFile),
-                          child: Image.asset(
-                            'assets/images/camera.png',
-                            width: 50,
-                            height: 50,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                'assets/images/camera.png',
+                                width: 50,
+                                height: 50,
+                              ),
+                              Text(
+                                'Press \nHere',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.teal[50],
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
                           ),
                         ),
                       ),
