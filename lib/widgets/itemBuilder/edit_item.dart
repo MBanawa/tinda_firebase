@@ -62,6 +62,7 @@ class _EditItemState extends State<EditItem> {
   void initState() {
     super.initState();
     _setValues();
+    _test();
   }
 
   _setValues() {
@@ -239,6 +240,24 @@ class _EditItemState extends State<EditItem> {
     _editItemSupplierController.clear();
     _editItemBuyPriceController.clear();
     _editItemSellPriceController.clear();
+  }
+
+  //TODO: https://www.youtube.com/watch?v=fy-rCZVcw78&ab_channel=1ManStartup
+
+  void _test() {
+    final supplier = FirebaseFirestore.instance
+        .collection('suppliers')
+        .where('itemId', isEqualTo: widget.itemId)
+        .where('entryDate', isNotEqualTo: 0)
+        // .where('quantity', isGreaterThan: 0)
+        .orderBy('entryDate')
+        .limit(1)
+        .get();
+    supplier.then((QuerySnapshot snapshot) => {
+          snapshot.docs.forEach((f) {
+            print('Doc ID:' + f.reference.id);
+          })
+        });
   }
 
   void _supplierDB(String itemId, String itemName) {
