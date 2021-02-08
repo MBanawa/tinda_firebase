@@ -203,12 +203,12 @@ class _NewItemState extends State<NewItem> {
       'barcode': _qrCode != null ? _qrCode : widget.barcode,
       'category': _category,
       'categoryId': widget.categoryId,
-      'quantity': _itemQuantityController.text.trim(),
+      'quantity': int.parse(_itemQuantityController.text.trim()),
       'itemImage': url,
       'supplier': _itemSupplierController.text.trim(),
       'buyDate': _itemBuyDateController.text.trim(),
-      'buyPrice': _itemBuyPriceController.text.trim(),
-      'sellPrice': _itemSellPriceController.text.trim(),
+      'buyPrice': double.parse(_itemBuyPriceController.text.trim()),
+      'sellPrice': double.parse(_itemSellPriceController.text.trim()),
     });
 
     _supplierDB(itemDoc.id, _itemNameController.text.trim());
@@ -230,8 +230,8 @@ class _NewItemState extends State<NewItem> {
       'entryDate': Timestamp.now(),
       'supplier': _itemSupplierController.text.trim(),
       'buyDate': _itemBuyDateController.text.trim(),
-      'buyPrice': _itemBuyPriceController.text.trim(),
-      'quantity': _itemQuantityController.text.trim(),
+      'buyPrice': double.parse(_itemBuyPriceController.text.trim()),
+      'quantity': int.parse(_itemQuantityController.text.trim()),
       'itemId': itemId,
       'itemName': itemName,
     });
@@ -245,8 +245,8 @@ class _NewItemState extends State<NewItem> {
     itemCollection.add({
       'entryDate': Timestamp.now(),
       'buyDate': _itemBuyDateController.text.trim(),
-      'buyPrice': _itemBuyPriceController.text.trim(),
-      'sellPrice': _itemSellPriceController.text.trim(),
+      'buyPrice': double.parse(_itemBuyPriceController.text.trim()),
+      'sellPrice': double.parse(_itemSellPriceController.text.trim()),
       'itemId': itemId,
       'itemName': itemName,
     });
