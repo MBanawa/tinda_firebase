@@ -193,8 +193,8 @@ class _EditItemState extends State<EditItem> {
         'itemImage': imageFile != null ? url : widget.itemImage,
         'supplier': _editItemSupplierController.text.trim(),
         'buyDate': _editItemBuyDateController.text.trim(),
-        'buyPrice': _editItemBuyPriceController.text.trim(),
-        'sellPrice': _editItemSellPriceController.text.trim(),
+        'buyPrice': double.parse(_editItemBuyPriceController.text.trim()),
+        'sellPrice': double.parse(_editItemSellPriceController.text.trim()),
       });
 
       _supplierDB(widget.itemId, _editItemNameController.text.trim());
@@ -212,8 +212,8 @@ class _EditItemState extends State<EditItem> {
       itemCollection.add({
         'entryDate': Timestamp.now(),
         'removeReason': _removeReasonController.text.trim(),
-        'buyPrice': widget.buyPrice,
-        'sellPrice': widget.sellPrice,
+        'buyPrice': double.parse(widget.buyPrice),
+        'sellPrice': double.parse(widget.sellPrice),
         'supplier': widget.supplier,
         'itemId': widget.itemId,
         'itemName': widget.itemName,
@@ -223,12 +223,12 @@ class _EditItemState extends State<EditItem> {
       FirebaseFirestore.instance.collection('items').doc(widget.itemId).update({
         'barcode': _qrCode != null ? _qrCode : widget.barcode,
         'itemName': _editItemNameController.text.trim(),
-        'quantity': _editItemQuantityController.text.trim(),
+        'quantity': int.parse(_editItemQuantityController.text.trim()),
         'itemImage': imageFile != null ? url : widget.itemImage,
         'supplier': _editItemSupplierController.text.trim(),
         'buyDate': _editItemBuyDateController.text.trim(),
-        'buyPrice': _editItemBuyPriceController.text.trim(),
-        'sellPrice': _editItemSellPriceController.text.trim(),
+        'buyPrice': double.parse(_editItemBuyPriceController.text.trim()),
+        'sellPrice': double.parse(_editItemSellPriceController.text.trim()),
       });
     }
 
@@ -267,8 +267,8 @@ class _EditItemState extends State<EditItem> {
       'entryDate': Timestamp.now(),
       'supplier': _editItemSupplierController.text.trim(),
       'buyDate': _editItemBuyDateController.text.trim(),
-      'buyPrice': _editItemBuyPriceController.text.trim(),
-      'quantity': _editItemQuantityController.text.trim(),
+      'buyPrice': double.parse(_editItemBuyPriceController.text.trim()),
+      'quantity': int.parse(_editItemQuantityController.text.trim()),
       'itemId': itemId,
       'itemName': itemName,
     });
@@ -282,8 +282,8 @@ class _EditItemState extends State<EditItem> {
     itemCollection.add({
       'entryDate': Timestamp.now(),
       'buyDate': _editItemBuyDateController.text.trim(),
-      'buyPrice': _editItemBuyPriceController.text.trim(),
-      'sellPrice': _editItemSellPriceController.text.trim(),
+      'buyPrice': double.parse(_editItemBuyPriceController.text.trim()),
+      'sellPrice': double.parse(_editItemSellPriceController.text.trim()),
       'itemId': itemId,
       'itemName': itemName,
     });
