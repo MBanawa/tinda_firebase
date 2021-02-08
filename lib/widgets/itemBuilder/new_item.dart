@@ -224,9 +224,9 @@ class _NewItemState extends State<NewItem> {
   }
 
   void _supplierDB(String itemId, String itemName) {
-    final itemCollection = FirebaseFirestore.instance.collection('suppliers');
+    final itemCollection = FirebaseFirestore.instance.collection('items');
 
-    itemCollection.add({
+    itemCollection.doc(itemId).collection('suppliers').add({
       'entryDate': Timestamp.now(),
       'supplier': _itemSupplierController.text.trim(),
       'buyDate': _itemBuyDateController.text.trim(),
@@ -241,8 +241,8 @@ class _NewItemState extends State<NewItem> {
     String itemId,
     String itemName,
   ) {
-    final itemCollection = FirebaseFirestore.instance.collection('sellprice');
-    itemCollection.add({
+    final itemCollection = FirebaseFirestore.instance.collection('items');
+    itemCollection.doc(itemId).collection('sellprice').add({
       'entryDate': Timestamp.now(),
       'buyDate': _itemBuyDateController.text.trim(),
       'buyPrice': double.parse(_itemBuyPriceController.text.trim()),

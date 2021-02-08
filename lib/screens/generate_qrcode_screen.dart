@@ -234,7 +234,6 @@ class _GenerateQrState extends State<GenerateQr> {
                     ),
                     onPressed: () {
                       _qrCode == null ? _qrGenerator() : resetQr();
-                      ;
                     }),
               ),
               SizedBox(height: 15),

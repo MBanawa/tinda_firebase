@@ -247,9 +247,9 @@ class _EditItemState extends State<EditItem> {
   void _test() {
     final supplier = FirebaseFirestore.instance
         .collection('suppliers')
-        .where('itemId', isEqualTo: widget.itemId)
-        .where('entryDate', isNotEqualTo: 0)
-        // .where('quantity', isGreaterThan: 0)
+        // .where('itemId', isEqualTo: widget.itemId)
+        // .where('quantity', isNotEqualTo: 0)
+        .where('entryDate', isGreaterThan: 0)
         .orderBy('entryDate')
         .limit(1)
         .get();
@@ -261,9 +261,10 @@ class _EditItemState extends State<EditItem> {
   }
 
   void _supplierDB(String itemId, String itemName) {
-    final itemCollection = FirebaseFirestore.instance.collection('suppliers');
+    final itemCollection =
+        FirebaseFirestore.instance.collection('items').doc(itemId);
 
-    itemCollection.add({
+    itemCollection.collection('suppliers').add({
       'entryDate': Timestamp.now(),
       'supplier': _editItemSupplierController.text.trim(),
       'buyDate': _editItemBuyDateController.text.trim(),
@@ -278,8 +279,9 @@ class _EditItemState extends State<EditItem> {
     String itemId,
     String itemName,
   ) {
-    final itemCollection = FirebaseFirestore.instance.collection('sellprice');
-    itemCollection.add({
+    final itemCollection =
+        FirebaseFirestore.instance.collection('items').doc(itemId);
+    itemCollection.collection('sellprice').add({
       'entryDate': Timestamp.now(),
       'buyDate': _editItemBuyDateController.text.trim(),
       'buyPrice': double.parse(_editItemBuyPriceController.text.trim()),
