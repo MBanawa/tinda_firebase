@@ -62,7 +62,7 @@ class _EditItemState extends State<EditItem> {
   void initState() {
     super.initState();
     _setValues();
-    _test();
+    // _test();
   }
 
   _setValues() {
@@ -197,8 +197,8 @@ class _EditItemState extends State<EditItem> {
         'sellPrice': double.parse(_editItemSellPriceController.text.trim()),
       });
 
-      _supplierDB(widget.itemId, _editItemNameController.text.trim());
-      _sellPriceDB(widget.itemId, _editItemNameController.text.trim());
+      _supplierDB(widget.itemId, widget.itemName);
+      _sellPriceDB(widget.itemId, widget.itemName);
     } else if (widget.option == 'remove') {
       FirebaseFirestore.instance.collection('items').doc(widget.itemId).update({
         'quantity': (int.parse(widget.itemQuantity) -
@@ -206,9 +206,10 @@ class _EditItemState extends State<EditItem> {
             .toString(),
       });
 
-      //TODO: first in first out or last in first out for prices and supplier?
-      final itemCollection =
-          FirebaseFirestore.instance.collection('removedData');
+      final itemCollection = FirebaseFirestore.instance
+          .collection('items')
+          .doc(widget.itemId)
+          .collection('removedData');
       itemCollection.add({
         'entryDate': Timestamp.now(),
         'removeReason': _removeReasonController.text.trim(),
@@ -218,6 +219,22 @@ class _EditItemState extends State<EditItem> {
         'itemId': widget.itemId,
         'itemName': widget.itemName,
       });
+
+      //implement remove for supplier db
+      // final supplier = FirebaseFirestore.instance
+      //     .collection('items')
+      //     .doc(widget.itemId)
+      //     .collection('suppliers')
+      //     .where('quantity', isNotEqualTo: 0)
+      //     .get();
+
+      // supplier.then((QuerySnapshot snapshot)  {
+      //     snapshot.docs.length != 1
+      //     //TODO listview in a dialogbox
+      //     ? null
+      //     : null;
+      //   });
+
     } else {
       //TODO: Edit supplier and price as well
       FirebaseFirestore.instance.collection('items').doc(widget.itemId).update({
@@ -244,21 +261,20 @@ class _EditItemState extends State<EditItem> {
 
   //TODO: https://www.youtube.com/watch?v=fy-rCZVcw78&ab_channel=1ManStartup
 
-  void _test() {
-    final supplier = FirebaseFirestore.instance
-        .collection('suppliers')
-        // .where('itemId', isEqualTo: widget.itemId)
-        // .where('quantity', isNotEqualTo: 0)
-        .where('entryDate', isGreaterThan: 0)
-        .orderBy('entryDate')
-        .limit(1)
-        .get();
-    supplier.then((QuerySnapshot snapshot) => {
-          snapshot.docs.forEach((f) {
-            print('Doc ID:' + f.reference.id);
-          })
-        });
-  }
+  // void _test() {
+  //   final supplier = FirebaseFirestore.instance
+  //       .collection('suppliers')
+  //       // .where('itemId', isEqualTo: widget.itemId)
+  //       // .where('quantity', isNotEqualTo: 0)
+  //       .where('entryDate', isGreaterThan: 0)
+  //       .orderBy('entryDate')
+  //       .get();
+  //   supplier.then((QuerySnapshot snapshot) => {
+  //         snapshot.docs.forEach((f) {
+  //           print('Doc ID:' + f.reference.id);
+  //         })
+  //       });
+  // }
 
   void _supplierDB(String itemId, String itemName) {
     final itemCollection =

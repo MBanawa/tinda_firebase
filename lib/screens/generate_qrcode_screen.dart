@@ -252,6 +252,7 @@ class _GenerateQrState extends State<GenerateQr> {
                             style: TextStyle(color: Colors.white),
                           ),
                           onPressed: () {
+                            _requestPermission(Permission.storage);
                             _saveQrImage();
                           }),
                     ),
