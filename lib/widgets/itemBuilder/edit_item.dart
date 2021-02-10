@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -58,6 +59,8 @@ class _EditItemState extends State<EditItem> {
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
   String _qrCode;
   bool _dismiss = false;
+  Stream supplierstream;
+
   @override
   void initState() {
     super.initState();
@@ -65,7 +68,17 @@ class _EditItemState extends State<EditItem> {
     // _test();
   }
 
+  CollectionReference categcollection =
+      FirebaseFirestore.instance.collection('items');
+
   _setValues() {
+    setState(() {
+      supplierstream = categcollection
+          .doc(widget.itemId)
+          .collection('suppliers')
+          .orderBy('entryDate')
+          .snapshots();
+    });
     if (widget.option == 'add' || widget.option == 'remove') {
       _editItemQuantityController.clear();
       _editItemBuyDateController.clear();
@@ -261,12 +274,11 @@ class _EditItemState extends State<EditItem> {
 
   //TODO: https://www.youtube.com/watch?v=fy-rCZVcw78&ab_channel=1ManStartup
 
-  // void _test() {
+  // void _test()  {
   //   final supplier = FirebaseFirestore.instance
   //       .collection('suppliers')
   //       // .where('itemId', isEqualTo: widget.itemId)
-  //       // .where('quantity', isNotEqualTo: 0)
-  //       .where('entryDate', isGreaterThan: 0)
+  //       .where('quantity', isNotEqualTo: 0)
   //       .orderBy('entryDate')
   //       .get();
   //   supplier.then((QuerySnapshot snapshot) => {
@@ -636,8 +648,7 @@ class _EditItemState extends State<EditItem> {
                                   padding: const EdgeInsets.fromLTRB(
                                       8.0, 0.0, 8.0, 0.0),
                                   child: Text(
-                                    widget.option == 'add' ||
-                                            widget.option == 'remove'
+                                    widget.option == 'add'
                                         ? 'Supplier Name: \n(Last Supplier: ${widget.supplier})'
                                         : 'Supplier Name:',
                                     style: TextStyle(color: Colors.white),
@@ -658,8 +669,7 @@ class _EditItemState extends State<EditItem> {
                                   padding: const EdgeInsets.fromLTRB(
                                       8.0, 0.0, 8.0, 0.0),
                                   child: Text(
-                                    widget.option == 'add' ||
-                                            widget.option == 'remove'
+                                    widget.option == 'add'
                                         ? 'Purchase Price: \n(Previous Purchase Price: PHP ${double.parse(widget.buyPrice).toStringAsFixed(2)})'
                                         : 'Purchase Price:',
                                     style: TextStyle(color: Colors.white),
@@ -681,8 +691,7 @@ class _EditItemState extends State<EditItem> {
                                   padding: const EdgeInsets.fromLTRB(
                                       8.0, 0.0, 8.0, 0.0),
                                   child: Text(
-                                    widget.option == 'add' ||
-                                            widget.option == 'remove'
+                                    widget.option == 'add'
                                         ? 'Sell Price: \n(Previous Sell Price: PHP ${double.parse(widget.sellPrice).toStringAsFixed(2)})'
                                         : 'Sell Price:',
                                     style: TextStyle(color: Colors.white),
@@ -704,6 +713,31 @@ class _EditItemState extends State<EditItem> {
                       SizedBox(
                         height: 15,
                       ),
+                      Container(
+                          child: StreamBuilder<QuerySnapshot>(
+                        stream: supplierstream,
+                        builder: (ctx, supplierSnap) {
+                          if (supplierSnap.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+
+                          final supplierDocs = supplierSnap.data.docs;
+                          //add code to select stocks to remove
+                          return ListView.builder(
+                              scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              physics: BouncingScrollPhysics(),
+                              itemCount: supplierDocs.length,
+                              itemBuilder: (context, index) {
+                                return Text(supplierDocs[index]
+                                    .data()['quantity']
+                                    .toString());
+                              });
+                        },
+                      )),
                       Center(
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width - 16,
