@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -605,7 +605,7 @@ class _EditItemState extends State<EditItem> {
                                   padding: const EdgeInsets.fromLTRB(
                                       8.0, 0.0, 8.0, 0.0),
                                   child: Text(
-                                    'Please select reason for removing: \n(Expired, rat damage, defective, etc...)',
+                                    'Please type the reason for removing: \n(Expired, rat damage, defective, etc...)',
                                     style: TextStyle(color: Colors.white),
                                   ),
                                 ),
@@ -713,6 +713,14 @@ class _EditItemState extends State<EditItem> {
                       SizedBox(
                         height: 15,
                       ),
+                      //TODO: if there's only 1 line, no need to select
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+                        child: Text(
+                          'Which stock will you remove?',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
                       Container(
                           child: StreamBuilder<QuerySnapshot>(
                         stream: supplierstream,
@@ -732,12 +740,82 @@ class _EditItemState extends State<EditItem> {
                               physics: BouncingScrollPhysics(),
                               itemCount: supplierDocs.length,
                               itemBuilder: (context, index) {
-                                return Text(supplierDocs[index]
-                                    .data()['quantity']
-                                    .toString());
+                                return Card(
+                                  margin: EdgeInsets.all(8),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      //TODO: item id and change color to pressed color
+                                    },
+                                    //TODO:rouded corners
+                                    child: Container(
+                                      color: Colors.grey[400],
+                                      child: Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            12, 8, 0, 10),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            Expanded(
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  //TODO:circle grayed out check button will turn to green selected check button
+                                                  Text(
+                                                    supplierDocs[index]
+                                                        .data()['supplier'],
+                                                    style: TextStyle(
+                                                      fontSize: 22,
+                                                      color:
+                                                          //color for selected: Colors.teal.shade800
+                                                          Colors.grey[900],
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    'Buy Date: ${supplierDocs[index].data()['buyDate']} @ Price:  PHP ${supplierDocs[index].data()['buyPrice'].toStringAsFixed(2)}',
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                      color:
+                                                          //color for selected: Colors.orange.shade400
+                                                          Colors.grey[900],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      0, 4, 16, 0),
+                                              child: Text(
+                                                'In Stock: ${supplierDocs[index].data()['quantity']}',
+                                                style: TextStyle(
+                                                    color: Colors.grey[900]),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Icon(
+                                                Icons.check_circle_outline,
+                                                color: Colors.grey[900],
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
                               });
                         },
                       )),
+                      SizedBox(
+                        height: 15,
+                      ),
                       Center(
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width - 16,
