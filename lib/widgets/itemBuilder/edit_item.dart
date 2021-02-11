@@ -717,7 +717,7 @@ class _EditItemState extends State<EditItem> {
                       Padding(
                         padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
                         child: Text(
-                          'Which stock will you remove?',
+                          'Which stock will you remove? \nPlease Select:',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -744,7 +744,8 @@ class _EditItemState extends State<EditItem> {
                                   margin: EdgeInsets.all(8),
                                   child: GestureDetector(
                                     onTap: () {
-                                      //TODO: item id and change color to pressed color
+                                      //TODO: add item id and change color to pressed color.
+                                      //TODO: need to warn user if selected stock is less than the _editItemQuantityController value
                                     },
                                     //TODO:rouded corners
                                     child: Container(
