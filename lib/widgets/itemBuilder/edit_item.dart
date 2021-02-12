@@ -60,6 +60,7 @@ class _EditItemState extends State<EditItem> {
   String _qrCode;
   bool _dismiss = false;
   Stream supplierstream;
+  bool _selection = false;
 
   @override
   void initState() {
@@ -721,8 +722,7 @@ class _EditItemState extends State<EditItem> {
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
-                      Container(
-                          child: StreamBuilder<QuerySnapshot>(
+                      StreamBuilder<QuerySnapshot>(
                         stream: supplierstream,
                         builder: (ctx, supplierSnap) {
                           if (supplierSnap.connectionState ==
@@ -741,15 +741,34 @@ class _EditItemState extends State<EditItem> {
                               itemCount: supplierDocs.length,
                               itemBuilder: (context, index) {
                                 return Card(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
                                   margin: EdgeInsets.all(8),
                                   child: GestureDetector(
                                     onTap: () {
                                       //TODO: add item id and change color to pressed color.
                                       //TODO: need to warn user if selected stock is less than the _editItemQuantityController value
+                                      _onSelected(index);
+                                      // setState(() {
+
+                                      //   _selection == false
+                                      //       ? _selection = true
+                                      //       : _selection = false;
+                                      //   print(supplierDocs[index].id);
+                                      // });
+
+                                      print(_selectedIndex);
                                     },
                                     //TODO:rouded corners
                                     child: Container(
-                                      color: Colors.grey[400],
+                                      decoration: BoxDecoration(
+                                          color: _selectedIndex != null &&
+                                                  _selectedIndex == index
+                                              ? Colors.white
+                                              : Colors.grey[400],
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(6))),
                                       child: Padding(
                                         padding: const EdgeInsets.fromLTRB(
                                             12, 8, 0, 10),
@@ -772,16 +791,27 @@ class _EditItemState extends State<EditItem> {
                                                       fontSize: 22,
                                                       color:
                                                           //color for selected: Colors.teal.shade800
-                                                          Colors.grey[900],
+                                                          _selectedIndex !=
+                                                                      null &&
+                                                                  _selectedIndex ==
+                                                                      index
+                                                              ? Colors
+                                                                  .teal.shade800
+                                                              : Colors
+                                                                  .grey[900],
                                                     ),
                                                   ),
                                                   Text(
                                                     'Buy Date: ${supplierDocs[index].data()['buyDate']} @ Price:  PHP ${supplierDocs[index].data()['buyPrice'].toStringAsFixed(2)}',
                                                     style: TextStyle(
                                                       fontSize: 12,
-                                                      color:
-                                                          //color for selected: Colors.orange.shade400
-                                                          Colors.grey[900],
+                                                      color: _selectedIndex !=
+                                                                  null &&
+                                                              _selectedIndex ==
+                                                                  index
+                                                          ? Colors
+                                                              .orange.shade400
+                                                          : Colors.grey[900],
                                                     ),
                                                   ),
                                                 ],
@@ -801,8 +831,15 @@ class _EditItemState extends State<EditItem> {
                                               padding:
                                                   const EdgeInsets.all(8.0),
                                               child: Icon(
-                                                Icons.check_circle_outline,
-                                                color: Colors.grey[900],
+                                                _selectedIndex != null &&
+                                                        _selectedIndex == index
+                                                    ? Icons.check_circle
+                                                    : Icons
+                                                        .check_circle_outline,
+                                                color: _selectedIndex != null &&
+                                                        _selectedIndex == index
+                                                    ? Colors.teal
+                                                    : Colors.grey[900],
                                               ),
                                             )
                                           ],
@@ -813,7 +850,7 @@ class _EditItemState extends State<EditItem> {
                                 );
                               });
                         },
-                      )),
+                      ),
                       SizedBox(
                         height: 15,
                       ),
@@ -850,5 +887,12 @@ class _EditItemState extends State<EditItem> {
         ],
       ),
     );
+  }
+
+  int _selectedIndex;
+  _onSelected(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 }

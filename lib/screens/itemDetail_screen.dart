@@ -76,6 +76,7 @@ class _ItemDetailState extends State<ItemDetail> {
               ],
             ),
             child: Stack(
+              //TODO: menu to ask how many stocks before alerting / adding to grocery list
               children: [
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 50),
