@@ -37,7 +37,7 @@ class _NewItemState extends State<NewItem> {
   DateTime _dateTime = DateTime.now();
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
   bool _dismiss = false;
-
+  //TODO: Create a firebase collection that increments a number when a new item is added and decrements when an item is removed
   @override
   void initState() {
     super.initState();
