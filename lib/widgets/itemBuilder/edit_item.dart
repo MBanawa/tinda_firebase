@@ -329,7 +329,7 @@ class _EditItemState extends State<EditItem> {
             child: SingleChildScrollView(
               child: Container(
                 color: Theme.of(context).primaryColor,
-                height: MediaQuery.of(context).size.height * 1.4,
+                height: MediaQuery.of(context).size.height * 1.8,
                 width: MediaQuery.of(context).size.width,
                 child: Padding(
                   padding: const EdgeInsets.only(top: 4.0),
@@ -701,167 +701,188 @@ class _EditItemState extends State<EditItem> {
                         height: 15,
                       ),
                       //TODO: if there's only 1 line, no need to select. automatically add document id to _selectedIdToRemove
-                      Container(
-                          color: Colors.black54,
-                          padding: const EdgeInsets.fromLTRB(0, 8, 0, 12),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                    8.0, 0.0, 8.0, 0.0),
-                                child: Text(
-                                  'Select a stock to remove:',
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              StreamBuilder<QuerySnapshot>(
-                                stream: supplierstream,
-                                builder: (ctx, supplierSnap) {
-                                  if (supplierSnap.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  }
+                      widget.option != 'remove'
+                          ? Container()
+                          : Container(
+                              height: 350,
+                              color: Colors.black54,
+                              padding: const EdgeInsets.fromLTRB(0, 8, 0, 12),
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          8.0, 0.0, 8.0, 0.0),
+                                      child: Text(
+                                        'Select a stock to remove:',
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    StreamBuilder<QuerySnapshot>(
+                                      stream: supplierstream,
+                                      builder: (ctx, supplierSnap) {
+                                        if (supplierSnap.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return Center(
+                                            child: CircularProgressIndicator(),
+                                          );
+                                        }
 
-                                  final supplierDocs = supplierSnap.data.docs;
-                                  //add code to select stocks to remove
-                                  return ListView.builder(
-                                      scrollDirection: Axis.vertical,
-                                      shrinkWrap: true,
-                                      physics: BouncingScrollPhysics(),
-                                      itemCount: supplierDocs.length,
-                                      itemBuilder: (context, index) {
-                                        return Card(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(6),
-                                          ),
-                                          margin: EdgeInsets.all(8),
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              //TODO: need to warn user if selected stock is less than the _editItemQuantityController value
-                                              _onSelected(index);
-                                              setState(() {
-                                                _removeDocId =
-                                                    supplierDocs[index].id;
-                                                _quantity = supplierDocs[index]
-                                                    .data()['quantity'];
-                                              });
-                                            },
-                                            //TODO:rouded corners
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  color:
-                                                      _selectedIndex != null &&
-                                                              _selectedIndex ==
-                                                                  index
-                                                          ? Colors.white
-                                                          : Colors.grey[400],
+                                        final supplierDocs =
+                                            supplierSnap.data.docs;
+
+                                        return ListView.builder(
+                                            scrollDirection: Axis.vertical,
+                                            shrinkWrap: true,
+                                            physics: BouncingScrollPhysics(),
+                                            itemCount: supplierDocs.length,
+                                            itemBuilder: (context, index) {
+                                              return Card(
+                                                shape: RoundedRectangleBorder(
                                                   borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(6))),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        12, 8, 0, 10),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: <Widget>[
-                                                    Expanded(
-                                                      child: Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          //TODO:circle grayed out check button will turn to green selected check button
-                                                          Text(
-                                                            supplierDocs[index]
-                                                                    .data()[
-                                                                'supplier'],
-                                                            style: TextStyle(
-                                                              fontSize: 22,
-                                                              color:
-                                                                  //color for selected: Colors.teal.shade800
-                                                                  _selectedIndex !=
-                                                                              null &&
-                                                                          _selectedIndex ==
-                                                                              index
-                                                                      ? Colors
-                                                                          .teal
-                                                                          .shade800
-                                                                      : Colors.grey[
-                                                                          900],
-                                                            ),
-                                                          ),
-                                                          Text(
-                                                            'You purchased on: ${supplierDocs[index].data()['buyDate']} \nPurchase price:  PHP ${supplierDocs[index].data()['buyPrice'].toStringAsFixed(2)}',
-                                                            style: TextStyle(
-                                                              color: _selectedIndex !=
-                                                                          null &&
-                                                                      _selectedIndex ==
-                                                                          index
-                                                                  ? Colors
-                                                                      .orange
-                                                                      .shade400
-                                                                  : Colors.grey[
-                                                                      900],
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .fromLTRB(
-                                                          0, 4, 16, 0),
-                                                      child: Text(
-                                                        'In Stock: ${supplierDocs[index].data()['quantity']}',
-                                                        style: TextStyle(
-                                                            color: Colors
-                                                                .grey[900]),
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              8.0),
-                                                      child: Icon(
-                                                        _selectedIndex !=
-                                                                    null &&
-                                                                _selectedIndex ==
-                                                                    index
-                                                            ? Icons.check_circle
-                                                            : Icons
-                                                                .check_circle_outline,
+                                                      BorderRadius.circular(6),
+                                                ),
+                                                margin: EdgeInsets.all(8),
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    //TODO: need to warn user if selected stock is less than the _editItemQuantityController value
+                                                    _onSelected(index);
+                                                    setState(() {
+                                                      _removeDocId =
+                                                          supplierDocs[index]
+                                                              .id;
+                                                      _quantity = supplierDocs[
+                                                              index]
+                                                          .data()['quantity'];
+                                                    });
+                                                  },
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
                                                         color: _selectedIndex !=
                                                                     null &&
                                                                 _selectedIndex ==
                                                                     index
-                                                            ? Colors.teal
-                                                            : Colors.grey[900],
+                                                            ? Colors.white
+                                                            : Colors.grey[400],
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    6))),
+                                                    child: Padding(
+                                                      padding: const EdgeInsets
+                                                              .fromLTRB(
+                                                          12, 8, 0, 10),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: <Widget>[
+                                                          Expanded(
+                                                            child: Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Text(
+                                                                  supplierDocs[
+                                                                              index]
+                                                                          .data()[
+                                                                      'supplier'],
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    fontSize:
+                                                                        18,
+                                                                    color: _selectedIndex !=
+                                                                                null &&
+                                                                            _selectedIndex ==
+                                                                                index
+                                                                        ? Colors
+                                                                            .teal
+                                                                            .shade800
+                                                                        : Colors
+                                                                            .grey[900],
+                                                                  ),
+                                                                ),
+                                                                Text(
+                                                                  'You purchased on: ${supplierDocs[index].data()['buyDate']} \nPurchase price:  PHP ${supplierDocs[index].data()['buyPrice'].toStringAsFixed(2)}',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        10,
+                                                                    color: _selectedIndex !=
+                                                                                null &&
+                                                                            _selectedIndex ==
+                                                                                index
+                                                                        ? Colors
+                                                                            .orange
+                                                                            .shade400
+                                                                        : Colors
+                                                                            .grey[900],
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    0,
+                                                                    4,
+                                                                    16,
+                                                                    0),
+                                                            child: Text(
+                                                              'In Stock: ${supplierDocs[index].data()['quantity']}',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                          .grey[
+                                                                      900]),
+                                                            ),
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(8.0),
+                                                            child: Icon(
+                                                              _selectedIndex !=
+                                                                          null &&
+                                                                      _selectedIndex ==
+                                                                          index
+                                                                  ? Icons
+                                                                      .check_circle
+                                                                  : Icons
+                                                                      .check_circle_outline,
+                                                              color: _selectedIndex !=
+                                                                          null &&
+                                                                      _selectedIndex ==
+                                                                          index
+                                                                  ? Colors.teal
+                                                                  : Colors.grey[
+                                                                      900],
+                                                            ),
+                                                          )
+                                                        ],
                                                       ),
-                                                    )
-                                                  ],
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      });
-                                },
-                              ),
-                            ],
-                          )),
+                                              );
+                                            });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              )),
                       SizedBox(
                         height: 15,
                       ),
