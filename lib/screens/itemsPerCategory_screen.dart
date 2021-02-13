@@ -52,7 +52,7 @@ class _ItemsPerCategoryState extends State<ItemsPerCategory> {
       appBar: AppBar(
         title: Text('$_category'),
       ),
-      //TODO: how to add SearchFieldWidget here??????
+      //TODO: how to add SearchFieldWidget here?????? do i need to put stream in a list first?
       body: StreamBuilder<QuerySnapshot>(
         stream: userstream,
         builder: (context, snapshot) {
