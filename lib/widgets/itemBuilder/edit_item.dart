@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:tinda/screens/generate_qrcode_screen.dart';
 
 import 'package:tinda/widgets/customTextField.dart';
+import 'package:tinda/widgets/errorDialog.dart';
 
 class EditItem extends StatefulWidget {
   final String option;
@@ -715,7 +716,7 @@ class _EditItemState extends State<EditItem> {
                                       padding: const EdgeInsets.fromLTRB(
                                           8.0, 0.0, 8.0, 0.0),
                                       child: Text(
-                                        'Select a stock to remove:',
+                                        'Which stock would you like to deduct?',
                                         style: TextStyle(
                                             fontSize: 18,
                                             color: Colors.white,
@@ -751,14 +752,27 @@ class _EditItemState extends State<EditItem> {
                                                   onTap: () {
                                                     //TODO: need to warn user if selected stock is less than the _editItemQuantityController value
                                                     _onSelected(index);
-                                                    setState(() {
-                                                      _removeDocId =
-                                                          supplierDocs[index]
-                                                              .id;
-                                                      _quantity = supplierDocs[
-                                                              index]
-                                                          .data()['quantity'];
-                                                    });
+                                                    var errorMessage =
+                                                        'There are only ${supplierDocs[index].data()['quantity']} pieces left in this stock. Please select a different stock item.';
+                                                    int.parse(_editItemQuantityController
+                                                                .text) >
+                                                            supplierDocs[index]
+                                                                    .data()[
+                                                                'quantity']
+                                                        ? showErrorDialog(
+                                                            context,
+                                                            errorMessage)
+                                                        : setState(() {
+                                                            _removeDocId =
+                                                                supplierDocs[
+                                                                        index]
+                                                                    .id;
+                                                            _quantity =
+                                                                supplierDocs[
+                                                                            index]
+                                                                        .data()[
+                                                                    'quantity'];
+                                                          });
                                                   },
                                                   child: Container(
                                                     decoration: BoxDecoration(
