@@ -142,20 +142,26 @@ class OptionsDialog extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) => EditItem(
-                              option: 'add',
-                              itemId: id,
-                              category: category,
-                              barcode: barcode,
-                              itemName: itemName,
-                              itemQuantity: quantity,
-                              itemImage: image,
-                              buyDate: buyDate,
-                              supplier: supplier,
-                              buyPrice: buyPrice,
-                              sellPrice: sellPrice,
-                            )));
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(
+                            builder: (BuildContext context) => EditItem(
+                                  option: 'add',
+                                  itemId: id,
+                                  category: category,
+                                  barcode: barcode,
+                                  itemName: itemName,
+                                  itemQuantity: quantity,
+                                  itemImage: image,
+                                  buyDate: buyDate,
+                                  supplier: supplier,
+                                  buyPrice: buyPrice,
+                                  sellPrice: sellPrice,
+                                )))
+                        .then((popMessage) {
+                      //TODO: Dialog box for success, create variable, then use variable for dynamic dialog box for all buttons
+                      print(popMessage);
+                      Navigator.pop(context);
+                    });
                   }),
             ),
             SizedBox(height: 10.0),

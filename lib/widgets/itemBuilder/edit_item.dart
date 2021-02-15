@@ -64,6 +64,7 @@ class _EditItemState extends State<EditItem> {
   int _selectedIndex;
   String _removeDocId;
   int _quantity;
+  String _popMessage;
 
   _onSelected(int index) {
     setState(() {
@@ -218,6 +219,10 @@ class _EditItemState extends State<EditItem> {
         'buyDate': _editItemBuyDateController.text.trim(),
         'buyPrice': double.parse(_editItemBuyPriceController.text.trim()),
         'sellPrice': double.parse(_editItemSellPriceController.text.trim()),
+      }).then((_) {
+        setState(() {
+          _popMessage = 'added';
+        });
       });
 
       _supplierDB(widget.itemId, widget.itemName);
@@ -242,6 +247,10 @@ class _EditItemState extends State<EditItem> {
         'supplier': widget.supplier,
         'itemId': widget.itemId,
         'itemName': widget.itemName,
+      }).then((_) {
+        setState(() {
+          _popMessage = 'removed';
+        });
       });
     } else {
       //TODO: Edit supplier and price as well
@@ -254,10 +263,14 @@ class _EditItemState extends State<EditItem> {
         'buyDate': _editItemBuyDateController.text.trim(),
         'buyPrice': double.parse(_editItemBuyPriceController.text.trim()),
         'sellPrice': double.parse(_editItemSellPriceController.text.trim()),
+      }).then((_) {
+        setState(() {
+          _popMessage = 'edited';
+        });
       });
     }
 
-    Navigator.pop(context);
+    Navigator.pop(context, _popMessage);
     imageFile = null;
     _editItemNameController.clear();
     _editItemQuantityController.clear();
@@ -750,7 +763,6 @@ class _EditItemState extends State<EditItem> {
                                                 margin: EdgeInsets.all(8),
                                                 child: GestureDetector(
                                                   onTap: () {
-                                                    //TODO: need to warn user if selected stock is less than the _editItemQuantityController value
                                                     _onSelected(index);
                                                     var errorMessage =
                                                         'There are only ${supplierDocs[index].data()['quantity']} pieces left in this stock. Please select a different stock item.';
@@ -911,6 +923,7 @@ class _EditItemState extends State<EditItem> {
                             onPressed: () {
                               _editItem();
                             },
+                            //TODO: circleprogressindicator
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Center(
