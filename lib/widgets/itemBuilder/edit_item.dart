@@ -953,7 +953,6 @@ class _EditItemState extends State<EditItem> {
                             onPressed: () {
                               _editItem();
                             },
-                            //TODO: circleprogressindicator
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Center(
