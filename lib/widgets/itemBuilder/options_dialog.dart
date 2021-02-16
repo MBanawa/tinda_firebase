@@ -158,9 +158,9 @@ class OptionsDialog extends StatelessWidget {
                                   sellPrice: sellPrice,
                                 )))
                         .then((popMessage) {
+                      popMessage != null ?? Navigator.pop(context);
+
                       //TODO: Dialog box for success, create variable, then use variable for dynamic dialog box for all buttons
-                      print(popMessage);
-                      Navigator.pop(context);
                     });
                   }),
             ),
@@ -182,20 +182,24 @@ class OptionsDialog extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) => EditItem(
-                              option: 'remove',
-                              itemId: id,
-                              category: category,
-                              barcode: barcode,
-                              itemName: itemName,
-                              itemQuantity: quantity,
-                              itemImage: image,
-                              buyDate: buyDate,
-                              supplier: supplier,
-                              buyPrice: buyPrice,
-                              sellPrice: sellPrice,
-                            )));
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(
+                            builder: (BuildContext context) => EditItem(
+                                  option: 'remove',
+                                  itemId: id,
+                                  category: category,
+                                  barcode: barcode,
+                                  itemName: itemName,
+                                  itemQuantity: quantity,
+                                  itemImage: image,
+                                  buyDate: buyDate,
+                                  supplier: supplier,
+                                  buyPrice: buyPrice,
+                                  sellPrice: sellPrice,
+                                )))
+                        .then((popMessage) {
+                      popMessage != null ?? Navigator.pop(context);
+                    });
                   }),
             ),
             SizedBox(height: 10.0),
@@ -218,20 +222,24 @@ class OptionsDialog extends StatelessWidget {
                     textAlign: TextAlign.start,
                   ),
                   onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) => EditItem(
-                              option: 'edit',
-                              itemId: id,
-                              category: category,
-                              barcode: barcode,
-                              itemName: itemName,
-                              itemQuantity: quantity,
-                              itemImage: image,
-                              buyDate: buyDate,
-                              supplier: supplier,
-                              buyPrice: buyPrice,
-                              sellPrice: sellPrice,
-                            )));
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(
+                            builder: (BuildContext context) => EditItem(
+                                  option: 'edit',
+                                  itemId: id,
+                                  category: category,
+                                  barcode: barcode,
+                                  itemName: itemName,
+                                  itemQuantity: quantity,
+                                  itemImage: image,
+                                  buyDate: buyDate,
+                                  supplier: supplier,
+                                  buyPrice: buyPrice,
+                                  sellPrice: sellPrice,
+                                )))
+                        .then((popMessage) {
+                      popMessage != null ?? Navigator.pop(context);
+                    });
                   }),
             ),
             SizedBox(height: 10.0),
