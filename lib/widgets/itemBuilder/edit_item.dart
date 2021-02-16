@@ -65,6 +65,8 @@ class _EditItemState extends State<EditItem> {
   String _removeDocId;
   int _quantity;
   String _popMessage;
+  var _isLoading;
+  final dataKey = GlobalKey();
 
   _onSelected(int index) {
     setState(() {
@@ -196,88 +198,106 @@ class _EditItemState extends State<EditItem> {
 
   void _editItem() async {
     FocusScope.of(context).unfocus();
-    _showSnackBar(context, Text('Saving, please wait....'));
-    var url;
+    Scrollable.ensureVisible(dataKey.currentContext);
+    setState(() {
+      _isLoading = true;
+    });
+    await Future.delayed(Duration(milliseconds: 1000), () async {
+      _showSnackBar(context, Text('Saving, please wait....'));
+      var url;
 
-    if (imageFile != null) {
-      final ref = FirebaseStorage.instance
-          .ref()
-          .child('itemImage')
-          .child(Timestamp.now().millisecondsSinceEpoch.toString() + '.jpg');
+      if (imageFile != null) {
+        final ref = FirebaseStorage.instance
+            .ref()
+            .child('itemImage')
+            .child(Timestamp.now().millisecondsSinceEpoch.toString() + '.jpg');
 
-      await ref.putFile(imageFile);
-      url = await ref.getDownloadURL();
-    }
+        await ref.putFile(imageFile);
+        url = await ref.getDownloadURL();
+      }
 
-    if (widget.option == 'add') {
-      FirebaseFirestore.instance.collection('items').doc(widget.itemId).update({
-        'quantity': (int.parse(widget.itemQuantity) +
-                int.parse(_editItemQuantityController.text.trim()))
-            .toString(),
-        'itemImage': imageFile != null ? url : widget.itemImage,
-        'supplier': _editItemSupplierController.text.trim(),
-        'buyDate': _editItemBuyDateController.text.trim(),
-        'buyPrice': double.parse(_editItemBuyPriceController.text.trim()),
-        'sellPrice': double.parse(_editItemSellPriceController.text.trim()),
-      }).then((_) {
-        setState(() {
-          _popMessage = 'added';
+      if (widget.option == 'add') {
+        FirebaseFirestore.instance
+            .collection('items')
+            .doc(widget.itemId)
+            .update({
+          'quantity': (int.parse(widget.itemQuantity) +
+                  int.parse(_editItemQuantityController.text.trim()))
+              .toString(),
+          'itemImage': imageFile != null ? url : widget.itemImage,
+          'supplier': _editItemSupplierController.text.trim(),
+          'buyDate': _editItemBuyDateController.text.trim(),
+          'buyPrice': double.parse(_editItemBuyPriceController.text.trim()),
+          'sellPrice': double.parse(_editItemSellPriceController.text.trim()),
+        }).then((_) {
+          setState(() {
+            _popMessage = 'added';
+            _isLoading = false;
+          });
         });
-      });
 
-      _supplierDB(widget.itemId, widget.itemName);
-      _sellPriceDB(widget.itemId, widget.itemName);
-    } else if (widget.option == 'remove') {
-      _removeQuantInSupplier(widget.itemId, _removeDocId);
+        _supplierDB(widget.itemId, widget.itemName);
+        _sellPriceDB(widget.itemId, widget.itemName);
+      } else if (widget.option == 'remove') {
+        _removeQuantInSupplier(widget.itemId, _removeDocId);
 
-      FirebaseFirestore.instance.collection('items').doc(widget.itemId).update({
-        'quantity': int.parse(widget.itemQuantity) -
-            int.parse(_editItemQuantityController.text.trim()),
-      });
-
-      final itemCollection = FirebaseFirestore.instance
-          .collection('items')
-          .doc(widget.itemId)
-          .collection('removedData');
-      itemCollection.add({
-        'entryDate': Timestamp.now(),
-        'removeReason': _removeReasonController.text.trim(),
-        'buyPrice': double.parse(widget.buyPrice),
-        'sellPrice': double.parse(widget.sellPrice),
-        'supplier': widget.supplier,
-        'itemId': widget.itemId,
-        'itemName': widget.itemName,
-      }).then((_) {
-        setState(() {
-          _popMessage = 'removed';
+        FirebaseFirestore.instance
+            .collection('items')
+            .doc(widget.itemId)
+            .update({
+          'quantity': int.parse(widget.itemQuantity) -
+              int.parse(_editItemQuantityController.text.trim()),
         });
-      });
-    } else {
-      //TODO: Edit supplier and price as well
-      FirebaseFirestore.instance.collection('items').doc(widget.itemId).update({
-        'barcode': _qrCode != null ? _qrCode : widget.barcode,
-        'itemName': _editItemNameController.text.trim(),
-        'quantity': int.parse(_editItemQuantityController.text.trim()),
-        'itemImage': imageFile != null ? url : widget.itemImage,
-        'supplier': _editItemSupplierController.text.trim(),
-        'buyDate': _editItemBuyDateController.text.trim(),
-        'buyPrice': double.parse(_editItemBuyPriceController.text.trim()),
-        'sellPrice': double.parse(_editItemSellPriceController.text.trim()),
-      }).then((_) {
-        setState(() {
-          _popMessage = 'edited';
-        });
-      });
-    }
 
-    Navigator.pop(context, _popMessage);
-    imageFile = null;
-    _editItemNameController.clear();
-    _editItemQuantityController.clear();
-    _editItemBuyDateController.clear();
-    _editItemSupplierController.clear();
-    _editItemBuyPriceController.clear();
-    _editItemSellPriceController.clear();
+        final itemCollection = FirebaseFirestore.instance
+            .collection('items')
+            .doc(widget.itemId)
+            .collection('removedData');
+        itemCollection.add({
+          'entryDate': Timestamp.now(),
+          'removeReason': _removeReasonController.text.trim(),
+          'buyPrice': double.parse(widget.buyPrice),
+          'sellPrice': double.parse(widget.sellPrice),
+          'supplier': widget.supplier,
+          'itemId': widget.itemId,
+          'itemName': widget.itemName,
+        }).then((_) {
+          setState(() {
+            _popMessage = 'removed';
+            _isLoading = false;
+          });
+        });
+      } else {
+        //TODO: Edit supplier and price as well
+        FirebaseFirestore.instance
+            .collection('items')
+            .doc(widget.itemId)
+            .update({
+          'barcode': _qrCode != null ? _qrCode : widget.barcode,
+          'itemName': _editItemNameController.text.trim(),
+          'quantity': int.parse(_editItemQuantityController.text.trim()),
+          'itemImage': imageFile != null ? url : widget.itemImage,
+          'supplier': _editItemSupplierController.text.trim(),
+          'buyDate': _editItemBuyDateController.text.trim(),
+          'buyPrice': double.parse(_editItemBuyPriceController.text.trim()),
+          'sellPrice': double.parse(_editItemSellPriceController.text.trim()),
+        }).then((_) {
+          setState(() {
+            _popMessage = 'edited';
+            _isLoading = false;
+          });
+        });
+      }
+
+      Navigator.pop(context, _popMessage);
+      imageFile = null;
+      _editItemNameController.clear();
+      _editItemQuantityController.clear();
+      _editItemBuyDateController.clear();
+      _editItemSupplierController.clear();
+      _editItemBuyPriceController.clear();
+      _editItemSellPriceController.clear();
+    });
   }
 
   void _supplierDB(String itemId, String itemName) {
@@ -336,8 +356,18 @@ class _EditItemState extends State<EditItem> {
         centerTitle: true,
       ),
       body: Column(
+        key: dataKey,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          _isLoading == true
+              ? Container(
+                  alignment: Alignment.center,
+                  child: LinearProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation(Colors.teal[600]),
+                    backgroundColor: Colors.white,
+                  ),
+                )
+              : Container(),
           Expanded(
             flex: 1,
             child: SingleChildScrollView(
