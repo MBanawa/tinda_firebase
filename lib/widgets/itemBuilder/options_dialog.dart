@@ -158,7 +158,9 @@ class OptionsDialog extends StatelessWidget {
                                   sellPrice: sellPrice,
                                 )))
                         .then((popMessage) {
-                      popMessage != null ?? Navigator.pop(context);
+                      popMessage == 'add'
+                          ? Navigator.pop(context)
+                          : print(popMessage);
 
                       //TODO: Dialog box for success, create variable, then use variable for dynamic dialog box for all buttons
                     });
@@ -198,7 +200,9 @@ class OptionsDialog extends StatelessWidget {
                                   sellPrice: sellPrice,
                                 )))
                         .then((popMessage) {
-                      popMessage != null ?? Navigator.pop(context);
+                      popMessage == 'remove'
+                          ? Navigator.pop(context)
+                          : print(popMessage);
                     });
                   }),
             ),
@@ -238,7 +242,9 @@ class OptionsDialog extends StatelessWidget {
                                   sellPrice: sellPrice,
                                 )))
                         .then((popMessage) {
-                      popMessage != null ?? Navigator.pop(context);
+                      popMessage == 'edit'
+                          ? Navigator.pop(context)
+                          : print(popMessage);
                     });
                   }),
             ),

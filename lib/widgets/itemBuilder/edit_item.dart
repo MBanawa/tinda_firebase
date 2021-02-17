@@ -229,11 +229,6 @@ class _EditItemState extends State<EditItem> {
           'buyDate': _editItemBuyDateController.text.trim(),
           'buyPrice': double.parse(_editItemBuyPriceController.text.trim()),
           'sellPrice': double.parse(_editItemSellPriceController.text.trim()),
-        }).then((_) {
-          setState(() {
-            _popMessage = 'added';
-            _isLoading = false;
-          });
         });
 
         _supplierDB(widget.itemId, widget.itemName);
@@ -261,11 +256,6 @@ class _EditItemState extends State<EditItem> {
           'supplier': widget.supplier,
           'itemId': widget.itemId,
           'itemName': widget.itemName,
-        }).then((_) {
-          setState(() {
-            _popMessage = 'removed';
-            _isLoading = false;
-          });
         });
       } else {
         //TODO: Edit supplier and price as well
@@ -281,15 +271,10 @@ class _EditItemState extends State<EditItem> {
           'buyDate': _editItemBuyDateController.text.trim(),
           'buyPrice': double.parse(_editItemBuyPriceController.text.trim()),
           'sellPrice': double.parse(_editItemSellPriceController.text.trim()),
-        }).then((_) {
-          setState(() {
-            _popMessage = 'edited';
-            _isLoading = false;
-          });
         });
       }
 
-      Navigator.pop(context, _popMessage);
+      Navigator.pop(context, widget.option);
       imageFile = null;
       _editItemNameController.clear();
       _editItemQuantityController.clear();
