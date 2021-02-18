@@ -24,8 +24,8 @@ class _HomePageState extends State<HomePage> {
   PageController _pageController = PageController();
 
   List<Widget> _screens = [
-    InventoryScreen(),
     CashierScreen(),
+    InventoryScreen(),
     ReportingScreen()
   ];
 
