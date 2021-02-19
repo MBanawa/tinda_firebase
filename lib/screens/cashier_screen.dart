@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CashierScreen extends StatelessWidget {
-  double _smallFontSize = 8;
-  double _medFontSize = 12;
+  double _smallFontSize = 12;
+  double _medFontSize = 16;
   Color _largeFontColor = Colors.grey[700];
   // _scanDialog(context) {
   //   return showDialog(
@@ -50,107 +50,127 @@ class CashierScreen extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Column(
-          children: <Widget>[
+          children: [
+            Container(
+              height: 70,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 80,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 21),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              'Inday\'s General Merch',
+                              style: TextStyle(fontSize: _smallFontSize),
+                            ),
+                            Text(
+                              'Angeles City, 2009',
+                              style: TextStyle(fontSize: _smallFontSize),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 6),
+                  Expanded(
+                    child: Container(
+                      height: 80,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              'INVOICE',
+                              style: TextStyle(
+                                fontSize: 40,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.teal[400],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      'Inday\'s General Merch',
-                      style: TextStyle(
-                        fontSize: _smallFontSize,
-                        color: _largeFontColor,
+                Expanded(
+                  child: Container(
+                    height: 90,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 18.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            'DATE:',
+                            style: TextStyle(
+                              fontSize: _medFontSize,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            'INVOICE NUM:',
+                            style: TextStyle(
+                              fontSize: _medFontSize,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            'TOTAL:',
+                            style: TextStyle(
+                              fontSize: _medFontSize,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    Text(
-                      'Mc Arthur Highway, Balibago',
-                      style: TextStyle(
-                        fontSize: _smallFontSize,
-                        color: _largeFontColor,
-                      ),
-                    ),
-                    Text(
-                      'Angeles City, Pampanga 2009',
-                      style: TextStyle(
-                        fontSize: _smallFontSize,
-                        color: _largeFontColor,
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-                SizedBox(width: 4),
-                Text('INVOICE',
-                    style: TextStyle(
-                      fontSize: 45,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.teal,
-                    )),
+                SizedBox(width: 6),
+                Expanded(
+                  child: Container(
+                    height: 90,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 18.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '19-Feb-2021',
+                            style: TextStyle(fontSize: _medFontSize),
+                          ),
+                          Text(
+                            '000258',
+                            style: TextStyle(fontSize: _medFontSize),
+                          ),
+                          Text(
+                            'PHP 750.00',
+                            style: TextStyle(fontSize: _medFontSize),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      'DATE:',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: _medFontSize,
-                        color: _largeFontColor,
-                      ),
-                    ),
-                    Text(
-                      'INVOICE NUM:',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: _medFontSize,
-                        color: _largeFontColor,
-                      ),
-                    ),
-                    Text(
-                      'TOTAL:',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: _medFontSize,
-                        color: _largeFontColor,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(width: 4),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '18-Feb-2021',
-                      style: TextStyle(
-                        fontSize: _medFontSize,
-                        color: _largeFontColor,
-                      ),
-                    ),
-                    Text(
-                      '000589',
-                      style: TextStyle(
-                        fontSize: _medFontSize,
-                        color: _largeFontColor,
-                      ),
-                    ),
-                    Text(
-                      'PHP 500.00',
-                      style: TextStyle(
-                        fontSize: _medFontSize,
-                        color: _largeFontColor,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+            Container(
+              width: double.infinity,
+              color: Colors.grey[900],
+              height: 30,
+            )
           ],
         ),
       ),
