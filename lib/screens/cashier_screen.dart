@@ -166,10 +166,13 @@ class CashierScreen extends StatelessWidget {
                 ),
               ],
             ),
-            Container(
-              width: double.infinity,
-              color: Colors.grey[900],
-              height: 30,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 0),
+              child: Container(
+                width: double.infinity,
+                color: Colors.grey[900],
+                height: 40,
+              ),
             )
           ],
         ),
