@@ -166,6 +166,7 @@ class CashierScreen extends StatelessWidget {
                 ),
               ],
             ),
+            //TODO: try 3 expanded widgets with columns
             Padding(
               padding: const EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 0),
               child: Container(
