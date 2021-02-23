@@ -166,15 +166,84 @@ class CashierScreen extends StatelessWidget {
                 ),
               ],
             ),
-            //TODO: try 3 expanded widgets with columns
+            SizedBox(height: 25),
             Padding(
-              padding: const EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 0),
-              child: Container(
-                width: double.infinity,
-                color: Colors.grey[900],
-                height: 40,
+              padding: const EdgeInsets.only(left: 8, right: 8),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: Column(
+                      children: [
+                        Container(
+                          width: double.infinity,
+                          color: Colors.grey[900],
+                          height: 40,
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
+                            child: Text(
+                              'ITEMS',
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Container(
+                          width: double.infinity,
+                          color: Colors.grey[900],
+                          height: 40,
+                          child: Center(
+                            child: Text(
+                              'QTY',
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Container(
+                          width: double.infinity,
+                          color: Colors.grey[900],
+                          height: 40,
+                          child: Center(
+                            child: Text(
+                              'PRICE',
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Container(
+                          width: double.infinity,
+                          color: Colors.grey[900],
+                          height: 40,
+                          child: Center(
+                            child: Text(
+                              'TOTAL',
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            )
+            ),
           ],
         ),
       ),
