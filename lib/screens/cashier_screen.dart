@@ -172,8 +172,9 @@ class CashierScreen extends StatelessWidget {
               child: Row(
                 children: [
                   Expanded(
-                    flex: 3,
+                    flex: 2,
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
                           width: double.infinity,
@@ -186,7 +187,31 @@ class CashierScreen extends StatelessWidget {
                               style: TextStyle(color: Colors.grey),
                             ),
                           ),
-                        )
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
+                          child: Text(
+                            'Cookies N Cream',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ),
+                        Container(
+                          width: double.infinity,
+                          height: 1,
+                          color: Colors.grey,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
+                          child: Text(
+                            'Chippy',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ),
+                        Container(
+                          width: double.infinity,
+                          height: 1,
+                          color: Colors.grey,
+                        ),
                       ],
                     ),
                   ),
@@ -203,7 +228,31 @@ class CashierScreen extends StatelessWidget {
                               style: TextStyle(color: Colors.grey),
                             ),
                           ),
-                        )
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
+                          child: Text(
+                            '2',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ),
+                        Container(
+                          width: double.infinity,
+                          height: 1,
+                          color: Colors.grey,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
+                          child: Text(
+                            '7',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ),
+                        Container(
+                          width: double.infinity,
+                          height: 1,
+                          color: Colors.grey,
+                        ),
                       ],
                     ),
                   ),
@@ -220,7 +269,31 @@ class CashierScreen extends StatelessWidget {
                               style: TextStyle(color: Colors.grey),
                             ),
                           ),
-                        )
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
+                          child: Text(
+                            'PHP 10.00',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ),
+                        Container(
+                          width: double.infinity,
+                          height: 1,
+                          color: Colors.grey,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
+                          child: Text(
+                            'PHP 15.00',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ),
+                        Container(
+                          width: double.infinity,
+                          height: 1,
+                          color: Colors.grey,
+                        ),
                       ],
                     ),
                   ),
@@ -237,13 +310,53 @@ class CashierScreen extends StatelessWidget {
                               style: TextStyle(color: Colors.grey),
                             ),
                           ),
-                        )
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
+                          child: Text(
+                            'PHP 20.00',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ),
+                        Container(
+                          width: double.infinity,
+                          height: 1,
+                          color: Colors.grey,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
+                          child: Text(
+                            'PHP 105.00',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ),
+                        Container(
+                          width: double.infinity,
+                          height: 1,
+                          color: Colors.grey,
+                        ),
                       ],
                     ),
                   ),
                 ],
               ),
             ),
+            SizedBox(height: 15),
+            Container(
+              padding: const EdgeInsets.only(right: 10),
+              width: double.infinity,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    color: Colors.teal,
+                    width: 100,
+                    child: Text('TOTAL           PHP 125'),
+                  )
+                ],
+              ),
+            )
           ],
         ),
       ),
