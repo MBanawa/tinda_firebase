@@ -349,10 +349,20 @@ class CashierScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(4),
+                    padding: const EdgeInsets.all(8),
                     color: Colors.teal,
-                    width: 100,
-                    child: Text('TOTAL           PHP 125'),
+                    child: Text(
+                      'TOTAL',
+                      style: TextStyle(color: Colors.grey[200]),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    color: Colors.teal,
+                    child: Text(
+                      'PHP 125.00',
+                      style: TextStyle(color: Colors.grey[200]),
+                    ),
                   )
                 ],
               ),
