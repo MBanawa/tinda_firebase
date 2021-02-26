@@ -78,11 +78,38 @@ class _EditItemState extends State<EditItem> {
   void initState() {
     super.initState();
     _setValues();
-    // _test();
+    _test();
   }
 
   CollectionReference categcollection =
       FirebaseFirestore.instance.collection('items');
+  CollectionReference itemcollection = FirebaseFirestore.instance
+      .collection('items')
+      .doc()
+      .collection('suppliers');
+
+  var supplierId;
+
+  _test() async {
+    //   supplierId = await itemcollection
+    //       .where('itemId', isEqualTo: widget.itemId)
+    //       .where('quantity', isGreaterThan: 0)
+    //       .orderBy('entryDate')
+    //       .get();
+    //   var _itemId = supplierId.ref.documentId;
+    //   print(_itemId);
+
+    supplierId = await itemcollection
+        .where('itemId', isEqualTo: widget.itemId)
+        .where('quantity', isGreaterThan: 0)
+        .get();
+    supplierId.docs.sort((QueryDocumentSnapshot a, QueryDocumentSnapshot b) =>
+        (a.data()['suppliers']['entryDate'] as String)
+            .compareTo(b.data()['suppliers']['entryDate'] as String));
+    final fifoId = supplierId.docs[0].get();
+    var _id = fifoId.ref.documentId;
+    print(_id);
+  }
 
   _setValues() {
     setState(() {

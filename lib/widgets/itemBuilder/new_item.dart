@@ -224,6 +224,8 @@ class _NewItemState extends State<NewItem> {
   }
 
   void _supplierDB(String itemId, String itemName) {
+    //TODO: https://stackoverflow.com/questions/63303526/how-to-save-the-documentid-in-a-document-in-firebase-using-flutter
+    //add supplier document id manually using itemid + millisecondstillepoch?
     final itemCollection = FirebaseFirestore.instance.collection('items');
 
     itemCollection.doc(itemId).collection('suppliers').add({
