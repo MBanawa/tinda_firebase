@@ -211,7 +211,8 @@ class _NewItemState extends State<NewItem> {
       'sellPrice': double.parse(_itemSellPriceController.text.trim()),
     });
 
-    _supplierDB(itemDoc.id, _itemNameController.text.trim());
+    _supplierDB(
+        itemDoc.id, _itemNameController.text.trim(), userData.data()['name']);
     _sellPriceDB(itemDoc.id, _itemNameController.text.trim());
 
     imageFile = null;
@@ -223,12 +224,20 @@ class _NewItemState extends State<NewItem> {
     _itemSellPriceController.clear();
   }
 
-  void _supplierDB(String itemId, String itemName) {
+  void _supplierDB(String itemId, String itemName, String userName) async {
     //TODO: https://stackoverflow.com/questions/63303526/how-to-save-the-documentid-in-a-document-in-firebase-using-flutter
-    //add supplier document id manually using itemid + millisecondstillepoch?
+    //change millisecondssinceepoch to a unique identifier // count how many documents in the suppliers sub-collection?
     final itemCollection = FirebaseFirestore.instance.collection('items');
 
-    itemCollection.doc(itemId).collection('suppliers').add({
+    // QuerySnapshot itemCollectionGet = await FirebaseFirestore.instance.collection('items').get();
+    // List<DocumentSnapshot> _myDocCount = itemCollectionGet.docs;
+
+    itemCollection
+        .doc(itemId)
+        .collection('suppliers')
+        .doc(
+            '$userName$itemId.${DateTime.now().millisecondsSinceEpoch.toString()}')
+        .set({
       'entryDate': Timestamp.now(),
       'supplier': _itemSupplierController.text.trim(),
       'buyDate': _itemBuyDateController.text.trim(),
@@ -236,6 +245,8 @@ class _NewItemState extends State<NewItem> {
       'quantity': int.parse(_itemQuantityController.text.trim()),
       'itemId': itemId,
       'itemName': itemName,
+      'supplierId':
+          '$userName$itemId.${DateTime.now().millisecondsSinceEpoch.toString()}'
     });
   }
 
