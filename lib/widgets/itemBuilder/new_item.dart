@@ -229,8 +229,9 @@ class _NewItemState extends State<NewItem> {
     //change millisecondssinceepoch to a unique identifier // count how many documents in the suppliers sub-collection?
     final itemCollection = FirebaseFirestore.instance.collection('items');
 
-    // QuerySnapshot itemCollectionGet = await FirebaseFirestore.instance.collection('items').get();
-    // List<DocumentSnapshot> _myDocCount = itemCollectionGet.docs;
+    QuerySnapshot itemCollectionGet =
+        await FirebaseFirestore.instance.collection('items').get();
+    List<DocumentSnapshot> _myDocCount = itemCollectionGet.docs;
 
     itemCollection
         .doc(itemId)
