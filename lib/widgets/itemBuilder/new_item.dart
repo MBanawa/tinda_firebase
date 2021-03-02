@@ -238,6 +238,7 @@ class _NewItemState extends State<NewItem> {
         .doc(itemId)
         .collection('suppliers')
         .doc(
+          //TODO: DONT FORGET TO CHANGE EPOCH TO A SMARTER IDENTFIER
             '$userName$itemId.${DateTime.now().millisecondsSinceEpoch.toString()}')
         .set({
       'entryDate': Timestamp.now(),
@@ -248,6 +249,7 @@ class _NewItemState extends State<NewItem> {
       'itemId': itemId,
       'itemName': itemName,
       'supplierId':
+      //TODO: DONT FORGET TO CHANGE EPOCH TO A SMARTER IDENTFIER
           '$userName$itemId.${DateTime.now().millisecondsSinceEpoch.toString()}'
     });
   }
