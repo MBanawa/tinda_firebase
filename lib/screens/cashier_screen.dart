@@ -1,3 +1,4 @@
+//TODO: FINISH THIS AND THE REPORTING SCREEN ASAP. WE NEED TO PRESENT IT TO BOSS LLOYD.
 import 'package:flutter/material.dart';
 
 class CashierScreen extends StatelessWidget {
