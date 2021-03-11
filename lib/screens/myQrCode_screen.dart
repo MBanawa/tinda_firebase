@@ -61,55 +61,55 @@ class _MyQrCodeScreenState extends State<MyQrCodeScreen> {
           IconButton(
             icon: Icon(Icons.download_sharp),
             onPressed: () {
-              Directory directory;
-              _requestPermission(Permission.storage);
-              try {
-                _imageFile = null;
-                screenshotController
-                    .capture(delay: Duration(milliseconds: 10))
-                    .then((File image) async {
-                  //print("Capture Done");
-                  setState(() {
-                    _imageFile = image;
-                  });
+              // Directory directory;
+              // _requestPermission(Permission.storage);
+              // try {
+              //   _imageFile = null;
+              //   screenshotController
+              //       .capture(delay: Duration(milliseconds: 10))
+              //       .then((File image) async {
+              //     //print("Capture Done");
+              //     setState(() {
+              //       _imageFile = image;
+              //     });
 
-                  if (await _requestPermission(Permission.storage)) {
-                    directory = await getExternalStorageDirectory();
+              //     if (await _requestPermission(Permission.storage)) {
+              //       directory = await getExternalStorageDirectory();
 
-                    String newPath = '';
-                    List<String> folders = directory.path.split('/');
+              //       String newPath = '';
+              //       List<String> folders = directory.path.split('/');
 
-                    ///storage/emulated/0/Android/data/com.banawa.tinda/files
-                    for (int x = 1; x < folders.length; x++) {
-                      String folder = folders[x];
-                      if (folder != 'Android') {
-                        newPath += '/' + folder;
-                      } else {
-                        break;
-                      }
-                    }
-                    newPath = newPath + '/Tinda';
-                    directory = Directory(newPath);
-                    print(directory.path);
-                  } else {
-                    return false;
-                  }
-                  if (!await directory.exists()) {
-                    await directory.create(recursive: true);
-                  }
-                  if (await directory.exists()) {
-                    final result = await ImageGallerySaver.saveImage(
-                        _imageFile.readAsBytesSync(),
-                        quality: 100);
-                    print("File Saved");
-                    print(result);
-                  }
-                }).catchError((onError) {
-                  print(onError);
-                });
-              } catch (e) {
-                print(e);
-              }
+              //       ///storage/emulated/0/Android/data/com.banawa.tinda/files
+              //       for (int x = 1; x < folders.length; x++) {
+              //         String folder = folders[x];
+              //         if (folder != 'Android') {
+              //           newPath += '/' + folder;
+              //         } else {
+              //           break;
+              //         }
+              //       }
+              //       newPath = newPath + '/Tinda';
+              //       directory = Directory(newPath);
+              //       print(directory.path);
+              //     } else {
+              //       return false;
+              //     }
+              //     if (!await directory.exists()) {
+              //       await directory.create(recursive: true);
+              //     }
+              //     if (await directory.exists()) {
+              //       final result = await ImageGallerySaver.saveImage(
+              //           _imageFile.readAsBytesSync(),
+              //           quality: 100);
+              //       print("File Saved");
+              //       print(result);
+              //     }
+              //   }).catchError((onError) {
+              //     print(onError);
+              //   });
+              // } catch (e) {
+              //   print(e);
+              // }
             },
           ),
         ],
