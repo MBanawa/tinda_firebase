@@ -177,10 +177,7 @@ class _RegisterState extends State<Register> {
             SizedBox(
               width: MediaQuery.of(context).size.width - 20,
               height: 60,
-              child: RaisedButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(6.0)),
-                color: Colors.yellow.shade900,
+              child: ElevatedButton(
                 onPressed: () {
                   register();
                 },
@@ -191,7 +188,33 @@ class _RegisterState extends State<Register> {
                     style: TextStyle(color: Colors.white, fontSize: 18),
                   ),
                 ),
+                style: ButtonStyle(
+                  shape: MaterialStateProperty.all(
+                    RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6.0)),
+                  ),
+                  backgroundColor: MaterialStateProperty.resolveWith((states) {
+                    if (states.contains(MaterialState.pressed))
+                      return Colors.green;
+                    return Colors.yellow[900];
+                  }),
+                ),
               ),
+              // RaisedButton(
+              //   shape: RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.circular(6.0)),
+              //   color: Colors.yellow.shade900,
+              //   onPressed: () {
+              //     register();
+              //   },
+              //   child: Padding(
+              //     padding: const EdgeInsets.all(8.0),
+              //     child: Text(
+              //       'Sign Up',
+              //       style: TextStyle(color: Colors.white, fontSize: 18),
+              //     ),
+              //   ),
+              // ),
             ),
             SizedBox(
               height: 40.0,

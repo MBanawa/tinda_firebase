@@ -224,10 +224,19 @@ class _GenerateQrState extends State<GenerateQr> {
               SizedBox(
                 width: MediaQuery.of(context).size.width - 20,
                 height: 60,
-                child: RaisedButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(6.0)),
-                    color: Colors.yellow.shade900,
+                child: ElevatedButton(
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6.0)),
+                      ),
+                      backgroundColor:
+                          MaterialStateProperty.resolveWith((states) {
+                        if (states.contains(MaterialState.pressed))
+                          return Colors.green;
+                        return Colors.yellow[900];
+                      }),
+                    ),
                     child: Text(
                       _qrCode == null ? 'Generate QR Now' : 'Reset',
                       style: TextStyle(color: Colors.white),
@@ -243,18 +252,26 @@ class _GenerateQrState extends State<GenerateQr> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width - 20,
                       height: 60,
-                      child: RaisedButton(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(6.0)),
-                          color: Colors.green,
-                          child: Text(
-                            'Save',
-                            style: TextStyle(color: Colors.white),
+                      child: ElevatedButton(
+                        child: Text(
+                          'Save',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: () {
+                          _requestPermission(Permission.storage);
+                          _saveQrImage();
+                        },
+                        style: ButtonStyle(
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6.0)),
                           ),
-                          onPressed: () {
-                            _requestPermission(Permission.storage);
-                            _saveQrImage();
+                          backgroundColor:
+                              MaterialStateProperty.resolveWith((states) {
+                            return Colors.green;
                           }),
+                        ),
+                      ),
                     ),
                   ],
                 ),

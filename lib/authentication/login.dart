@@ -130,10 +130,16 @@ class _LoginState extends State<Login> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width - 20,
                     height: 60,
-                    child: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(6.0)),
-                      color: Colors.yellow.shade900,
+                    child: ElevatedButton(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Center(
+                          child: Text(
+                            'Sign In',
+                            style: TextStyle(color: Colors.white, fontSize: 18),
+                          ),
+                        ),
+                      ),
                       onPressed: () {
                         _emailtextEditingController.text.isNotEmpty &&
                                 _passwordtextEditingController.text.isNotEmpty
@@ -143,14 +149,17 @@ class _LoginState extends State<Login> {
                                 'Please enter a valid email and password',
                               );
                       },
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Center(
-                          child: Text(
-                            'Sign In',
-                            style: TextStyle(color: Colors.white, fontSize: 18),
-                          ),
+                      style: ButtonStyle(
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6.0)),
                         ),
+                        backgroundColor:
+                            MaterialStateProperty.resolveWith((states) {
+                          if (states.contains(MaterialState.pressed))
+                            return Colors.green;
+                          return Colors.yellow[900];
+                        }),
                       ),
                     ),
                   ),
