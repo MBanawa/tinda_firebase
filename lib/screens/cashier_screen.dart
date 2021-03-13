@@ -1,41 +1,14 @@
 //TODO: FINISH THIS AND THE REPORTING SCREEN ASAP. WE NEED TO PRESENT IT TO BOSS LLOYD.
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class CashierScreen extends StatelessWidget {
   double _smallFontSize = 12;
   double _medFontSize = 16;
   Color _largeFontColor = Colors.grey[700];
-  // _scanDialog(context) {
-  //   return showDialog(
-  //       context: context,
-  //       barrierDismissible: true,
-  //       builder: (ctx) {
-  //         return AlertDialog(
-  //           content: RaisedButton(
-  //             onPressed: () {
-  //               dialog2(context);
-  //             },
-  //           ),
-  //         );
-  //       });
-  // }
 
-  // dialog2(context) {
-  //   return showDialog(
-  //       context: context,
-  //       barrierDismissible: true,
-  //       builder: (ctx) {
-  //         return AlertDialog(
-  //           actions: [
-  //             RaisedButton(
-  //               onPressed: () {
-  //                 Navigator.pop(context);
-  //               },
-  //             ),
-  //           ],
-  //         );
-  //       });
-  // }
+  CollectionReference itemcollection =
+      FirebaseFirestore.instance.collection('items');
 
   @override
   Widget build(BuildContext context) {

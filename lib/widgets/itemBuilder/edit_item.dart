@@ -64,7 +64,7 @@ class _EditItemState extends State<EditItem> {
   int _selectedIndex;
   String _removeDocId;
   int _quantity;
-  String _popMessage;
+  String _supplierId;
   var _isLoading;
   final dataKey = GlobalKey();
 
@@ -78,18 +78,15 @@ class _EditItemState extends State<EditItem> {
   void initState() {
     super.initState();
     _setValues();
-    _test();
+    _firstIn();
   }
 
   CollectionReference itemcollection =
       FirebaseFirestore.instance.collection('items');
 
-  CollectionReference docRef = FirebaseFirestore.instance
-      .collection('items')
-      .doc('UnDEPs8macfudwcdnwN8')
-      .collection('suppliers');
-
-  _test() async {
+  _firstIn() async {
+    CollectionReference docRef =
+        itemcollection.doc(widget.itemId).collection('suppliers');
     var listOfDocs = await docRef
         .where('itemId', isEqualTo: widget.itemId)
         .where('quantity', isGreaterThan: 0)
@@ -102,22 +99,10 @@ class _EditItemState extends State<EditItem> {
 
     final desiredDocId = docs.first.id;
 
-    print(desiredDocId);
+    setState(() {
+      _supplierId = desiredDocId;
+    });
   }
-
-  // var _itemId = supplierId.ref.documentId;
-  // print(_itemId);
-
-  // supplierId = await itemcollection
-  //     .where('itemId', isEqualTo: widget.itemId)
-  //     .where('quantity', isGreaterThan: 0)
-  //     .get();
-  // supplierId.docs.sort((QueryDocumentSnapshot a, QueryDocumentSnapshot b) =>
-  //     (a.data()['suppliers']['entryDate'] as String)
-  //         .compareTo(b.data()['suppliers']['entryDate'] as String));
-  // final fifoId = supplierId.docs[0].get();
-  // var _id = fifoId.ref.documentId;
-  // print(_id);
 
   _setValues() {
     setState(() {
@@ -761,204 +746,204 @@ class _EditItemState extends State<EditItem> {
                                 ),
                               ],
                             ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      //TODO: if there's only 1 line, no need to select. automatically add document id to _selectedIdToRemove
-                      widget.option != 'remove'
-                          ? Container()
-                          : Container(
-                              height: 350,
-                              color: Colors.black54,
-                              padding: const EdgeInsets.fromLTRB(0, 8, 0, 12),
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          8.0, 0.0, 8.0, 0.0),
-                                      child: Text(
-                                        'Which stock would you like to deduct?',
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                    StreamBuilder<QuerySnapshot>(
-                                      stream: supplierstream,
-                                      builder: (ctx, supplierSnap) {
-                                        if (supplierSnap.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return Center(
-                                            child: CircularProgressIndicator(),
-                                          );
-                                        }
+                      // SizedBox(
+                      //   height: 15,
+                      // ),
+                      // //TODO: if there's only 1 line, no need to select. automatically add document id to _selectedIdToRemove
+                      // widget.option != 'remove'
+                      //     ? Container()
+                      //     : Container(
+                      //         height: 350,
+                      //         color: Colors.black54,
+                      //         padding: const EdgeInsets.fromLTRB(0, 8, 0, 12),
+                      //         child: SingleChildScrollView(
+                      //           child: Column(
+                      //             crossAxisAlignment: CrossAxisAlignment.start,
+                      //             children: [
+                      //               Padding(
+                      //                 padding: const EdgeInsets.fromLTRB(
+                      //                     8.0, 0.0, 8.0, 0.0),
+                      //                 child: Text(
+                      //                   'Which stock would you like to deduct?',
+                      //                   style: TextStyle(
+                      //                       fontSize: 18,
+                      //                       color: Colors.white,
+                      //                       fontWeight: FontWeight.bold),
+                      //                 ),
+                      //               ),
+                      //               StreamBuilder<QuerySnapshot>(
+                      //                 stream: supplierstream,
+                      //                 builder: (ctx, supplierSnap) {
+                      //                   if (supplierSnap.connectionState ==
+                      //                       ConnectionState.waiting) {
+                      //                     return Center(
+                      //                       child: CircularProgressIndicator(),
+                      //                     );
+                      //                   }
 
-                                        final supplierDocs =
-                                            supplierSnap.data.docs;
+                      //                   final supplierDocs =
+                      //                       supplierSnap.data.docs;
 
-                                        return ListView.builder(
-                                            scrollDirection: Axis.vertical,
-                                            shrinkWrap: true,
-                                            physics: BouncingScrollPhysics(),
-                                            itemCount: supplierDocs.length,
-                                            itemBuilder: (context, index) {
-                                              return Card(
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(6),
-                                                ),
-                                                margin: EdgeInsets.all(8),
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    _onSelected(index);
-                                                    var errorMessage =
-                                                        'There are only ${supplierDocs[index].data()['quantity']} pieces left in this stock. Please select a different stock item.';
-                                                    int.parse(_editItemQuantityController
-                                                                .text) >
-                                                            supplierDocs[index]
-                                                                    .data()[
-                                                                'quantity']
-                                                        ? showErrorDialog(
-                                                            context,
-                                                            errorMessage)
-                                                        : setState(() {
-                                                            _removeDocId =
-                                                                supplierDocs[
-                                                                        index]
-                                                                    .id;
-                                                            _quantity =
-                                                                supplierDocs[
-                                                                            index]
-                                                                        .data()[
-                                                                    'quantity'];
-                                                          });
-                                                  },
-                                                  child: Container(
-                                                    decoration: BoxDecoration(
-                                                        color: _selectedIndex !=
-                                                                    null &&
-                                                                _selectedIndex ==
-                                                                    index
-                                                            ? Colors.white
-                                                            : Colors.grey[400],
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                                Radius.circular(
-                                                                    6))),
-                                                    child: Padding(
-                                                      padding: const EdgeInsets
-                                                              .fromLTRB(
-                                                          12, 8, 0, 10),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: <Widget>[
-                                                          Expanded(
-                                                            child: Column(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                Text(
-                                                                  supplierDocs[
-                                                                              index]
-                                                                          .data()[
-                                                                      'supplier'],
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    fontSize:
-                                                                        18,
-                                                                    color: _selectedIndex !=
-                                                                                null &&
-                                                                            _selectedIndex ==
-                                                                                index
-                                                                        ? Colors
-                                                                            .teal
-                                                                            .shade800
-                                                                        : Colors
-                                                                            .grey[900],
-                                                                  ),
-                                                                ),
-                                                                Text(
-                                                                  'You purchased on: ${supplierDocs[index].data()['buyDate']} \nPurchase price:  PHP ${supplierDocs[index].data()['buyPrice'].toStringAsFixed(2)}',
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontSize:
-                                                                        10,
-                                                                    color: _selectedIndex !=
-                                                                                null &&
-                                                                            _selectedIndex ==
-                                                                                index
-                                                                        ? Colors
-                                                                            .orange
-                                                                            .shade400
-                                                                        : Colors
-                                                                            .grey[900],
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .fromLTRB(
-                                                                    0,
-                                                                    4,
-                                                                    16,
-                                                                    0),
-                                                            child: Text(
-                                                              'In Stock: ${supplierDocs[index].data()['quantity']}',
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                          .grey[
-                                                                      900]),
-                                                            ),
-                                                          ),
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(8.0),
-                                                            child: Icon(
-                                                              _selectedIndex !=
-                                                                          null &&
-                                                                      _selectedIndex ==
-                                                                          index
-                                                                  ? Icons
-                                                                      .check_circle
-                                                                  : Icons
-                                                                      .check_circle_outline,
-                                                              color: _selectedIndex !=
-                                                                          null &&
-                                                                      _selectedIndex ==
-                                                                          index
-                                                                  ? Colors.teal
-                                                                  : Colors.grey[
-                                                                      900],
-                                                            ),
-                                                          )
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              );
-                                            });
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              )),
+                      //                   return ListView.builder(
+                      //                       scrollDirection: Axis.vertical,
+                      //                       shrinkWrap: true,
+                      //                       physics: BouncingScrollPhysics(),
+                      //                       itemCount: supplierDocs.length,
+                      //                       itemBuilder: (context, index) {
+                      //                         return Card(
+                      //                           shape: RoundedRectangleBorder(
+                      //                             borderRadius:
+                      //                                 BorderRadius.circular(6),
+                      //                           ),
+                      //                           margin: EdgeInsets.all(8),
+                      //                           child: GestureDetector(
+                      //                             onTap: () {
+                      //                               _onSelected(index);
+                      //                               var errorMessage =
+                      //                                   'There are only ${supplierDocs[index].data()['quantity']} pieces left in this stock. Please select a different stock item.';
+                      //                               int.parse(_editItemQuantityController
+                      //                                           .text) >
+                      //                                       supplierDocs[index]
+                      //                                               .data()[
+                      //                                           'quantity']
+                      //                                   ? showErrorDialog(
+                      //                                       context,
+                      //                                       errorMessage)
+                      //                                   : setState(() {
+                      //                                       _removeDocId =
+                      //                                           supplierDocs[
+                      //                                                   index]
+                      //                                               .id;
+                      //                                       _quantity =
+                      //                                           supplierDocs[
+                      //                                                       index]
+                      //                                                   .data()[
+                      //                                               'quantity'];
+                      //                                     });
+                      //                             },
+                      //                             child: Container(
+                      //                               decoration: BoxDecoration(
+                      //                                   color: _selectedIndex !=
+                      //                                               null &&
+                      //                                           _selectedIndex ==
+                      //                                               index
+                      //                                       ? Colors.white
+                      //                                       : Colors.grey[400],
+                      //                                   borderRadius:
+                      //                                       BorderRadius.all(
+                      //                                           Radius.circular(
+                      //                                               6))),
+                      //                               child: Padding(
+                      //                                 padding: const EdgeInsets
+                      //                                         .fromLTRB(
+                      //                                     12, 8, 0, 10),
+                      //                                 child: Row(
+                      //                                   mainAxisAlignment:
+                      //                                       MainAxisAlignment
+                      //                                           .spaceBetween,
+                      //                                   children: <Widget>[
+                      //                                     Expanded(
+                      //                                       child: Column(
+                      //                                         mainAxisAlignment:
+                      //                                             MainAxisAlignment
+                      //                                                 .center,
+                      //                                         crossAxisAlignment:
+                      //                                             CrossAxisAlignment
+                      //                                                 .start,
+                      //                                         children: [
+                      //                                           Text(
+                      //                                             supplierDocs[
+                      //                                                         index]
+                      //                                                     .data()[
+                      //                                                 'supplier'],
+                      //                                             style:
+                      //                                                 TextStyle(
+                      //                                               fontWeight:
+                      //                                                   FontWeight
+                      //                                                       .bold,
+                      //                                               fontSize:
+                      //                                                   18,
+                      //                                               color: _selectedIndex !=
+                      //                                                           null &&
+                      //                                                       _selectedIndex ==
+                      //                                                           index
+                      //                                                   ? Colors
+                      //                                                       .teal
+                      //                                                       .shade800
+                      //                                                   : Colors
+                      //                                                       .grey[900],
+                      //                                             ),
+                      //                                           ),
+                      //                                           Text(
+                      //                                             'You purchased on: ${supplierDocs[index].data()['buyDate']} \nPurchase price:  PHP ${supplierDocs[index].data()['buyPrice'].toStringAsFixed(2)}',
+                      //                                             style:
+                      //                                                 TextStyle(
+                      //                                               fontSize:
+                      //                                                   10,
+                      //                                               color: _selectedIndex !=
+                      //                                                           null &&
+                      //                                                       _selectedIndex ==
+                      //                                                           index
+                      //                                                   ? Colors
+                      //                                                       .orange
+                      //                                                       .shade400
+                      //                                                   : Colors
+                      //                                                       .grey[900],
+                      //                                             ),
+                      //                                           ),
+                      //                                         ],
+                      //                                       ),
+                      //                                     ),
+                      //                                     Padding(
+                      //                                       padding:
+                      //                                           const EdgeInsets
+                      //                                                   .fromLTRB(
+                      //                                               0,
+                      //                                               4,
+                      //                                               16,
+                      //                                               0),
+                      //                                       child: Text(
+                      //                                         'In Stock: ${supplierDocs[index].data()['quantity']}',
+                      //                                         style: TextStyle(
+                      //                                             color: Colors
+                      //                                                     .grey[
+                      //                                                 900]),
+                      //                                       ),
+                      //                                     ),
+                      //                                     Padding(
+                      //                                       padding:
+                      //                                           const EdgeInsets
+                      //                                               .all(8.0),
+                      //                                       child: Icon(
+                      //                                         _selectedIndex !=
+                      //                                                     null &&
+                      //                                                 _selectedIndex ==
+                      //                                                     index
+                      //                                             ? Icons
+                      //                                                 .check_circle
+                      //                                             : Icons
+                      //                                                 .check_circle_outline,
+                      //                                         color: _selectedIndex !=
+                      //                                                     null &&
+                      //                                                 _selectedIndex ==
+                      //                                                     index
+                      //                                             ? Colors.teal
+                      //                                             : Colors.grey[
+                      //                                                 900],
+                      //                                       ),
+                      //                                     )
+                      //                                   ],
+                      //                                 ),
+                      //                               ),
+                      //                             ),
+                      //                           ),
+                      //                         );
+                      //                       });
+                      //                 },
+                      //               ),
+                      //             ],
+                      //           ),
+                      //         )),
                       SizedBox(
                         height: 15,
                       ),
