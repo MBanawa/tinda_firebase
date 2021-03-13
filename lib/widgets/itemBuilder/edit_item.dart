@@ -63,7 +63,6 @@ class _EditItemState extends State<EditItem> {
   // int _selectedIndex;
   String _removeDocId;
   int _quantity;
-  int _nextQuantity;
   var _isLoading;
   final dataKey = GlobalKey();
 
@@ -255,7 +254,7 @@ class _EditItemState extends State<EditItem> {
         _supplierDB(widget.itemId, widget.itemName);
         _sellPriceDB(widget.itemId, widget.itemName);
       } else if (widget.option == 'remove') {
-        _removeQuantInSupplier(widget.itemId, _removeDocId);
+        _removeQuantInSupplier();
 
         FirebaseFirestore.instance
             .collection('items')
@@ -321,23 +320,27 @@ class _EditItemState extends State<EditItem> {
     });
   }
 
-  void _removeQuantInSupplier(String itemId, String docId) {
+  void _removeQuantInSupplier() {
     final itemCollection =
-        FirebaseFirestore.instance.collection('items').doc(itemId);
+        FirebaseFirestore.instance.collection('items').doc(widget.itemId);
 
-    if (_quantity < int.parse(_editItemQuantityController.text.trim())) {
-      _nextQuantity =
-          int.parse(_editItemQuantityController.text.trim()) - _quantity;
-      // itemCollection.collection('suppliers').doc(docId).update({
-      //   'quantity': 0,
-      // });
-      print(_nextQuantity);
-    } else {
-      itemCollection.collection('suppliers').doc(docId).update({
-        'quantity':
-            _quantity - int.parse(_editItemQuantityController.text.trim()),
-      });
-    }
+    do {
+      _firstIn();
+      if (_quantity < int.parse(_editItemQuantityController.text.trim())) {
+        _quantity =
+            int.parse(_editItemQuantityController.text.trim()) - _quantity;
+        print(_quantity);
+        itemCollection.collection('suppliers').doc(_removeDocId).update({
+          'quantity': 0,
+        });
+      } else {
+        itemCollection.collection('suppliers').doc(_removeDocId).update({
+          'quantity':
+              _quantity - int.parse(_editItemQuantityController.text.trim()),
+        });
+        _quantity = 0;
+      }
+    } while (_quantity > 0);
   }
 
   void getQuantity(String itemId, String docId) async {
