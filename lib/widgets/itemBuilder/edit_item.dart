@@ -9,7 +9,6 @@ import 'package:intl/intl.dart';
 import 'package:tinda/screens/generate_qrcode_screen.dart';
 
 import 'package:tinda/widgets/customTextField.dart';
-import 'package:tinda/widgets/errorDialog.dart';
 
 class EditItem extends StatefulWidget {
   final String option;
@@ -61,18 +60,18 @@ class _EditItemState extends State<EditItem> {
   String _qrCode;
   bool _dismiss = false;
   Stream supplierstream;
-  int _selectedIndex;
+  // int _selectedIndex;
   String _removeDocId;
   int _quantity;
-  String _supplierId;
+  int _nextQuantity;
   var _isLoading;
   final dataKey = GlobalKey();
 
-  _onSelected(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+  // _onSelected(int index) {
+  //   setState(() {
+  //     _selectedIndex = index;
+  //   });
+  // }
 
   @override
   void initState() {
@@ -100,8 +99,10 @@ class _EditItemState extends State<EditItem> {
     final desiredDocId = docs.first.id;
 
     setState(() {
-      _supplierId = desiredDocId;
+      _removeDocId = desiredDocId;
     });
+
+    getQuantity(widget.itemId, _removeDocId);
   }
 
   _setValues() {
@@ -323,9 +324,28 @@ class _EditItemState extends State<EditItem> {
   void _removeQuantInSupplier(String itemId, String docId) {
     final itemCollection =
         FirebaseFirestore.instance.collection('items').doc(itemId);
-    itemCollection.collection('suppliers').doc(docId).update({
-      'quantity':
-          _quantity - int.parse(_editItemQuantityController.text.trim()),
+
+    if (_quantity < int.parse(_editItemQuantityController.text.trim())) {
+      _nextQuantity =
+          int.parse(_editItemQuantityController.text.trim()) - _quantity;
+      // itemCollection.collection('suppliers').doc(docId).update({
+      //   'quantity': 0,
+      // });
+      print(_nextQuantity);
+    } else {
+      itemCollection.collection('suppliers').doc(docId).update({
+        'quantity':
+            _quantity - int.parse(_editItemQuantityController.text.trim()),
+      });
+    }
+  }
+
+  void getQuantity(String itemId, String docId) async {
+    DocumentReference documentReference =
+        itemcollection.doc(itemId).collection('suppliers').doc(docId);
+
+    await documentReference.get().then((value) {
+      _quantity = value.data()['quantity'];
     });
   }
 
