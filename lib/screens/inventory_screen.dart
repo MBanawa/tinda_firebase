@@ -62,19 +62,27 @@ class _InventoryScreenState extends State<InventoryScreen> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width - 20,
                     height: 60,
-                    child: RaisedButton(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6.0)),
-                        color: Colors.yellow.shade900,
-                        child: Text(
-                          'Scan item now',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          scanBarcodeNormal()
-                              .then((value) => _selectionDialog(context));
-                        }),
+                    child: ElevatedButton(
+                      child: Text(
+                        'Scan item now',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        scanBarcodeNormal()
+                            .then((value) => _selectionDialog(context));
+                      },
+                      style: ButtonStyle(
+                          shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(6.0))),
+                          backgroundColor:
+                              MaterialStateProperty.resolveWith((states) {
+                            if (states.contains(MaterialState.pressed))
+                              return Colors.green;
+                            return Colors.yellow.shade900;
+                          })),
+                    ),
                   ),
                   SizedBox(height: 10.0),
                   Text(
@@ -88,20 +96,28 @@ class _InventoryScreenState extends State<InventoryScreen> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width - 20,
                     height: 60,
-                    child: RaisedButton(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6.0)),
-                        color: Colors.yellow.shade900,
-                        child: Text(
-                          'Create item without Barcode',
-                          style: TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center,
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          _selectionDialog(context);
-                          _scanBarcode = null;
-                        }),
+                    child: ElevatedButton(
+                      child: Text(
+                        'Create item without Barcode',
+                        style: TextStyle(color: Colors.white),
+                        textAlign: TextAlign.center,
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        _selectionDialog(context);
+                        _scanBarcode = null;
+                      },
+                      style: ButtonStyle(
+                          shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(6.0))),
+                          backgroundColor:
+                              MaterialStateProperty.resolveWith((states) {
+                            if (states.contains(MaterialState.pressed))
+                              return Colors.green;
+                            return Colors.yellow.shade900;
+                          })),
+                    ),
                   ),
                 ],
               ),
@@ -157,10 +173,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
               ),
               _scanBarcode == 'No Data'
                   ? null
-                  : RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(6.0)),
-                      color: Colors.yellow.shade900,
+                  : ElevatedButton(
                       onPressed: () {
                         Navigator.pop(context);
                         final providedCategory = Provider.of<CategoryProvider>(
@@ -178,6 +191,16 @@ class _InventoryScreenState extends State<InventoryScreen> {
                         'Continue',
                         style: TextStyle(color: Colors.white),
                       ),
+                      style: ButtonStyle(
+                          shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(6.0))),
+                          backgroundColor:
+                              MaterialStateProperty.resolveWith((states) {
+                            if (states.contains(MaterialState.pressed))
+                              return Colors.green;
+                            return Colors.yellow.shade900;
+                          })),
                     ),
             ],
             title: Text(
@@ -191,10 +214,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
             content: _scanBarcode == 'No Data'
                 ? SizedBox(
                     height: 60,
-                    child: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(6.0)),
-                      color: Colors.yellow.shade900,
+                    child: ElevatedButton(
                       onPressed: () {
                         Navigator.pop(context);
                         scanBarcodeNormal()
@@ -205,6 +225,16 @@ class _InventoryScreenState extends State<InventoryScreen> {
                         'Scan Again',
                         style: TextStyle(color: Colors.white),
                       ),
+                      style: ButtonStyle(
+                          shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(6.0))),
+                          backgroundColor:
+                              MaterialStateProperty.resolveWith((states) {
+                            if (states.contains(MaterialState.pressed))
+                              return Colors.green;
+                            return Colors.yellow.shade900;
+                          })),
                     ),
                   )
                 : SingleChildScrollView(
@@ -213,21 +243,30 @@ class _InventoryScreenState extends State<InventoryScreen> {
                         SizedBox(
                           width: MediaQuery.of(context).size.width - 20,
                           height: 60,
-                          child: RaisedButton(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(6.0)),
-                              color: Colors.yellow.shade900,
-                              child: Text(
-                                'Create a new Category',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => NewCategory(
-                                            barcode: _scanBarcode)));
-                              }),
+                          child: ElevatedButton(
+                            child: Text(
+                              'Create a new Category',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          NewCategory(barcode: _scanBarcode)));
+                            },
+                            style: ButtonStyle(
+                                shape: MaterialStateProperty.all(
+                                    RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(6.0))),
+                                backgroundColor:
+                                    MaterialStateProperty.resolveWith((states) {
+                                  if (states.contains(MaterialState.pressed))
+                                    return Colors.green;
+                                  return Colors.yellow.shade900;
+                                })),
+                          ),
                         ),
                         SizedBox(height: 10.0),
                         Text(
