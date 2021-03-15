@@ -141,10 +141,8 @@ class LoginTab extends StatelessWidget {
                     SizedBox(
                       width: MediaQuery.of(context).size.width - 20,
                       height: 60,
-                      child: RaisedButton(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6.0)),
-                        color: Colors.yellow.shade900,
+                      child: ElevatedButton(
+                        
                         onPressed: () {
                           _loginUser();
                         },
@@ -158,6 +156,17 @@ class LoginTab extends StatelessWidget {
                             ),
                           ),
                         ),
+                        style: ButtonStyle(
+                                shape: MaterialStateProperty.all(
+                                    RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(6.0))),
+                                backgroundColor:
+                                    MaterialStateProperty.resolveWith((states) {
+                                  if (states.contains(MaterialState.pressed))
+                                    return Colors.green;
+                                  return Colors.yellow.shade900;
+                                })),
                       ),
                     ),
                   ],

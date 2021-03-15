@@ -974,10 +974,8 @@ class _EditItemState extends State<EditItem> {
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width - 16,
                           height: 60,
-                          child: RaisedButton(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(6.0)),
-                            color: Colors.yellow.shade900,
+                          child: ElevatedButton(
+                           
                             onPressed: () {
                               _editItem();
                             },
@@ -991,6 +989,17 @@ class _EditItemState extends State<EditItem> {
                                 ),
                               ),
                             ),
+                            style: ButtonStyle(
+                                shape: MaterialStateProperty.all(
+                                    RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(6.0))),
+                                backgroundColor:
+                                    MaterialStateProperty.resolveWith((states) {
+                                  if (states.contains(MaterialState.pressed))
+                                    return Colors.green;
+                                  return Colors.yellow.shade900;
+                                })),
                           ),
                         ),
                       ),

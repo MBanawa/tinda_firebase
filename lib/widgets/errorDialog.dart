@@ -26,11 +26,11 @@ class ErrorAlertDialog extends StatelessWidget {
         ),
       ),
       actions: <Widget>[
-        RaisedButton(
+        ElevatedButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          color: Colors.yellow.shade900,
+          
           child: Center(
             child: Text(
               'Return',
@@ -39,6 +39,14 @@ class ErrorAlertDialog extends StatelessWidget {
               ),
             ),
           ),
+          style: ButtonStyle(
+                                
+                                backgroundColor:
+                                    MaterialStateProperty.resolveWith((states) {
+                                  if (states.contains(MaterialState.pressed))
+                                    return Colors.green;
+                                  return Colors.yellow.shade900;
+                                })),
         ),
       ],
     );

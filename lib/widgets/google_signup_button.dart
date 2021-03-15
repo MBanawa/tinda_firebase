@@ -9,9 +9,8 @@ class GoogleSignupButtonWidget extends StatelessWidget {
     return SizedBox(
       width: MediaQuery.of(context).size.width - 20,
       height: 60,
-      child: RaisedButton(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6.0)),
-        color: Colors.red,
+      child: ElevatedButton(
+        
         onPressed: () {
           final provider =
               Provider.of<GoogleSignInProvider>(context, listen: false);
@@ -36,6 +35,17 @@ class GoogleSignupButtonWidget extends StatelessWidget {
             ),
           ),
         ),
+        style: ButtonStyle(
+                                shape: MaterialStateProperty.all(
+                                    RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(6.0))),
+                                backgroundColor:
+                                    MaterialStateProperty.resolveWith((states) {
+                                  if (states.contains(MaterialState.pressed))
+                                    return Colors.green;
+                                  return Colors.red;
+                                })),
       ),
     );
   }

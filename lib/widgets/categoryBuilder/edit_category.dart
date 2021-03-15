@@ -84,8 +84,8 @@ class _EditCategoryState extends State<EditCategory> {
                       onColorChanged: changeColor,
                       layoutBuilder: layoutBuilder,
                     ),
-                    RaisedButton(
-                      color: Colors.green,
+                    ElevatedButton(
+                      
                       onPressed: () {
                         Navigator.pop(context);
                       },
@@ -93,6 +93,14 @@ class _EditCategoryState extends State<EditCategory> {
                         'Confirm',
                         style: TextStyle(color: Colors.white),
                       ),
+                      style: ButtonStyle(
+                               
+                                backgroundColor:
+                                    MaterialStateProperty.resolveWith((states) {
+                                  if (states.contains(MaterialState.pressed))
+                                    return Colors.green.shade900;
+                                  return Colors.green;
+                                })),
                     )
                   ],
                 ),
@@ -201,10 +209,8 @@ class _EditCategoryState extends State<EditCategory> {
                       child: SizedBox(
                         width: MediaQuery.of(context).size.width - 16,
                         height: 60,
-                        child: RaisedButton(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(6.0)),
-                          color: Colors.yellow.shade900,
+                        child: ElevatedButton(
+                          
                           onPressed: () {
                             _editCategory();
                           },
@@ -218,6 +224,17 @@ class _EditCategoryState extends State<EditCategory> {
                               ),
                             ),
                           ),
+                          style: ButtonStyle(
+                                shape: MaterialStateProperty.all(
+                                    RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(6.0))),
+                                backgroundColor:
+                                    MaterialStateProperty.resolveWith((states) {
+                                  if (states.contains(MaterialState.pressed))
+                                    return Colors.green;
+                                  return Colors.yellow.shade900;
+                                })),
                         ),
                       ),
                     ),
