@@ -63,6 +63,7 @@ class _EditItemState extends State<EditItem> {
   // int _selectedIndex;
   String _removeDocId;
   int _quantity;
+  int _remainingQuantity = 0;
   var _isLoading;
   final dataKey = GlobalKey();
 
@@ -321,26 +322,30 @@ class _EditItemState extends State<EditItem> {
   }
 
   void _removeQuantInSupplier() {
+    print(_removeDocId);
     final itemCollection =
         FirebaseFirestore.instance.collection('items').doc(widget.itemId);
 
-    do {
-      _firstIn();
-      if (_quantity < int.parse(_editItemQuantityController.text.trim())) {
-        _quantity =
+    if (_quantity < int.parse(_editItemQuantityController.text.trim())) {
+      do {
+        _remainingQuantity =
             int.parse(_editItemQuantityController.text.trim()) - _quantity;
-        print(_quantity);
+
         itemCollection.collection('suppliers').doc(_removeDocId).update({
           'quantity': 0,
         });
-      } else {
-        itemCollection.collection('suppliers').doc(_removeDocId).update({
-          'quantity':
-              _quantity - int.parse(_editItemQuantityController.text.trim()),
-        });
-        _quantity = 0;
-      }
-    } while (_quantity > 0);
+
+        print(_remainingQuantity);
+        _firstIn();
+
+        print(_removeDocId);
+      } while (_remainingQuantity > 0);
+    } else {
+      itemCollection.collection('suppliers').doc(_removeDocId).update({
+        'quantity':
+            _quantity - int.parse(_editItemQuantityController.text.trim()),
+      });
+    }
   }
 
   void getQuantity(String itemId, String docId) async {
@@ -350,6 +355,7 @@ class _EditItemState extends State<EditItem> {
     await documentReference.get().then((value) {
       _quantity = value.data()['quantity'];
     });
+    print(_quantity);
   }
 
   void _sellPriceDB(
@@ -975,7 +981,6 @@ class _EditItemState extends State<EditItem> {
                           width: MediaQuery.of(context).size.width - 16,
                           height: 60,
                           child: ElevatedButton(
-                           
                             onPressed: () {
                               _editItem();
                             },
