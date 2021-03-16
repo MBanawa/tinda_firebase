@@ -83,6 +83,7 @@ class _EditItemState extends State<EditItem> {
   CollectionReference itemcollection =
       FirebaseFirestore.instance.collection('items');
 
+//find first stock in supplier database with quantity greater than 0
   _firstIn() async {
     CollectionReference docRef =
         itemcollection.doc(widget.itemId).collection('suppliers');
@@ -102,7 +103,41 @@ class _EditItemState extends State<EditItem> {
       _removeDocId = desiredDocId;
     });
 
+    // get quantity of firstIn
     getQuantity(widget.itemId, _removeDocId);
+  }
+
+  void getQuantity(String itemId, String docId) async {
+    DocumentReference documentReference =
+        itemcollection.doc(itemId).collection('suppliers').doc(docId);
+
+    await documentReference.get().then((value) {
+      _quantity = value.data()['quantity'];
+    });
+  }
+
+  //remove user entered quantity from the firstIn quantity
+  void _firstOut() {
+    var _removeQuantity = int.parse(_editItemQuantityController.text.trim());
+
+    final itemCollection =
+        FirebaseFirestore.instance.collection('items').doc(widget.itemId);
+
+    if (_quantity < _removeQuantity) {
+      _remainingQuantity = _removeQuantity - _quantity;
+      var xQuantity = _quantity - _remainingQuantity;
+      do {
+        itemCollection.collection('suppliers').doc(_removeDocId).update({
+          'quantity': _quantity - xQuantity,
+        });
+
+        _firstIn();
+      } while (_remainingQuantity > 0);
+    } else {
+      itemCollection.collection('suppliers').doc(_removeDocId).update({
+        'quantity': _quantity - _removeQuantity,
+      });
+    }
   }
 
   _setValues() {
@@ -255,7 +290,7 @@ class _EditItemState extends State<EditItem> {
         _supplierDB(widget.itemId, widget.itemName);
         _sellPriceDB(widget.itemId, widget.itemName);
       } else if (widget.option == 'remove') {
-        _removeQuantInSupplier();
+        _firstOut();
 
         FirebaseFirestore.instance
             .collection('items')
@@ -319,50 +354,6 @@ class _EditItemState extends State<EditItem> {
       'itemId': itemId,
       'itemName': itemName,
     });
-  }
-
-  void _removeQuantInSupplier() {
-    print(_removeDocId);
-    final itemCollection =
-        FirebaseFirestore.instance.collection('items').doc(widget.itemId);
-
-    if (_quantity < int.parse(_editItemQuantityController.text.trim())) {
-      _remainingQuantity =
-          int.parse(_editItemQuantityController.text.trim()) - _quantity;
-      var xQuantity = _quantity - _remainingQuantity;
-      do {
-        if (_quantity == xQuantity) {
-          itemCollection.collection('suppliers').doc(_removeDocId).update({
-            'quantity': 0,
-          });
-        } else {
-          itemCollection.collection('suppliers').doc(_removeDocId).update({
-            'quantity': _quantity - xQuantity,
-          });
-          _remainingQuantity = 0;
-        }
-
-        print(_remainingQuantity);
-        _firstIn();
-
-        print(_removeDocId);
-      } while (_remainingQuantity > 0);
-    } else {
-      itemCollection.collection('suppliers').doc(_removeDocId).update({
-        'quantity':
-            _quantity - int.parse(_editItemQuantityController.text.trim()),
-      });
-    }
-  }
-
-  void getQuantity(String itemId, String docId) async {
-    DocumentReference documentReference =
-        itemcollection.doc(itemId).collection('suppliers').doc(docId);
-
-    await documentReference.get().then((value) {
-      _quantity = value.data()['quantity'];
-    });
-    print(_quantity);
   }
 
   void _sellPriceDB(
