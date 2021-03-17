@@ -118,10 +118,9 @@ class _EditItemState extends State<EditItem> {
 
   //remove user entered quantity from the firstIn quantity
   void _firstOut() {
-    var _removeQuantity = int.parse(_editItemQuantityController.text.trim());
-
     final itemCollection =
         FirebaseFirestore.instance.collection('items').doc(widget.itemId);
+    var _removeQuantity = int.parse(_editItemQuantityController.text.trim());
 
     if (_quantity < _removeQuantity) {
       _remainingQuantity = _removeQuantity - _quantity;
