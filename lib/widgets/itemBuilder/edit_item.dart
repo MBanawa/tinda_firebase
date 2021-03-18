@@ -122,21 +122,20 @@ class _EditItemState extends State<EditItem> {
         FirebaseFirestore.instance.collection('items').doc(widget.itemId);
     var _removeQuantity = int.parse(_editItemQuantityController.text.trim());
 
-    if (_quantity < _removeQuantity) {
-      _remainingQuantity = _removeQuantity - _quantity;
-      var xQuantity = _quantity - _remainingQuantity;
-      do {
+    do {
+      if (_quantity < _removeQuantity) {
+        _remainingQuantity = _removeQuantity - _quantity;
+        var xQuantity = _quantity - _remainingQuantity;
         itemCollection.collection('suppliers').doc(_removeDocId).update({
           'quantity': _quantity - xQuantity,
         });
-
-        _firstIn();
-      } while (_remainingQuantity > 0);
-    } else {
-      itemCollection.collection('suppliers').doc(_removeDocId).update({
-        'quantity': _quantity - _removeQuantity,
-      });
-    }
+      } else {
+        itemCollection.collection('suppliers').doc(_removeDocId).update({
+          'quantity': _quantity - _removeQuantity,
+        });
+      }
+      _firstIn();
+    } while (_remainingQuantity > 0);
   }
 
   _setValues() {
