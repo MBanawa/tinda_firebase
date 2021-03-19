@@ -83,7 +83,7 @@ class _EditItemState extends State<EditItem> {
   CollectionReference itemcollection =
       FirebaseFirestore.instance.collection('items');
 
-//find first stock in supplier database with quantity greater than 0
+//find the first available stock in a date-sorted list from the supplier database with quantity greater than 0
   _firstIn() async {
     CollectionReference docRef =
         itemcollection.doc(widget.itemId).collection('suppliers');
@@ -116,7 +116,9 @@ class _EditItemState extends State<EditItem> {
     });
   }
 
-  //remove user entered quantity from the firstIn quantity
+  //deduct user entered quantity from the firstIn quantity
+  // This is just a scratch. it's not working. but maybe you can get an idea from here.
+
   void _firstOut() {
     final itemCollection =
         FirebaseFirestore.instance.collection('items').doc(widget.itemId);
