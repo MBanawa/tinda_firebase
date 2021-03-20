@@ -62,10 +62,15 @@ class _EditItemState extends State<EditItem> {
   Stream supplierstream;
   // int _selectedIndex;
   String _removeDocId;
-  int _quantity;
-  int _remainingQuantity = 0;
+  // int _quantity;
+  // int _remainingQuantity = 0;
   var _isLoading;
   final dataKey = GlobalKey();
+
+  int remainingQuantity = 0;
+  CollectionReference docRef;
+  CollectionReference itemcollection =
+      FirebaseFirestore.instance.collection('items');
 
   // _onSelected(int index) {
   //   setState(() {
@@ -76,68 +81,59 @@ class _EditItemState extends State<EditItem> {
   @override
   void initState() {
     super.initState();
+    _initializeCollection();
     _setValues();
     _firstIn();
   }
 
-  CollectionReference itemcollection =
-      FirebaseFirestore.instance.collection('items');
+  _initializeCollection() async {
+    docRef = itemcollection.doc(widget.itemId).collection('suppliers');
+  }
 
 //find the first available stock in a date-sorted list from the supplier database with quantity greater than 0
   _firstIn() async {
-    CollectionReference docRef =
-        itemcollection.doc(widget.itemId).collection('suppliers');
     var listOfDocs = await docRef
         .where('itemId', isEqualTo: widget.itemId)
         .where('quantity', isGreaterThan: 0)
         .get();
 
-    var docs = listOfDocs.docs;
-
-    docs.sort((prev, next) => (prev.data()['entryDate'] as Timestamp)
-        .compareTo(next.data()['entryDate'] as Timestamp));
-
-    final desiredDocId = docs.first.id;
-
-    setState(() {
-      _removeDocId = desiredDocId;
-    });
-
-    // get quantity of firstIn
-    getQuantity(widget.itemId, _removeDocId);
+    _removeDocId = (listOfDocs.docs
+          ..sort((a, b) => (a.data()['entryDate'] as Timestamp)
+              .compareTo(b.data()['entryDate'] as Timestamp)))
+        .first
+        .id;
   }
 
-  void getQuantity(String itemId, String docId) async {
-    DocumentReference documentReference =
-        itemcollection.doc(itemId).collection('suppliers').doc(docId);
-
-    await documentReference.get().then((value) {
-      _quantity = value.data()['quantity'];
-    });
+  Future<dynamic> getSupplier(String docId) async {
+    DocumentReference documentReference = docRef.doc(docId);
+    return (await documentReference.get()).data();
   }
 
   //deduct user entered quantity from the firstIn quantity
-  // This is just a scratch. it's not working. but maybe you can get an idea from here.
 
-  void _firstOut() {
-    final itemCollection =
-        FirebaseFirestore.instance.collection('items').doc(widget.itemId);
-    var _removeQuantity = int.parse(_editItemQuantityController.text.trim());
+  void _firstOut() async {
+    remainingQuantity = int.parse(_editItemQuantityController.text.trim());
 
     do {
-      if (_quantity < _removeQuantity) {
-        _remainingQuantity = _removeQuantity - _quantity;
-        var xQuantity = _quantity - _remainingQuantity;
-        itemCollection.collection('suppliers').doc(_removeDocId).update({
-          'quantity': _quantity - xQuantity,
-        });
+      var desiredDocId = _removeDocId;
+      await _firstIn();
+      var _supplier = await getSupplier(desiredDocId);
+      int _quantity = _supplier['quantity'];
+
+      int _toBeDeducted = 0;
+
+      if (remainingQuantity > _quantity) {
+        _toBeDeducted = _quantity;
+        remainingQuantity -= _quantity;
       } else {
-        itemCollection.collection('suppliers').doc(_removeDocId).update({
-          'quantity': _quantity - _removeQuantity,
-        });
+        _toBeDeducted = remainingQuantity;
+        remainingQuantity = 0;
       }
-      _firstIn();
-    } while (_remainingQuantity > 0);
+
+      await docRef.doc(desiredDocId).update({
+        'quantity': _quantity - _toBeDeducted,
+      });
+    } while (remainingQuantity > 0);
   }
 
   _setValues() {
