@@ -21,6 +21,15 @@ class CashierScreen extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: Text('Cashier'),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: IconButton(
+              icon: Icon(Icons.save, size: 30),
+              onPressed: () {},
+            ),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -101,7 +110,7 @@ class CashierScreen extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            'TOTAL:',
+                            'TIME:',
                             style: TextStyle(
                               fontSize: _medFontSize,
                               fontWeight: FontWeight.bold,
@@ -130,7 +139,7 @@ class CashierScreen extends StatelessWidget {
                             style: TextStyle(fontSize: _medFontSize),
                           ),
                           Text(
-                            'PHP 750.00',
+                            '07:32 AM',
                             style: TextStyle(fontSize: _medFontSize),
                           ),
                         ],
@@ -141,6 +150,10 @@ class CashierScreen extends StatelessWidget {
               ],
             ),
             SizedBox(height: 25),
+
+            //TODO: PROBLEM: WHEN PRICE COLUMN AND TOTAL COLUMN GOES TO 5 DIGITS AND 2 DECIMAL PLACES (I.E. 10,000.00)
+            // THE ENTIRE TABLE WILL WARP. NEED TO FIND A WAY TO MAKE IT MORE DYNAMIC
+            // NEED TO SOLVE ITEM NAME TOO. USED ELIPSIS FOR NOW
             Padding(
               padding: const EdgeInsets.only(left: 8, right: 8),
               child: Row(
@@ -165,8 +178,9 @@ class CashierScreen extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
                           child: Text(
-                            'Cookies N Cream',
+                            'Cookies N CreamMMMMM',
                             style: TextStyle(color: Colors.grey),
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         Container(
@@ -271,7 +285,7 @@ class CashierScreen extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
                           child: Text(
-                            'PHP 10.00',
+                            '10.00',
                             style: TextStyle(color: Colors.grey),
                           ),
                         ),
@@ -283,7 +297,7 @@ class CashierScreen extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
                           child: Text(
-                            'PHP 15.00',
+                            '50.00',
                             style: TextStyle(color: Colors.grey),
                           ),
                         ),
@@ -295,7 +309,7 @@ class CashierScreen extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
                           child: Text(
-                            'PHP 5.00',
+                            '5.00',
                             style: TextStyle(color: Colors.grey),
                           ),
                         ),
@@ -324,7 +338,7 @@ class CashierScreen extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
                           child: Text(
-                            'PHP 20.00',
+                            '20.00',
                             style: TextStyle(color: Colors.grey),
                           ),
                         ),
@@ -336,7 +350,7 @@ class CashierScreen extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
                           child: Text(
-                            'PHP 105.00',
+                            '350.00',
                             style: TextStyle(color: Colors.grey),
                           ),
                         ),
@@ -348,7 +362,7 @@ class CashierScreen extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
                           child: Text(
-                            'PHP 50.00',
+                            '50.00',
                             style: TextStyle(color: Colors.grey),
                           ),
                         ),
@@ -375,20 +389,131 @@ class CashierScreen extends StatelessWidget {
                     color: Colors.teal,
                     child: Text(
                       'TOTAL',
-                      style: TextStyle(color: Colors.grey[200]),
+                      style: TextStyle(
+                          color: Colors.grey[200], fontWeight: FontWeight.bold),
                     ),
                   ),
                   Container(
                     padding: const EdgeInsets.all(8),
                     color: Colors.teal,
                     child: Text(
-                      'PHP 175.00',
-                      style: TextStyle(color: Colors.grey[200]),
+                      'PHP 420.00',
+                      style: TextStyle(
+                          color: Colors.grey[200], fontWeight: FontWeight.bold),
                     ),
                   )
                 ],
               ),
-            )
+            ),
+            SizedBox(height: 5),
+            Container(
+              padding: const EdgeInsets.only(right: 10),
+              width: double.infinity,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                    child: Text(
+                      'CASH',
+                      style: TextStyle(color: Colors.grey[900]),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                    child: Text(
+                      'PHP 500.00',
+                      style: TextStyle(color: Colors.grey[900]),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            SizedBox(height: 5),
+            Container(
+              padding: const EdgeInsets.only(right: 10),
+              width: double.infinity,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                    child: Text(
+                      'CHANGE',
+                      style: TextStyle(color: Colors.grey[900]),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                    child: Text(
+                      'PHP 80.00',
+                      style: TextStyle(color: Colors.grey[900]),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 25,
+            ),
+            Center(
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width - 16,
+                height: 60,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(
+                      child: Text(
+                        'SEARCH ITEM',
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
+                    ),
+                  ),
+                  style: ButtonStyle(
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6.0))),
+                      backgroundColor:
+                          MaterialStateProperty.resolveWith((states) {
+                        if (states.contains(MaterialState.pressed))
+                          return Colors.green;
+                        return Colors.grey[900];
+                      })),
+                ),
+              ),
+            ),
+
+            SizedBox(
+              height: 5,
+            ),
+            Center(
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width - 16,
+                height: 60,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(
+                      child: Text(
+                        'PAYMENT',
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
+                    ),
+                  ),
+                  style: ButtonStyle(
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6.0))),
+                      backgroundColor:
+                          MaterialStateProperty.resolveWith((states) {
+                        if (states.contains(MaterialState.pressed))
+                          return Colors.green;
+                        return Colors.teal;
+                      })),
+                ),
+              ),
+            ),
           ],
         ),
       ),
