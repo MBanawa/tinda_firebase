@@ -52,6 +52,7 @@ class _MyQrCodeScreenState extends State<MyQrCodeScreen> {
     }
   }
 
+//TODO: add loading animation and save confirmation
   _downloadQrCode() {
     Directory directory;
     _requestPermission(Permission.storage);
