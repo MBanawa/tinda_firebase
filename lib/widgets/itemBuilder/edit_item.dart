@@ -110,11 +110,13 @@ class _EditItemState extends State<EditItem> {
   }
 
   //deduct user entered quantity from the firstIn quantity
-  //TODO: what if the user enters an amount that is greater than the entire stock supply??
-  // create a validator that checks remainingQuantity versus items collection's quantity field
+
   void _firstOut() async {
     remainingQuantity = int.parse(_editItemQuantityController.text.trim());
 
+    //TODO: what if the user enters an amount that is greater than the entire stock supply??
+    // create a validator that checks remainingQuantity versus items collection's quantity field
+    // add if statement here to check:
     do {
       var desiredDocId = _removeDocId;
       await _firstIn();
