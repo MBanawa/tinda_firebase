@@ -13,8 +13,8 @@ Future<CachedImage> cacheImage(
   Uint8List data, {
   List<String> customPathList,
   int quality: 80,
-  int minHeight: 120,
-  int minWidth: 120,
+  // int minHeight: 250,
+  // int minWidth: 250,
 }) async {
   String dataPath = (await getApplicationDocumentsDirectory()).path + '/';
 
@@ -37,11 +37,11 @@ Future<CachedImage> cacheImage(
   else
     await dataFile.delete();
 
-  await dataFile.writeAsBytes(await comporessList(
+  await dataFile.writeAsBytes(await compressList(
     data,
     quality,
-    minHeight: minHeight,
-    minWidth: minWidth,
+    // minHeight: minHeight,
+    // minWidth: minWidth,
   ));
 
   CachedImage image = CachedImage(
@@ -62,8 +62,8 @@ Future<CachedImage> getCachedImage(
   String url, {
   List<String> customPathList,
   int quality: 80,
-  int minHeight: 120,
-  int minWidth: 120,
+  // int minHeight: 250,
+  // int minWidth: 250,
 }) async {
   LazyBox<CachedImage> box = Hive.lazyBox(cachedImagesBoxName);
   if (box.containsKey(url + '_$quality')) {
@@ -81,8 +81,8 @@ Future<CachedImage> getCachedImage(
           res.bodyBytes,
           customPathList: customPathList,
           quality: quality,
-          minHeight: minHeight,
-          minWidth: minWidth,
+          // minHeight: minHeight,
+          // minWidth: minWidth,
         );
       } catch (e) {
         throw e;

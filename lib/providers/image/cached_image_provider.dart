@@ -36,8 +36,8 @@ class CachedImageProvider extends ImageProvider<CachedImageProvider> {
       url,
       customPathList: this.customPathList,
       quality: this.quality,
-      minHeight: this.minHeight,
-      minWidth: this.minWidth,
+      // minHeight: this.minHeight,
+      // minWidth: this.minWidth,
     ))
             .filePath)
         .readAsBytes();
