@@ -67,14 +67,16 @@ Future<CachedImage> getCachedImage(
 }) async {
   LazyBox<CachedImage> box = Hive.lazyBox(cachedImagesBoxName);
   if (box.containsKey(url + '_$quality')) {
-    return await box.get(url + '_$quality');
+    CachedImage image = await box.get(url + '_$quality');
+    await image.declareUsage();
+    return image;
   } else {
     var res = await http.get(
       Uri.parse(url),
     );
     if (res.statusCode == 200)
       try {
-        var img = await cacheImage(
+        return await cacheImage(
           url,
           res.bodyBytes,
           customPathList: customPathList,
@@ -82,7 +84,6 @@ Future<CachedImage> getCachedImage(
           minHeight: minHeight,
           minWidth: minWidth,
         );
-        return img;
       } catch (e) {
         throw e;
       }

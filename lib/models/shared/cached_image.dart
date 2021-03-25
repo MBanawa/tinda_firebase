@@ -5,7 +5,7 @@ part 'cached_image.g.dart';
 String cachedImagesBoxName = 'cached_images_bpx';
 
 @HiveType(typeId: 0)
-class CachedImage {
+class CachedImage extends HiveObject {
   @HiveField(0)
   String url;
   @HiveField(1)
@@ -27,4 +27,11 @@ class CachedImage {
     this.usesCount,
     this.quality,
   });
+
+  Future declareUsage() async {
+    this.usesCount = this.usesCount ?? 0;
+    this.usesCount++;
+    this.lastUseDate = DateTime.now();
+    await this.save();
+  }
 }
