@@ -11,10 +11,12 @@ import 'package:tinda/providers/google_sign_in.dart';
 import 'package:tinda/providers/phonesize_provider.dart';
 
 import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:tinda/services/cache/initializers.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await initializeCache();
   runApp(Phoenix(child: Tinda()));
 }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tinda/animation/FadeAnimation.dart';
+import 'package:tinda/providers/image/cached_image_provider.dart';
 import 'package:tinda/screens/itemDetail_screen.dart';
 import 'package:tinda/widgets/itemBuilder/options_dialog.dart';
 
@@ -82,8 +83,13 @@ class MakeItem extends StatelessWidget {
           width: double.infinity,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(6),
+            color: Colors.white,
             image: DecorationImage(
-              image: NetworkImage(image),
+              image: CachedImageProvider(
+                image,
+                quality: 70,
+                customPathList: ['items', id],
+              ),
               fit: BoxFit.cover,
               colorFilter: ColorFilter.mode(
                 Colors.teal,
