@@ -12,6 +12,7 @@ class CachedImageWidget extends StatelessWidget {
   final int cacheWidth, cacheHeight;
   final int quality;
   final List<String> customPathList;
+  final ColorFilter colorFilter;
 
   const CachedImageWidget({
     Key key,
@@ -23,6 +24,7 @@ class CachedImageWidget extends StatelessWidget {
     this.cacheHeight,
     this.quality: 80,
     this.customPathList,
+    this.colorFilter,
   }) : super(key: key);
 
   @override
@@ -34,7 +36,19 @@ class CachedImageWidget extends StatelessWidget {
         customPathList: customPathList,
       ),
       builder: (context, snapshot) {
-        if (snapshot.hasData)
+        if (snapshot.hasData) if (colorFilter != null)
+          return ColorFiltered(
+            colorFilter: colorFilter,
+            child: Image.file(
+              File(snapshot.data.filePath),
+              fit: boxFit,
+              cacheWidth: cacheWidth,
+              cacheHeight: cacheHeight,
+              width: width,
+              height: height,
+            ),
+          );
+        else
           return Image.file(
             File(snapshot.data.filePath),
             fit: boxFit,
