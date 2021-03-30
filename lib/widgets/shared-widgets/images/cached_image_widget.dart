@@ -74,7 +74,7 @@ class ImageLoadingWidget extends StatelessWidget {
         itemBuilder: (BuildContext context, int index) {
           return DecoratedBox(
             decoration: BoxDecoration(
-              color: index.isEven ? Colors.red : Colors.green,
+              color: index.isEven ? Colors.yellow[900] : Colors.teal,
             ),
           );
         },
