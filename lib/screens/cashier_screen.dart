@@ -1,14 +1,101 @@
 //TODO: FINISH THIS AND THE REPORTING SCREEN ASAP. WE NEED TO PRESENT IT TO BOSS LLOYD.
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:tinda/models/cashier/cashier_item.dart';
 
-class CashierScreen extends StatelessWidget {
+import 'cashier/qr_code_scanner.dart';
+
+class CashierScreen extends StatefulWidget {
+  @override
+  _CashierScreenState createState() => _CashierScreenState();
+}
+
+class _CashierScreenState extends State<CashierScreen> {
   double _smallFontSize = 12;
-  double _medFontSize = 16;
-  Color _largeFontColor = Colors.grey[700];
+  double total = 0;
+  double cash = 0;
 
-  CollectionReference itemcollection =
-      FirebaseFirestore.instance.collection('items');
+  double _medFontSize = 16;
+
+  List<CashierItem> selectedItems = [];
+
+  Future<bool> verifyQRCode(String code) async {
+    CollectionReference itemsCollection =
+        FirebaseFirestore.instance.collection('items');
+    QuerySnapshot snapshot = await itemsCollection
+        .where(
+          'barcode',
+          isEqualTo: code,
+        )
+        .get();
+    if (snapshot.docs.length > 0) {
+      bool submitted = false;
+      bool continueScanning = false;
+      TextEditingController _quantityController = TextEditingController(
+        text: '1',
+      );
+      await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Item quantity'),
+          content: TextField(
+            controller: _quantityController,
+            decoration: InputDecoration(
+              labelText: 'Quantity',
+              hintText: 'Please enter ItenQuantity',
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                submitted = true;
+              },
+              child: Text(
+                'Done',
+                style: TextStyle(
+                  color: Colors.grey[700],
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                continueScanning = true;
+                submitted = true;
+                Navigator.pop(context);
+              },
+              child: Text('Scan more'),
+            ),
+          ],
+        ),
+      );
+      if (!submitted) return false;
+      int quantity = int.tryParse(_quantityController.text) ?? 1;
+      setState(() {
+        total += snapshot.docs.first.data()['sellPrice'] * quantity;
+        selectedItems.add(
+          CashierItem(
+            title: snapshot.docs.first.data()['itemName'],
+            quantity: quantity,
+            price: snapshot.docs.first.data()['sellPrice'],
+          ),
+        );
+      });
+      if (continueScanning)
+        Future.delayed(Duration(milliseconds: 2000)).then(
+          (value) => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => QRCodeScannerPage(
+                verifyCallback: verifyQRCode,
+                quitCallback: () => Navigator.of(context).pop(),
+              ),
+            ),
+          ),
+        );
+      return true;
+    }
+    return false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +103,14 @@ class CashierScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.qr_code_scanner_sharp),
-        onPressed: () {},
+        onPressed: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => QRCodeScannerPage(
+              verifyCallback: verifyQRCode,
+              quitCallback: () => Navigator.of(context).pop(),
+            ),
+          ),
+        ),
       ),
       appBar: AppBar(
         centerTitle: true,
@@ -35,7 +129,6 @@ class CashierScreen extends StatelessWidget {
         child: Column(
           children: [
             Container(
-              height: 70,
               child: Row(
                 children: [
                   Expanded(
@@ -62,7 +155,6 @@ class CashierScreen extends StatelessWidget {
                   SizedBox(width: 6),
                   Expanded(
                     child: Container(
-                      height: 80,
                       child: Padding(
                         padding: const EdgeInsets.only(top: 8),
                         child: Column(
@@ -89,7 +181,6 @@ class CashierScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: Container(
-                    height: 90,
                     child: Padding(
                       padding: const EdgeInsets.only(top: 18.0),
                       child: Column(
@@ -124,7 +215,6 @@ class CashierScreen extends StatelessWidget {
                 SizedBox(width: 6),
                 Expanded(
                   child: Container(
-                    height: 90,
                     child: Padding(
                       padding: const EdgeInsets.only(top: 18.0),
                       child: Column(
@@ -154,229 +244,98 @@ class CashierScreen extends StatelessWidget {
             //TODO: PROBLEM: WHEN PRICE COLUMN AND TOTAL COLUMN GOES TO 5 DIGITS AND 2 DECIMAL PLACES (I.E. 10,000.00)
             // THE ENTIRE TABLE WILL WARP. NEED TO FIND A WAY TO MAKE IT MORE DYNAMIC
             // NEED TO SOLVE ITEM NAME TOO. USED ELIPSIS FOR NOW
-            Padding(
+            Container(
               padding: const EdgeInsets.only(left: 8, right: 8),
-              child: Row(
+              child: Table(
+                columnWidths: {
+                  0: FractionColumnWidth(.5),
+                },
+                border: TableBorder.symmetric(
+                  outside: BorderSide(
+                    color: Colors.grey,
+                    width: 1,
+                  ),
+                ),
                 children: [
-                  Expanded(
-                    flex: 2,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: double.infinity,
-                          color: Colors.grey[900],
-                          height: 40,
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
-                            child: Text(
-                              'ITEMS',
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
+                  TableRow(
+                    children: [
+                      Container(
+                        color: Colors.grey[900],
+                        height: 40,
+                        child: Center(
                           child: Text(
-                            'Cookies N Cream Chocolate Flavor',
-                            style: TextStyle(color: Colors.grey),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        Container(
-                          width: double.infinity,
-                          height: 1,
-                          color: Colors.grey,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
-                          child: Text(
-                            'Chippy',
+                            'ITEMS',
                             style: TextStyle(color: Colors.grey),
                           ),
                         ),
-                        Container(
-                          width: double.infinity,
-                          height: 1,
-                          color: Colors.grey,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
+                      ),
+                      Container(
+                        color: Colors.grey[900],
+                        height: 40,
+                        child: Center(
                           child: Text(
-                            'Marlboro Red',
+                            'QTY',
                             style: TextStyle(color: Colors.grey),
                           ),
                         ),
-                        Container(
-                          width: double.infinity,
-                          height: 1,
-                          color: Colors.grey,
+                      ),
+                      Container(
+                        color: Colors.grey[900],
+                        height: 40,
+                        child: Center(
+                          child: Text(
+                            'PRICE',
+                            style: TextStyle(color: Colors.grey),
+                          ),
                         ),
-                      ],
-                    ),
+                      ),
+                      Container(
+                        color: Colors.grey[900],
+                        height: 40,
+                        child: Center(
+                          child: Text(
+                            'TOTAL',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        Container(
-                          width: double.infinity,
-                          color: Colors.grey[900],
-                          height: 40,
-                          child: Center(
-                            child: Text(
-                              'QTY',
-                              style: TextStyle(color: Colors.grey),
+                  ...selectedItems
+                      .map(
+                        (e) => TableRow(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              child: Text(e.title),
                             ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
-                          child: Text(
-                            '2',
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                        ),
-                        Container(
-                          width: double.infinity,
-                          height: 1,
-                          color: Colors.grey,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
-                          child: Text(
-                            '7',
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                        ),
-                        Container(
-                          width: double.infinity,
-                          height: 1,
-                          color: Colors.grey,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
-                          child: Text(
-                            '10',
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                        ),
-                        Container(
-                          width: double.infinity,
-                          height: 1,
-                          color: Colors.grey,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        Container(
-                          width: double.infinity,
-                          color: Colors.grey[900],
-                          height: 40,
-                          child: Center(
-                            child: Text(
-                              'PRICE',
-                              style: TextStyle(color: Colors.grey),
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              child: Center(
+                                child: Text(e.quantity.toString()),
+                              ),
                             ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
-                          child: Text(
-                            '10.00',
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                        ),
-                        Container(
-                          width: double.infinity,
-                          height: 1,
-                          color: Colors.grey,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
-                          child: Text(
-                            '50.00',
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                        ),
-                        Container(
-                          width: double.infinity,
-                          height: 1,
-                          color: Colors.grey,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
-                          child: Text(
-                            '5.00',
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                        ),
-                        Container(
-                          width: double.infinity,
-                          height: 1,
-                          color: Colors.grey,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        Container(
-                          width: double.infinity,
-                          color: Colors.grey[900],
-                          height: 40,
-                          child: Center(
-                            child: Text(
-                              'TOTAL',
-                              style: TextStyle(color: Colors.grey),
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              child: Center(
+                                child: Text(e.price.toStringAsFixed(1)),
+                              ),
                             ),
-                          ),
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              child: Center(
+                                child: Text(
+                                    (e.quantity * e.price).toStringAsFixed(1)),
+                              ),
+                            ),
+                          ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
-                          child: Text(
-                            '20.00',
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                        ),
-                        Container(
-                          width: double.infinity,
-                          height: 1,
-                          color: Colors.grey,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
-                          child: Text(
-                            '350.00',
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                        ),
-                        Container(
-                          width: double.infinity,
-                          height: 1,
-                          color: Colors.grey,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
-                          child: Text(
-                            '50.00',
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                        ),
-                        Container(
-                          width: double.infinity,
-                          height: 1,
-                          color: Colors.grey,
-                        ),
-                      ],
-                    ),
-                  ),
+                      )
+                      .toList(),
                 ],
               ),
             ),
+
             SizedBox(height: 15),
             Container(
               padding: const EdgeInsets.only(right: 10),
@@ -397,7 +356,7 @@ class CashierScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(8),
                     color: Colors.teal,
                     child: Text(
-                      'PHP 420.00',
+                      'PHP ${total.toStringAsFixed(2)}',
                       style: TextStyle(
                           color: Colors.grey[200], fontWeight: FontWeight.bold),
                     ),
@@ -422,7 +381,7 @@ class CashierScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                     child: Text(
-                      'PHP 500.00',
+                      'PHP ${cash.toStringAsFixed(2)}',
                       style: TextStyle(color: Colors.grey[900]),
                     ),
                   )
@@ -446,7 +405,7 @@ class CashierScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                     child: Text(
-                      'PHP 80.00',
+                      'PHP ${(cash - total).toStringAsFixed(2)}',
                       style: TextStyle(color: Colors.grey[900]),
                     ),
                   )
@@ -503,14 +462,16 @@ class CashierScreen extends StatelessWidget {
                     ),
                   ),
                   style: ButtonStyle(
-                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(6.0))),
-                      backgroundColor:
-                          MaterialStateProperty.resolveWith((states) {
+                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6.0))),
+                    backgroundColor: MaterialStateProperty.resolveWith(
+                      (states) {
                         if (states.contains(MaterialState.pressed))
                           return Colors.green;
                         return Colors.teal;
-                      })),
+                      },
+                    ),
+                  ),
                 ),
               ),
             ),
