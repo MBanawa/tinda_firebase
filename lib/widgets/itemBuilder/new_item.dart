@@ -209,6 +209,13 @@ class _NewItemState extends State<NewItem> {
       'buyDate': _itemBuyDateController.text.trim(),
       'buyPrice': double.parse(_itemBuyPriceController.text.trim()),
       'sellPrice': double.parse(_itemSellPriceController.text.trim()),
+      'searchKeywords': List.generate(
+        _itemNameController.text.trim().length,
+        (index) => _itemNameController.text
+            .trim()
+            .toLowerCase()
+            .substring(0, index + 1),
+      ),
     });
 
     _supplierDB(
@@ -238,7 +245,7 @@ class _NewItemState extends State<NewItem> {
         .doc(itemId)
         .collection('suppliers')
         .doc(
-          //TODO: DONT FORGET TO CHANGE EPOCH TO A SMARTER IDENTFIER
+            //TODO: DONT FORGET TO CHANGE EPOCH TO A SMARTER IDENTFIER
             '$userName$itemId.${DateTime.now().millisecondsSinceEpoch.toString()}')
         .set({
       'entryDate': Timestamp.now(),
@@ -249,7 +256,7 @@ class _NewItemState extends State<NewItem> {
       'itemId': itemId,
       'itemName': itemName,
       'supplierId':
-      //TODO: DONT FORGET TO CHANGE EPOCH TO A SMARTER IDENTFIER
+          //TODO: DONT FORGET TO CHANGE EPOCH TO A SMARTER IDENTFIER
           '$userName$itemId.${DateTime.now().millisecondsSinceEpoch.toString()}'
     });
   }
@@ -588,7 +595,6 @@ class _NewItemState extends State<NewItem> {
                     width: MediaQuery.of(context).size.width - 16,
                     height: 60,
                     child: ElevatedButton(
-                      
                       onPressed: () {
                         imageFile == null ? _imageAlert() : _saveNewItem();
                       },
@@ -602,16 +608,15 @@ class _NewItemState extends State<NewItem> {
                         ),
                       ),
                       style: ButtonStyle(
-                                shape: MaterialStateProperty.all(
-                                    RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(6.0))),
-                                backgroundColor:
-                                    MaterialStateProperty.resolveWith((states) {
-                                  if (states.contains(MaterialState.pressed))
-                                    return Colors.green;
-                                  return Colors.yellow.shade900;
-                                })),
+                          shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(6.0))),
+                          backgroundColor:
+                              MaterialStateProperty.resolveWith((states) {
+                            if (states.contains(MaterialState.pressed))
+                              return Colors.green;
+                            return Colors.yellow.shade900;
+                          })),
                     ),
                   ),
                 ),

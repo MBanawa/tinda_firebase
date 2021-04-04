@@ -58,7 +58,10 @@ class CachedImageWidget extends StatelessWidget {
             height: height,
           );
         else if (snapshot.hasError) return Icon(Icons.error_outline);
-        return ImageLoadingWidget();
+        return Container(
+            width: width,
+            height: height,
+            child: Center(child: ImageLoadingWidget()));
       },
     );
   }
