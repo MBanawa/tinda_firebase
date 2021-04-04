@@ -17,7 +17,7 @@ class _CashierScreenState extends State<CashierScreen> {
 
   double _medFontSize = 16;
 
-  List<CashierItem> selectedItems = [];
+  Map<String, CashierItem> selectedItems = {};
 
   Future<bool> verifyQRCode(String code) async {
     CollectionReference itemsCollection =
@@ -73,8 +73,14 @@ class _CashierScreenState extends State<CashierScreen> {
       int quantity = int.tryParse(_quantityController.text) ?? 1;
       setState(() {
         total += snapshot.docs.first.data()['sellPrice'] * quantity;
-        selectedItems.add(
-          CashierItem(
+        selectedItems.update(
+          code,
+          (old) => CashierItem(
+            title: snapshot.docs.first.data()['itemName'],
+            quantity: old.quantity + quantity,
+            price: snapshot.docs.first.data()['sellPrice'],
+          ),
+          ifAbsent: () => CashierItem(
             title: snapshot.docs.first.data()['itemName'],
             quantity: quantity,
             price: snapshot.docs.first.data()['sellPrice'],
@@ -301,7 +307,7 @@ class _CashierScreenState extends State<CashierScreen> {
                       ),
                     ],
                   ),
-                  ...selectedItems
+                  ...selectedItems.values
                       .map(
                         (e) => TableRow(
                           children: [
