@@ -3,7 +3,7 @@ import 'package:tinda/animation/FadeAnimation.dart';
 import 'package:tinda/providers/image/cached_image_provider.dart';
 import 'package:tinda/screens/itemDetail_screen.dart';
 import 'package:tinda/widgets/itemBuilder/options_dialog.dart';
-import 'package:tinda/widgets/shared-widgets/images/cached_image.dart';
+import 'package:tinda/widgets/shared-widgets/images/cached_image_widget.dart';
 
 Color fontColor = Colors.white;
 
@@ -80,51 +80,52 @@ class MakeItem extends StatelessWidget {
         },
         child: Stack(
           children: [
-            Container(
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey[500],
-                    blurRadius: 10,
-                    offset: Offset(0, 10),
-                  )
-                ],
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(6),
-                child: CachedImageWidget(
-                  url: image,
-                  quality: 70,
-                  customPathList: ['items', id],
-                  boxFit: BoxFit.cover,
-                  colorFilter: ColorFilter.mode(
-                    Colors.teal,
-                    BlendMode.modulate,
-                  ),
-                  height: 250,
-                  width: double.infinity,
-                ),
-              ),
-            ),
+            // Container(
+            //   decoration: BoxDecoration(
+            //     boxShadow: [
+            //       BoxShadow(
+            //         color: Colors.grey[500],
+            //         blurRadius: 10,
+            //         offset: Offset(0, 10),
+            //       )
+            //     ],
+            //     borderRadius: BorderRadius.circular(6),
+            //   ),
+            //   child: ClipRRect(
+            //     borderRadius: BorderRadius.circular(6),
+            //     child: CachedImageWidget(
+            //       url: image,
+            //       quality: 70,
+            //       customPathList: ['items', id],
+            //       boxFit: BoxFit.cover,
+            //       colorFilter: ColorFilter.mode(
+            //         Colors.teal,
+            //         BlendMode.modulate,
+            //       ),
+            //       height: 250,
+            //       width: double.infinity,
+            //     ),
+            //   ),
+            // ),
             Container(
               padding: const EdgeInsets.all(20),
               height: 250,
               width: double.infinity,
               decoration: BoxDecoration(
+                color: Colors.grey[900],
                 borderRadius: BorderRadius.circular(6),
-                // image: DecorationImage(
-                //   image: CachedImageProvider(
-                //     image,
-                //     quality: 70,
-                //     customPathList: ['items', id],
-                //   ),
-                //   fit: BoxFit.cover,
-                //   colorFilter: ColorFilter.mode(
-                //     Colors.teal,
-                //     BlendMode.modulate,
-                //   ),
-                // ),
+                image: DecorationImage(
+                  image: CachedImageProvider(
+                    image,
+                    quality: 70,
+                    customPathList: ['items', id],
+                  ),
+                  fit: BoxFit.cover,
+                  colorFilter: ColorFilter.mode(
+                    Colors.teal,
+                    BlendMode.modulate,
+                  ),
+                ),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

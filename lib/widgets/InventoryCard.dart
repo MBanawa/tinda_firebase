@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tinda/widgets/menuItem.dart';
-
 import 'package:tinda/screens/itemsPerCategory_screen.dart';
+import 'package:tinda/widgets/menuItem.dart';
 
 class InventoryCard extends StatelessWidget {
   final String categID;

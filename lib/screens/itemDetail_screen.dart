@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tinda/animation/FadeAnimation.dart';
+import 'package:tinda/providers/image/cached_image_provider.dart';
 import 'package:tinda/widgets/itemBuilder/options_dialog.dart';
 
 class ItemDetail extends StatefulWidget {
@@ -64,7 +65,12 @@ class _ItemDetailState extends State<ItemDetail> {
             width: double.infinity,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: NetworkImage(widget.image),
+                // image: NetworkImage(widget.image),
+                image: CachedImageProvider(
+                  widget.image,
+                  quality: 90,
+                  customPathList: ['items', widget.id],
+                ),
                 fit: BoxFit.cover,
               ),
               boxShadow: [

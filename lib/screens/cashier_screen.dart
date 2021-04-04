@@ -178,7 +178,7 @@ class CashierScreen extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
                           child: Text(
-                            'Cookies N CreamMMMMM',
+                            'Cookies N Cream Chocolate Flavor',
                             style: TextStyle(color: Colors.grey),
                             overflow: TextOverflow.ellipsis,
                           ),
