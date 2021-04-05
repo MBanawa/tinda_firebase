@@ -300,9 +300,7 @@ class _CashierScreenState extends State<CashierScreen> {
                   ),
                   SizedBox(height: 25),
 
-                  //TODO: PROBLEM: WHEN PRICE COLUMN AND TOTAL COLUMN GOES TO 5 DIGITS AND 2 DECIMAL PLACES (I.E. 10,000.00)
-                  // THE ENTIRE TABLE WILL WARP. NEED TO FIND A WAY TO MAKE IT MORE DYNAMIC
-                  // NEED TO SOLVE ITEM NAME TOO. USED ELIPSIS FOR NOW
+                  //TODO: MAKE SURE TO SAVE SALES TIED TO THE USER ID
                   Container(
                     padding: const EdgeInsets.only(left: 8, right: 8),
                     child: Table(
