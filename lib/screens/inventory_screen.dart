@@ -318,7 +318,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
         child: Column(
           children: [
             SearchFieldWidget(
-              hintText: 'Search Category',
+              hintText: 'Search item here...',
             ),
             Container(
               child: StreamBuilder<QuerySnapshot>(
