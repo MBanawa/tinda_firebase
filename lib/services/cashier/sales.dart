@@ -37,4 +37,68 @@ declareSale(
       .update({
     'salesCount': saleNumber + 1,
   });
+
+  for (int i = 0; i < itemsList.length; i++) {
+    int remainingQuantity = itemsList[i]['quantity'];
+    do {
+      var desiredDocId = await _firstIn(itemsList[i]['itemId']);
+      var _supplier = await getSupplier(itemsList[i]['itemId'], desiredDocId);
+      int _quantity = _supplier['quantity'];
+
+      int _toBeDeducted = 0;
+
+      if (remainingQuantity > _quantity) {
+        _toBeDeducted = _quantity;
+        remainingQuantity -= _quantity;
+      } else {
+        _toBeDeducted = remainingQuantity;
+        remainingQuantity = 0;
+      }
+
+      await FirebaseFirestore.instance
+          .collection('items')
+          .doc(itemsList[i]['itemId'])
+          .collection('suppliers')
+          .doc(desiredDocId)
+          .update({
+        'quantity': _quantity - _toBeDeducted,
+      });
+    } while (remainingQuantity > 0);
+    int oldQuantity = (await FirebaseFirestore.instance
+            .collection('items')
+            .doc(itemsList[i]['itemId'])
+            .get())
+        .data()['quantity'];
+    await FirebaseFirestore.instance
+        .collection('items')
+        .doc(itemsList[i]['itemId'])
+        .update({
+      'quantity': oldQuantity - itemsList[i]['quantity'],
+    });
+  }
+}
+
+Future<dynamic> getSupplier(itemId, String docId) async {
+  DocumentReference documentReference = FirebaseFirestore.instance
+      .collection('items')
+      .doc(itemId)
+      .collection('suppliers')
+      .doc(docId);
+  return (await documentReference.get()).data();
+}
+
+_firstIn(itemId) async {
+  var listOfDocs = await FirebaseFirestore.instance
+      .collection('items')
+      .doc(itemId)
+      .collection('suppliers')
+      .where('itemId', isEqualTo: itemId)
+      .where('quantity', isGreaterThan: 0)
+      .get();
+
+  return (listOfDocs.docs
+        ..sort((a, b) => (a.data()['entryDate'] as Timestamp)
+            .compareTo(b.data()['entryDate'] as Timestamp)))
+      .first
+      .id;
 }

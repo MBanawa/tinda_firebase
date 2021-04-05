@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:tinda/models/cashier/cashier_item.dart';
 import 'package:tinda/services/cashier/sales.dart';
 import 'package:tinda/widgets/shared-widgets/images/cached_image_widget.dart';
@@ -263,15 +264,31 @@ class _CashierScreenState extends State<CashierScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '19-Feb-2021',
+                                  DateFormat('dd-MMM-yyyy')
+                                      .format(DateTime.now()),
                                   style: TextStyle(fontSize: _medFontSize),
                                 ),
+                                StreamBuilder<DocumentSnapshot>(
+                                    stream: FirebaseFirestore.instance
+                                        .collection('users')
+                                        .doc(
+                                          FirebaseAuth.instance.currentUser.uid,
+                                        )
+                                        .snapshots(),
+                                    builder: (context, snapshot) {
+                                      return Text(
+                                        snapshot.hasData
+                                            ? (snapshot.data
+                                                        .data()['salesCount']
+                                                    as int)
+                                                .toString()
+                                            : 'loading',
+                                        style:
+                                            TextStyle(fontSize: _medFontSize),
+                                      );
+                                    }),
                                 Text(
-                                  '000258',
-                                  style: TextStyle(fontSize: _medFontSize),
-                                ),
-                                Text(
-                                  '07:32 AM',
+                                  DateFormat('hh:mm a').format(DateTime.now()),
                                   style: TextStyle(fontSize: _medFontSize),
                                 ),
                               ],

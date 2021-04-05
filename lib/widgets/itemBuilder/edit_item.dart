@@ -312,10 +312,17 @@ class _EditItemState extends State<EditItem> {
           'itemId': widget.itemId,
           'itemName': widget.itemName,
           'searchKeywords': List.generate(
-            widget.itemName.trim().length,
-            (index) =>
-                widget.itemName.trim().toLowerCase().substring(0, index + 1),
-          ),
+                widget.itemName.trim().length,
+                (index) => widget.itemName
+                    .trim()
+                    .toLowerCase()
+                    .substring(0, index + 1),
+              ) +
+              widget.itemName
+                  .trim()
+                  .split(' ')
+                  .map((e) => e.toLowerCase())
+                  .toList(),
         });
       } else {
         //TODO: Edit supplier and price as well
@@ -326,12 +333,17 @@ class _EditItemState extends State<EditItem> {
           'barcode': _qrCode != null ? _qrCode : widget.barcode,
           'itemName': _editItemNameController.text.trim(),
           'searchKeywords': List.generate(
-            _editItemNameController.text.trim().length,
-            (index) => _editItemNameController.text
-                .trim()
-                .toLowerCase()
-                .substring(0, index + 1),
-          ),
+                _editItemNameController.text.trim().length,
+                (index) => _editItemNameController.text
+                    .trim()
+                    .toLowerCase()
+                    .substring(0, index + 1),
+              ) +
+              _editItemNameController.text
+                  .trim()
+                  .split(' ')
+                  .map((e) => e.toLowerCase())
+                  .toList(),
           'quantity': int.parse(_editItemQuantityController.text.trim()),
           'itemImage': imageFile != null ? url : widget.itemImage,
           'supplier': _editItemSupplierController.text.trim(),

@@ -210,12 +210,17 @@ class _NewItemState extends State<NewItem> {
       'buyPrice': double.parse(_itemBuyPriceController.text.trim()),
       'sellPrice': double.parse(_itemSellPriceController.text.trim()),
       'searchKeywords': List.generate(
-        _itemNameController.text.trim().length,
-        (index) => _itemNameController.text
-            .trim()
-            .toLowerCase()
-            .substring(0, index + 1),
-      ),
+            _itemNameController.text.trim().length,
+            (index) => _itemNameController.text
+                .trim()
+                .toLowerCase()
+                .substring(0, index + 1),
+          ) +
+          _itemNameController.text
+              .trim()
+              .split(' ')
+              .map((e) => e.toLowerCase())
+              .toList(),
     });
 
     _supplierDB(
