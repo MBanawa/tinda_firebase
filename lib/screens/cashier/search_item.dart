@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tinda/models/cashier/cashier_item.dart';
-import 'package:tinda/providers/image/cached_image_provider.dart';
 import 'package:tinda/widgets/shared-widgets/images/cached_image_widget.dart';
 
 class SearchItemView extends StatefulWidget {
@@ -87,7 +86,7 @@ class _SearchItemViewState extends State<SearchItemView> {
           controller: _searchController,
           autofocus: true,
           decoration: InputDecoration(
-            hintText: 'Search here',
+            hintText: 'Type your search here',
             hintStyle: TextStyle(color: Colors.grey[300]),
           ),
           style: TextStyle(color: Colors.white),
