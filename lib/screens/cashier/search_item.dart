@@ -155,13 +155,16 @@ class _SearchItemViewState extends State<SearchItemView> {
                                 children: [
                                   CachedImageWidget(
                                     url: item['itemImage'],
-                                    width: 120,
-                                    height: 120,
+                                    width: 128,
+                                    height: 130,
                                   ),
                                   Flexible(
                                     child: Container(
-                                      padding: const EdgeInsets.all(8.0),
-                                      height: 120,
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 4,
+                                        horizontal: 8.0,
+                                      ),
+                                      height: 130,
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.stretch,
@@ -174,12 +177,15 @@ class _SearchItemViewState extends State<SearchItemView> {
                                                 .textTheme
                                                 .headline6
                                                 .copyWith(
-                                                    fontWeight:
-                                                        FontWeight.w400),
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 17,
+                                                ),
                                           ),
                                           Container(
                                             margin: const EdgeInsets.only(
-                                                top: 8.0, bottom: 4),
+                                              top: 2.0,
+                                              bottom: 0.0,
+                                            ),
                                             child: Text(
                                               (item['sellPrice'] as double)
                                                       .toStringAsFixed(2) +
@@ -188,15 +194,16 @@ class _SearchItemViewState extends State<SearchItemView> {
                                                   .textTheme
                                                   .subtitle2
                                                   .copyWith(
-                                                      fontWeight:
-                                                          FontWeight.bold),
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                             ),
                                           ),
                                           Text(
                                             item['category'],
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .bodyText1,
+                                                .bodyText1
+                                                .copyWith(),
                                           ),
                                         ],
                                       ),
