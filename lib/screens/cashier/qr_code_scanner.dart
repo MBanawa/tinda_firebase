@@ -51,7 +51,7 @@ class _QRCodeScannerPageState extends State<QRCodeScannerPage> {
 
   launchSkipDelay() {
     try {
-      skipDelay = Timer(Duration(seconds: 3), () {
+      skipDelay = Timer(Duration(milliseconds: 800), () {
         setState(() {
           showSkipper = true;
         });
@@ -62,7 +62,7 @@ class _QRCodeScannerPageState extends State<QRCodeScannerPage> {
   }
 
   launchFrameAnimation(BuildContext context) {
-    frameResizeTimer = Timer.periodic(Duration(milliseconds: 500), (Timer t) {
+    frameResizeTimer = Timer.periodic(Duration(milliseconds: 100), (Timer t) {
       if (mounted) {
         y
             ? x = 8 * MediaQuery.of(context).size.width / 10
