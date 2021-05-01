@@ -7,6 +7,7 @@ declareSale(
   double cash,
   double total,
 ) async {
+  final user = FirebaseAuth.instance.currentUser;
   if (items.length == 0) return;
   int saleNumber = (await FirebaseFirestore.instance
               .collection('users')
@@ -30,6 +31,7 @@ declareSale(
     'orderTotal': total,
     'paymentAmount': cash,
     'change': cash - total,
+    'user': user.uid,
   });
   await FirebaseFirestore.instance
       .collection('users')
