@@ -44,7 +44,7 @@ class OptionsDialog extends StatelessWidget {
               style: TextStyle(color: Colors.yellow),
             ),
             actions: [
-              FlatButton(
+              TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },

@@ -239,17 +239,17 @@ class _EditItemState extends State<EditItem> {
     );
   }
 
-  _showSnackBar(
-    BuildContext context,
-    message,
-  ) {
-    var _snackBar = SnackBar(
-      content: message,
-      backgroundColor: Colors.green,
-      duration: const Duration(milliseconds: 3000),
-    );
-    _globalKey.currentState.showSnackBar(_snackBar);
-  }
+  // _showSnackBar(
+  //   BuildContext context,
+  //   message,
+  // ) {
+  //   var _snackBar = SnackBar(
+  //     content: message,
+  //     backgroundColor: Colors.green,
+  //     duration: const Duration(milliseconds: 3000),
+  //   );
+  //   _globalKey.currentState.showSnackBar(_snackBar);
+  // }
 
   void _editItem() async {
     FocusScope.of(context).unfocus();
@@ -258,7 +258,13 @@ class _EditItemState extends State<EditItem> {
       _isLoading = true;
     });
     await Future.delayed(Duration(milliseconds: 1000), () async {
-      _showSnackBar(context, Text('Saving, please wait....'));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Saving, please wait....'),
+          backgroundColor: Colors.green,
+          duration: const Duration(milliseconds: 3000),
+        ),
+      );
       var url;
 
       if (imageFile != null) {
@@ -613,7 +619,7 @@ class _EditItemState extends State<EditItem> {
                                                                   6.0)),
                                                     ),
                                                     width: double.infinity,
-                                                    child: FlatButton(
+                                                    child: TextButton(
                                                         onPressed: () {
                                                           Navigator.of(context)
                                                               .push(MaterialPageRoute(

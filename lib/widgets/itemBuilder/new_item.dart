@@ -167,18 +167,24 @@ class _NewItemState extends State<NewItem> {
     );
   }
 
-  _showSnackBar(BuildContext context, message) {
-    var _snackBar = SnackBar(
-      content: message,
-      backgroundColor: Colors.green,
-      duration: const Duration(milliseconds: 3000),
-    );
-    _globalKey.currentState.showSnackBar(_snackBar);
-  }
+  // _showSnackBar(BuildContext context, message) {
+  //   var _snackBar = SnackBar(
+  //     content: message,
+  //     backgroundColor: Colors.green,
+  //     duration: const Duration(milliseconds: 3000),
+  //   );
+  //   _globalKey.currentState.showSnackBar(_snackBar);
+  // }
 
   void _saveNewItem() async {
     FocusScope.of(context).unfocus();
-    _showSnackBar(context, Text('Saving, please wait....'));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Saving, please wait....'),
+        backgroundColor: Colors.green,
+        duration: const Duration(milliseconds: 3000),
+      ),
+    );
     final user = FirebaseAuth.instance.currentUser;
     final userData = await FirebaseFirestore.instance
         .collection('users')
@@ -466,7 +472,7 @@ class _NewItemState extends State<NewItem> {
                                         BorderRadius.all(Radius.circular(6.0)),
                                   ),
                                   width: double.infinity,
-                                  child: FlatButton(
+                                  child: TextButton(
                                       onPressed: () {
                                         Navigator.of(context)
                                             .push(MaterialPageRoute(
