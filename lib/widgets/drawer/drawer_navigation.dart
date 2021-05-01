@@ -45,7 +45,7 @@ class _DrawerNavigationState extends State<DrawerNavigation> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                FlatButton(
+                TextButton(
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => MyQrCodeScreen()));
@@ -54,7 +54,7 @@ class _DrawerNavigationState extends State<DrawerNavigation> {
                       'MY QR Codes',
                       style: TextStyle(color: Colors.white),
                     )),
-                FlatButton(
+                TextButton(
                     onPressed: () {
                       if (userClass == 1) {
                         FirebaseAuth.instance.signOut();

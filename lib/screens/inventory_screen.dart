@@ -160,7 +160,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
           return AlertDialog(
             backgroundColor: Theme.of(context).primaryColor,
             actions: [
-              FlatButton(
+              TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
