@@ -177,7 +177,7 @@ class _CashierScreenState extends State<CashierScreen> {
                           child: Container(
                             height: 80,
                             child: Padding(
-                              padding: const EdgeInsets.only(top: 21),
+                              padding: const EdgeInsets.only(top: 26),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
